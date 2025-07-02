@@ -36,12 +36,39 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
         
-        h1 {
-            text-align: center;
-            color: #333;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        h1 {
+            color: #333;
             font-size: 2em;
             font-weight: 300;
+        }
+        
+        .edit-toggle {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .edit-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .edit-toggle.active {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
         }
         
         .install-banner {
@@ -89,6 +116,23 @@
             position: sticky;
             top: 0;
             z-index: 10;
+            position: relative;
+        }
+        
+        .add-category-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            margin-left: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            display: none;
+        }
+        
+        .edit-mode .add-category-btn {
+            display: inline-block;
         }
         
         td {
@@ -96,6 +140,7 @@
             vertical-align: top;
             border-right: 1px solid #e9ecef;
             background: #fafbfc;
+            position: relative;
         }
         
         td:last-child {
@@ -114,6 +159,7 @@
             transition: all 0.2s ease;
             cursor: pointer;
             user-select: none;
+            position: relative;
         }
         
         .item:hover, .item:active {
@@ -125,6 +171,58 @@
             background: #e3f2fd;
             color: #1976d2;
             font-weight: 500;
+        }
+        
+        .delete-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            cursor: pointer;
+            display: none;
+        }
+        
+        .edit-mode .item:hover .delete-btn {
+            display: block;
+        }
+        
+        .add-item-btn {
+            background: #f0f0f0;
+            border: 2px dashed #ccc;
+            color: #666;
+            text-align: center;
+            padding: 8px;
+            margin: 3px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            display: none;
+        }
+        
+        .edit-mode .add-item-btn {
+            display: block;
+        }
+        
+        .add-item-btn:hover {
+            background: #e0e0e0;
+            border-color: #999;
+        }
+        
+        .item-input {
+            width: 100%;
+            padding: 6px 10px;
+            margin: 3px 0;
+            border: 2px solid #4ecdc4;
+            border-radius: 6px;
+            font-size: 12px;
+            background: white;
         }
         
         /* Couleurs par colonne */
@@ -163,6 +261,12 @@
             .container {
                 padding: 15px;
                 border-radius: 15px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
             }
             
             h1 {
@@ -217,196 +321,57 @@
 </head>
 <body>
     <div class="container">
-        <h1>🍽️ Inspiration Repas Healthy</h1>
+        <div class="header">
+            <h1>🍽️ Inspiration Repas Healthy</h1>
+            <button class="edit-toggle" id="editToggle">✏️ Mode Édition</button>
+        </div>
         
         <div class="install-banner" id="installBanner">
             📱 Installe cette app sur ton téléphone pour un accès rapide !
             <button class="install-btn" id="installBtn">Installer</button>
         </div>
-</head>
-<body>
-    <div class="container">
-        <h1>🍽️ Tableau d'Inspiration Repas Healthy</h1>
         
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th><span class="emoji">🥗</span>ENTRÉES</th>
-                        <th><span class="emoji">🥄</span>BASES SAUCES</th>
-                        <th><span class="emoji">🍖</span>PROTÉINES & CUISSONS</th>
-                        <th><span class="emoji">🌾</span>GLUCIDES</th>
-                        <th><span class="emoji">🥬</span>LÉGUMES</th>
-                        <th><span class="emoji">⚡</span>TECHNIQUES CUISSON</th>
-                        <th><span class="emoji">🍨</span>DESSERTS</th>
+                        <th><span class="emoji">🥗</span>ENTRÉES <button class="add-category-btn">+</button></th>
+                        <th><span class="emoji">🥄</span>BASES SAUCES <button class="add-category-btn">+</button></th>
+                        <th><span class="emoji">🍖</span>PROTÉINES & CUISSONS <button class="add-category-btn">+</button></th>
+                        <th><span class="emoji">🌾</span>GLUCIDES <button class="add-category-btn">+</button></th>
+                        <th><span class="emoji">🥬</span>LÉGUMES <button class="add-category-btn">+</button></th>
+                        <th><span class="emoji">⚡</span>TECHNIQUES CUISSON <button class="add-category-btn">+</button></th>
+                        <th><span class="emoji">🍨</span>DESSERTS <button class="add-category-btn">+</button></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="col-entrees">
-                            <span class="item">Soupe froide</span>
-                            <span class="item">Gaspacho</span>
-                            <span class="item">Velouté</span>
-                            <span class="item">Soupe miso</span>
-                            <span class="item">Bouillon</span>
-                            <span class="item">Consommé</span>
-                            <span class="item">Salade verte</span>
-                            <span class="item">Salade composée</span>
-                            <span class="item">Salade de céréales</span>
-                            <span class="item">Bowl cru</span>
-                            <span class="item">Crudités</span>
-                            <span class="item">Carpaccio</span>
-                            <span class="item">Tartare</span>
-                            <span class="item">Ceviche</span>
-                            <span class="item">Hummus</span>
-                            <span class="item">Guacamole</span>
-                            <span class="item">Baba ganoush</span>
-                            <span class="item">Tapenade</span>
-                            <span class="item">Dips</span>
-                            <span class="item">Mousse</span>
-                            <span class="item">Terrine</span>
+                        <td class="col-entrees" data-category="entrees">
+                            <div class="add-item-btn">+ Ajouter une entrée</div>
                         </td>
                         
-                        <td class="col-sauces">
-                            <span class="item">Base fromage blanc</span>
-                            <span class="item">Base yaourt grec</span>
-                            <span class="item">Base sauce soja</span>
-                            <span class="item">Base miso</span>
-                            <span class="item">Base tahini</span>
-                            <span class="item">Mayo avocat</span>
-                            <span class="item">Mayo yaourt</span>
-                            <span class="item">Vinaigrette classique</span>
-                            <span class="item">Vinaigrette asiatique</span>
-                            <span class="item">Pesto</span>
-                            <span class="item">Chimichurri</span>
-                            <span class="item">Sauce verte</span>
-                            <span class="item">Sauce épicée</span>
-                            <span class="item">Sauce crémeuse</span>
-                            <span class="item">Marinade</span>
-                            <span class="item">Émulsion</span>
+                        <td class="col-sauces" data-category="sauces">
+                            <div class="add-item-btn">+ Ajouter une sauce</div>
                         </td>
                         
-                        <td class="col-proteines">
-                            <span class="item">Grillé</span>
-                            <span class="item">Air fryer</span>
-                            <span class="item">Mariné</span>
-                            <span class="item">Mi-cuit</span>
-                            <span class="item">Fumé</span>
-                            <span class="item">Vapeur</span>
-                            <span class="item">Papillote</span>
-                            <span class="item">Sauté</span>
-                            <span class="item">Poêlé</span>
-                            <span class="item">Effiloché</span>
-                            <span class="item">Mollet</span>
-                            <span class="item">Brouillé</span>
-                            <span class="item">En omelette</span>
-                            <span class="item">Confit</span>
-                            <span class="item">Cru</span>
-                            <span class="item">Slow cook</span>
-                            <span class="item">Sous-vide</span>
-                            <span class="item">Rôti</span>
-                            <span class="item">Braisé</span>
-                            <span class="item">En sauce</span>
-                            <span class="item">Pané</span>
-                            <span class="item">Laqué</span>
+                        <td class="col-proteines" data-category="proteines">
+                            <div class="add-item-btn">+ Ajouter une cuisson</div>
                         </td>
                         
-                        <td class="col-glucides">
-                            <span class="item">Riz complet</span>
-                            <span class="item">Riz noir</span>
-                            <span class="item">Riz rouge</span>
-                            <span class="item">Quinoa</span>
-                            <span class="item">Boulgour</span>
-                            <span class="item">Épeautre</span>
-                            <span class="item">Sarrasin</span>
-                            <span class="item">Farro</span>
-                            <span class="item">Orge</span>
-                            <span class="item">Millet</span>
-                            <span class="item">Avoine salée</span>
-                            <span class="item">Pâtes complètes</span>
-                            <span class="item">Pâtes légumineuses</span>
-                            <span class="item">Shiratakis</span>
-                            <span class="item">Patate douce</span>
-                            <span class="item">Pommes de terre</span>
-                            <span class="item">Courge</span>
-                            <span class="item">Riz de chou-fleur</span>
-                            <span class="item">Courgetti</span>
-                            <span class="item">Pain complet</span>
-                            <span class="item">Galettes</span>
-                            <span class="item">Polenta</span>
+                        <td class="col-glucides" data-category="glucides">
+                            <div class="add-item-btn">+ Ajouter un glucide</div>
                         </td>
                         
-                        <td class="col-legumes">
-                            <span class="item">Vapeur</span>
-                            <span class="item">Air fryer</span>
-                            <span class="item">Grillés</span>
-                            <span class="item">Rôtis four</span>
-                            <span class="item">Poêlés</span>
-                            <span class="item">Sautés wok</span>
-                            <span class="item">Braisés</span>
-                            <span class="item">Confits</span>
-                            <span class="item">Papillote</span>
-                            <span class="item">Crus</span>
-                            <span class="item">Massés</span>
-                            <span class="item">Marinés</span>
-                            <span class="item">Lacto-fermentés</span>
-                            <span class="item">Pickles</span>
-                            <span class="item">Glacés</span>
-                            <span class="item">À l'étouffée</span>
-                            <span class="item">Tempura</span>
-                            <span class="item">Fumés</span>
-                            <span class="item">En soupe</span>
-                            <span class="item">En purée</span>
-                            <span class="item">En chips</span>
-                            <span class="item">Spiralés</span>
+                        <td class="col-legumes" data-category="legumes">
+                            <div class="add-item-btn">+ Ajouter une cuisson</div>
                         </td>
                         
-                        <td class="col-cuissons">
-                            <span class="item">Air Fryer 180°C</span>
-                            <span class="item">Plancha haute température</span>
-                            <span class="item">Grill/Barbecue</span>
-                            <span class="item">Poêle antiadhésive</span>
-                            <span class="item">Wok sauté rapide</span>
-                            <span class="item">Four 200°C chaleur tournante</span>
-                            <span class="item">Four vapeur 85°C</span>
-                            <span class="item">Cuisson vapeur douce</span>
-                            <span class="item">Papillote hermétique</span>
-                            <span class="item">Pochage eau frémissante</span>
-                            <span class="item">Marinade à froid</span>
-                            <span class="item">Sous-vide basse température</span>
-                            <span class="item">Smoking fumage léger</span>
-                            <span class="item">Searing haute température</span>
-                            <span class="item">Braisage cocotte</span>
-                            <span class="item">Slow cooking mijoteuse</span>
-                            <span class="item">Fermentation lactique</span>
-                            <span class="item">Déshydratation</span>
-                            <span class="item">Cru mariné acidulé</span>
-                            <span class="item">Confit huile d'olive</span>
+                        <td class="col-cuissons" data-category="cuissons">
+                            <div class="add-item-btn">+ Ajouter une technique</div>
                         </td>
                         
-                        <td class="col-desserts">
-                            <span class="item">Nice cream</span>
-                            <span class="item">Chia pudding</span>
-                            <span class="item">Mousse</span>
-                            <span class="item">Yaourt grec</span>
-                            <span class="item">Skyr</span>
-                            <span class="item">Fromage blanc</span>
-                            <span class="item">Compote</span>
-                            <span class="item">Fruits pochés</span>
-                            <span class="item">Salade de fruits</span>
-                            <span class="item">Energy balls</span>
-                            <span class="item">Bark chocolat</span>
-                            <span class="item">Smoothie bowl</span>
-                            <span class="item">Panna cotta</span>
-                            <span class="item">Tiramisù</span>
-                            <span class="item">Cheesecake cru</span>
-                            <span class="item">Tarte crue</span>
-                            <span class="item">Muffins</span>
-                            <span class="item">Cookies</span>
-                            <span class="item">Granola</span>
-                            <span class="item">Parfait</span>
-                            <span class="item">Sorbet</span>
-                            <span class="item">Pudding</span>
+                        <td class="col-desserts" data-category="desserts">
+                            <div class="add-item-btn">+ Ajouter un dessert</div>
                         </td>
                     </tr>
                 </tbody>
@@ -415,6 +380,22 @@
     </div>
 
     <script>
+        // Données initiales
+        const initialData = {
+            entrees: ["Soupe froide", "Gaspacho", "Velouté", "Soupe miso", "Bouillon", "Consommé", "Salade verte", "Salade composée", "Salade de céréales", "Bowl cru", "Crudités", "Carpaccio", "Tartare", "Ceviche", "Hummus", "Guacamole", "Baba ganoush", "Tapenade", "Dips", "Mousse", "Terrine"],
+            sauces: ["Base fromage blanc", "Base yaourt grec", "Base sauce soja", "Base miso", "Base tahini", "Mayo avocat", "Mayo yaourt", "Vinaigrette classique", "Vinaigrette asiatique", "Pesto", "Chimichurri", "Sauce verte", "Sauce épicée", "Sauce crémeuse", "Marinade", "Émulsion"],
+            proteines: ["Grillé", "Air fryer", "Mariné", "Mi-cuit", "Fumé", "Vapeur", "Papillote", "Sauté", "Poêlé", "Effiloché", "Mollet", "Brouillé", "En omelette", "Confit", "Cru", "Slow cook", "Sous-vide", "Rôti", "Braisé", "En sauce", "Pané", "Laqué"],
+            glucides: ["Riz complet", "Riz noir", "Riz rouge", "Quinoa", "Boulgour", "Épeautre", "Sarrasin", "Farro", "Orge", "Millet", "Avoine salée", "Pâtes complètes", "Pâtes légumineuses", "Shiratakis", "Patate douce", "Pommes de terre", "Courge", "Riz de chou-fleur", "Courgetti", "Pain complet", "Galettes", "Polenta"],
+            legumes: ["Vapeur", "Air fryer", "Grillés", "Rôtis four", "Poêlés", "Sautés wok", "Braisés", "Confits", "Papillote", "Crus", "Massés", "Marinés", "Lacto-fermentés", "Pickles", "Glacés", "À l'étouffée", "Tempura", "Fumés", "En soupe", "En purée", "En chips", "Spiralés"],
+            cuissons: ["Air Fryer 180°C", "Plancha haute température", "Grill/Barbecue", "Poêle antiadhésive", "Wok sauté rapide", "Four 200°C chaleur tournante", "Four vapeur 85°C", "Cuisson vapeur douce", "Papillote hermétique", "Pochage eau frémissante", "Marinade à froid", "Sous-vide basse température", "Smoking fumage léger", "Searing haute température", "Braisage cocotte", "Slow cooking mijoteuse", "Fermentation lactique", "Déshydratation", "Cru mariné acidulé", "Confit huile d'olive"],
+            desserts: ["Nice cream", "Chia pudding", "Mousse", "Yaourt grec", "Skyr", "Fromage blanc", "Compote", "Fruits pochés", "Salade de fruits", "Energy balls", "Bark chocolat", "Smoothie bowl", "Panna cotta", "Tiramisù", "Cheesecake cru", "Tarte crue", "Muffins", "Cookies", "Granola", "Parfait", "Sorbet", "Pudding"]
+        };
+
+        // Chargement des données depuis le stockage local ou utilisation des données initiales
+        let userData = JSON.parse(localStorage.getItem('mealPlannerData')) || JSON.parse(JSON.stringify(initialData));
+
+        let editMode = false;
+
         // PWA Installation
         let deferredPrompt;
         const installBanner = document.getElementById('installBanner');
@@ -439,18 +420,127 @@
             installBanner.style.display = 'none';
         });
 
-        // Sélection interactive des items
-        document.querySelectorAll('.item').forEach(item => {
+        // Mode édition
+        document.getElementById('editToggle').addEventListener('click', function() {
+            editMode = !editMode;
+            document.body.classList.toggle('edit-mode', editMode);
+            this.textContent = editMode ? '✅ Sauvegarder' : '✏️ Mode Édition';
+            this.classList.toggle('active', editMode);
+            
+            if (!editMode) {
+                saveData();
+            }
+        });
+
+        // Sauvegarde des données
+        function saveData() {
+            localStorage.setItem('mealPlannerData', JSON.stringify(userData));
+        }
+
+        // Rendu des données
+        function renderData() {
+            Object.keys(userData).forEach(category => {
+                const column = document.querySelector(`[data-category="${category}"]`);
+                const addBtn = column.querySelector('.add-item-btn');
+                
+                // Supprime les anciens items (sauf le bouton d'ajout)
+                column.querySelectorAll('.item').forEach(item => item.remove());
+                
+                // Ajoute les nouveaux items
+                userData[category].forEach(item => {
+                    const itemEl = createItemElement(item, category);
+                    column.insertBefore(itemEl, addBtn);
+                });
+            });
+        }
+
+        // Création d'un élément item
+        function createItemElement(text, category) {
+            const item = document.createElement('span');
+            item.className = 'item';
+            item.textContent = text;
+            
+            // Bouton de suppression
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.innerHTML = '×';
+            deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                deleteItem(text, category);
+            });
+            
+            item.appendChild(deleteBtn);
+            
+            // Sélection
             item.addEventListener('click', function() {
-                this.classList.toggle('selected');
+                if (!editMode) {
+                    this.classList.toggle('selected');
+                }
+            });
+            
+            return item;
+        }
+
+        // Suppression d'un item
+        function deleteItem(text, category) {
+            const index = userData[category].indexOf(text);
+            if (index > -1) {
+                userData[category].splice(index, 1);
+                renderData();
+            }
+        }
+
+        // Ajout d'un item
+        function addItem(category) {
+            const input = document.createElement('input');
+            input.className = 'item-input';
+            input.placeholder = 'Tape ton nouvel élément...';
+            
+            const column = document.querySelector(`[data-category="${category}"]`);
+            const addBtn = column.querySelector('.add-item-btn');
+            column.insertBefore(input, addBtn);
+            
+            input.focus();
+            
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const text = input.value.trim();
+                    if (text && !userData[category].includes(text)) {
+                        userData[category].push(text);
+                        renderData();
+                    } else {
+                        input.remove();
+                    }
+                }
+            });
+            
+            input.addEventListener('blur', () => {
+                const text = input.value.trim();
+                if (text && !userData[category].includes(text)) {
+                    userData[category].push(text);
+                    renderData();
+                } else {
+                    input.remove();
+                }
+            });
+        }
+
+        // Event listeners pour les boutons d'ajout
+        document.querySelectorAll('.add-item-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const category = btn.closest('td').dataset.category;
+                addItem(category);
             });
         });
+
+        // Initialisation
+        renderData();
 
         // Service Worker pour fonctionnement offline
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 const swCode = `
-                    const CACHE_NAME = 'repas-healthy-v1';
+                    const CACHE_NAME = 'repas-healthy-v2';
                     const urlsToCache = ['/'];
                     
                     self.addEventListener('install', event => {
