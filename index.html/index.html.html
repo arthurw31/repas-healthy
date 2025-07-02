@@ -51,6 +51,28 @@
             font-weight: 300;
         }
         
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .random-menu-btn {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .random-menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
         .edit-toggle {
             background: linear-gradient(45deg, #ff6b6b, #ee5a52);
             color: white;
@@ -69,6 +91,37 @@
         
         .edit-toggle.active {
             background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        }
+        
+        
+        .random-result {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 500;
+            min-height: 80px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .random-result.show {
+            display: flex;
+        }
+        
+        .menu-item {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin: 5px;
+            display: inline-block;
+            font-size: 14px;
         }
         
         .install-banner {
@@ -269,6 +322,11 @@
                 text-align: center;
             }
             
+            .header-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
             h1 {
                 font-size: 1.8em;
                 margin-bottom: 15px;
@@ -323,7 +381,15 @@
     <div class="container">
         <div class="header">
             <h1>🍽️ Inspiration Repas Healthy</h1>
-            <button class="edit-toggle" id="editToggle">✏️ Mode Édition</button>
+            <div class="header-buttons">
+                <button class="random-menu-btn" id="randomMenuBtn">🎲 Menu Aléatoire</button>
+                <button class="edit-toggle" id="editToggle">✏️ Mode Édition</button>
+            </div>
+        </div>
+        
+        <div class="random-result" id="randomResult">
+            <div><strong>🎯 Ton Menu du Jour :</strong></div>
+            <div id="menuContent"></div>
         </div>
         
         <div class="install-banner" id="installBanner">
@@ -419,6 +485,44 @@
         window.addEventListener('appinstalled', () => {
             installBanner.style.display = 'none';
         });
+
+        // Génération de menu aléatoire
+        function generateRandomMenu() {
+            const menu = {};
+            const menuLabels = {
+                entrees: "🥗 Entrée",
+                sauces: "🥄 Sauce", 
+                proteines: "🍖 Protéine",
+                glucides: "🌾 Glucide",
+                legumes: "🥬 Légumes", 
+                cuissons: "⚡ Cuisson",
+                desserts: "🍨 Dessert"
+            };
+            
+            Object.keys(userData).forEach(category => {
+                if (userData[category].length > 0) {
+                    const randomIndex = Math.floor(Math.random() * userData[category].length);
+                    menu[category] = userData[category][randomIndex];
+                }
+            });
+            
+            const menuContent = document.getElementById('menuContent');
+            const randomResult = document.getElementById('randomResult');
+            
+            let menuHTML = '';
+            Object.keys(menu).forEach(category => {
+                menuHTML += `<span class="menu-item">${menuLabels[category]}: ${menu[category]}</span>`;
+            });
+            
+            menuContent.innerHTML = menuHTML;
+            randomResult.classList.add('show');
+            
+            // Scroll vers le résultat
+            randomResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Event listener pour le bouton menu aléatoire
+        document.getElementById('randomMenuBtn').addEventListener('click', generateRandomMenu);
 
         // Mode édition
         document.getElementById('editToggle').addEventListener('click', function() {
