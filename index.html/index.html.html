@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspiration Repas Healthy</title>
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="Générateur d'idées pour repas healthy">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" data-href="data:application/json;base64,ewogICJuYW1lIjogIkluc3BpcmF0aW9uIFJlcGFzIEhlYWx0aHkiLAogICJzaG9ydF9uYW1lIjogIlJlcGFzIEhlYWx0aHkiLAogICJkZXNjcmlwdGlvbiI6ICJHZW5lcmF0ZXVyIGQnaWRlZXMgcG91ciByZXBhcyBoZWFsdGh5IiwKICAic3RhcnRfdXJsIjogIi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmZmZmZmYiLAogICJ0aGVtZV9jb2xvciI6ICIjNjY3ZWVhIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTVRJNElpQm9aV2xuYUhROUlqRXlPQ0lpSUhodGJHNXpQU0pvZEhSd09pOHZkM2QzTG5jekxtOXlaeTh5TURBd0wzTjJaeUkrUEhKbFkzUWdkMmxrZEdnOUlqRXlPQ0lpSUdobGFXZG9kRDBpTVRJNElpQm1hV3hzUFNJak5qWTNaV1ZoSWk4K1BIUmxlSFFnZUQwaU5qUWlJSGs5SWpZMElpQm1iMjUwTFdaaGJXbHNlVDBpUVhKcFlXd2lJR1p2Ym5RdGMybDZaVDBpTXpaaUlpQm1hV3hzUFNJamRtWm1abVptSWo0NFl6OHZKM1JsZUhRK1BDOXpkbWMrIiwKICAgICAgInNpemVzIjogIjEyOHgxMjgiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfQogIF0KfQ==">
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgZmlsbD0iIzY2N2VlYSIvPjx0ZXh0IHg9IjY0IiB5PSI2NCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjM2IiBmaWxsPSIjZmZmZmZmIj7wn42dPC90ZXh0Pjwvc3ZnPg==">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2em;
+            font-weight: 300;
+        }
+        
+        .install-banner {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+        
+        .install-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid white;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 10px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: left;
+            vertical-align: top;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        td {
+            padding: 15px 10px;
+            vertical-align: top;
+            border-right: 1px solid #e9ecef;
+            background: #fafbfc;
+        }
+        
+        td:last-child {
+            border-right: none;
+        }
+        
+        .item {
+            display: block;
+            padding: 6px 10px;
+            margin: 3px 0;
+            background: white;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #555;
+            border-left: 3px solid;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .item:hover, .item:active {
+            transform: translateX(3px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .item.selected {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        /* Couleurs par colonne */
+        .col-entrees .item { border-left-color: #ff6b6b; }
+        .col-entrees .item:hover { background: #fff5f5; }
+        
+        .col-sauces .item { border-left-color: #4ecdc4; }
+        .col-sauces .item:hover { background: #f0fdfc; }
+        
+        .col-proteines .item { border-left-color: #45b7d1; }
+        .col-proteines .item:hover { background: #f0f9ff; }
+        
+        .col-glucides .item { border-left-color: #96ceb4; }
+        .col-glucides .item:hover { background: #f0fdf4; }
+        
+        .col-legumes .item { border-left-color: #feca57; }
+        .col-legumes .item:hover { background: #fffbeb; }
+        
+        .col-cuissons .item { border-left-color: #ff9ff3; }
+        .col-cuissons .item:hover { background: #fdf4ff; }
+        
+        .col-desserts .item { border-left-color: #a8e6cf; }
+        .col-desserts .item:hover { background: #f0fdf4; }
+        
+        .emoji {
+            font-size: 1.1em;
+            margin-right: 5px;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                padding: 15px;
+                border-radius: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 15px;
+            }
+            
+            th {
+                padding: 12px 8px;
+                font-size: 12px;
+            }
+            
+            td {
+                padding: 12px 8px;
+            }
+            
+            .item {
+                font-size: 11px;
+                padding: 5px 8px;
+                margin: 2px 0;
+            }
+            
+            .table-container {
+                border-radius: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+            }
+            
+            th {
+                padding: 10px 6px;
+                font-size: 11px;
+            }
+            
+            td {
+                padding: 10px 6px;
+            }
+            
+            .item {
+                font-size: 10px;
+                padding: 4px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍽️ Inspiration Repas Healthy</h1>
+        
+        <div class="install-banner" id="installBanner">
+            📱 Installe cette app sur ton téléphone pour un accès rapide !
+            <button class="install-btn" id="installBtn">Installer</button>
+        </div>
+</head>
+<body>
+    <div class="container">
+        <h1>🍽️ Tableau d'Inspiration Repas Healthy</h1>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th><span class="emoji">🥗</span>ENTRÉES</th>
+                        <th><span class="emoji">🥄</span>BASES SAUCES</th>
+                        <th><span class="emoji">🍖</span>PROTÉINES & CUISSONS</th>
+                        <th><span class="emoji">🌾</span>GLUCIDES</th>
+                        <th><span class="emoji">🥬</span>LÉGUMES</th>
+                        <th><span class="emoji">⚡</span>TECHNIQUES CUISSON</th>
+                        <th><span class="emoji">🍨</span>DESSERTS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-entrees">
+                            <span class="item">Soupe froide</span>
+                            <span class="item">Gaspacho</span>
+                            <span class="item">Velouté</span>
+                            <span class="item">Soupe miso</span>
+                            <span class="item">Bouillon</span>
+                            <span class="item">Consommé</span>
+                            <span class="item">Salade verte</span>
+                            <span class="item">Salade composée</span>
+                            <span class="item">Salade de céréales</span>
+                            <span class="item">Bowl cru</span>
+                            <span class="item">Crudités</span>
+                            <span class="item">Carpaccio</span>
+                            <span class="item">Tartare</span>
+                            <span class="item">Ceviche</span>
+                            <span class="item">Hummus</span>
+                            <span class="item">Guacamole</span>
+                            <span class="item">Baba ganoush</span>
+                            <span class="item">Tapenade</span>
+                            <span class="item">Dips</span>
+                            <span class="item">Mousse</span>
+                            <span class="item">Terrine</span>
+                        </td>
+                        
+                        <td class="col-sauces">
+                            <span class="item">Base fromage blanc</span>
+                            <span class="item">Base yaourt grec</span>
+                            <span class="item">Base sauce soja</span>
+                            <span class="item">Base miso</span>
+                            <span class="item">Base tahini</span>
+                            <span class="item">Mayo avocat</span>
+                            <span class="item">Mayo yaourt</span>
+                            <span class="item">Vinaigrette classique</span>
+                            <span class="item">Vinaigrette asiatique</span>
+                            <span class="item">Pesto</span>
+                            <span class="item">Chimichurri</span>
+                            <span class="item">Sauce verte</span>
+                            <span class="item">Sauce épicée</span>
+                            <span class="item">Sauce crémeuse</span>
+                            <span class="item">Marinade</span>
+                            <span class="item">Émulsion</span>
+                        </td>
+                        
+                        <td class="col-proteines">
+                            <span class="item">Grillé</span>
+                            <span class="item">Air fryer</span>
+                            <span class="item">Mariné</span>
+                            <span class="item">Mi-cuit</span>
+                            <span class="item">Fumé</span>
+                            <span class="item">Vapeur</span>
+                            <span class="item">Papillote</span>
+                            <span class="item">Sauté</span>
+                            <span class="item">Poêlé</span>
+                            <span class="item">Effiloché</span>
+                            <span class="item">Mollet</span>
+                            <span class="item">Brouillé</span>
+                            <span class="item">En omelette</span>
+                            <span class="item">Confit</span>
+                            <span class="item">Cru</span>
+                            <span class="item">Slow cook</span>
+                            <span class="item">Sous-vide</span>
+                            <span class="item">Rôti</span>
+                            <span class="item">Braisé</span>
+                            <span class="item">En sauce</span>
+                            <span class="item">Pané</span>
+                            <span class="item">Laqué</span>
+                        </td>
+                        
+                        <td class="col-glucides">
+                            <span class="item">Riz complet</span>
+                            <span class="item">Riz noir</span>
+                            <span class="item">Riz rouge</span>
+                            <span class="item">Quinoa</span>
+                            <span class="item">Boulgour</span>
+                            <span class="item">Épeautre</span>
+                            <span class="item">Sarrasin</span>
+                            <span class="item">Farro</span>
+                            <span class="item">Orge</span>
+                            <span class="item">Millet</span>
+                            <span class="item">Avoine salée</span>
+                            <span class="item">Pâtes complètes</span>
+                            <span class="item">Pâtes légumineuses</span>
+                            <span class="item">Shiratakis</span>
+                            <span class="item">Patate douce</span>
+                            <span class="item">Pommes de terre</span>
+                            <span class="item">Courge</span>
+                            <span class="item">Riz de chou-fleur</span>
+                            <span class="item">Courgetti</span>
+                            <span class="item">Pain complet</span>
+                            <span class="item">Galettes</span>
+                            <span class="item">Polenta</span>
+                        </td>
+                        
+                        <td class="col-legumes">
+                            <span class="item">Vapeur</span>
+                            <span class="item">Air fryer</span>
+                            <span class="item">Grillés</span>
+                            <span class="item">Rôtis four</span>
+                            <span class="item">Poêlés</span>
+                            <span class="item">Sautés wok</span>
+                            <span class="item">Braisés</span>
+                            <span class="item">Confits</span>
+                            <span class="item">Papillote</span>
+                            <span class="item">Crus</span>
+                            <span class="item">Massés</span>
+                            <span class="item">Marinés</span>
+                            <span class="item">Lacto-fermentés</span>
+                            <span class="item">Pickles</span>
+                            <span class="item">Glacés</span>
+                            <span class="item">À l'étouffée</span>
+                            <span class="item">Tempura</span>
+                            <span class="item">Fumés</span>
+                            <span class="item">En soupe</span>
+                            <span class="item">En purée</span>
+                            <span class="item">En chips</span>
+                            <span class="item">Spiralés</span>
+                        </td>
+                        
+                        <td class="col-cuissons">
+                            <span class="item">Air Fryer 180°C</span>
+                            <span class="item">Plancha haute température</span>
+                            <span class="item">Grill/Barbecue</span>
+                            <span class="item">Poêle antiadhésive</span>
+                            <span class="item">Wok sauté rapide</span>
+                            <span class="item">Four 200°C chaleur tournante</span>
+                            <span class="item">Four vapeur 85°C</span>
+                            <span class="item">Cuisson vapeur douce</span>
+                            <span class="item">Papillote hermétique</span>
+                            <span class="item">Pochage eau frémissante</span>
+                            <span class="item">Marinade à froid</span>
+                            <span class="item">Sous-vide basse température</span>
+                            <span class="item">Smoking fumage léger</span>
+                            <span class="item">Searing haute température</span>
+                            <span class="item">Braisage cocotte</span>
+                            <span class="item">Slow cooking mijoteuse</span>
+                            <span class="item">Fermentation lactique</span>
+                            <span class="item">Déshydratation</span>
+                            <span class="item">Cru mariné acidulé</span>
+                            <span class="item">Confit huile d'olive</span>
+                        </td>
+                        
+                        <td class="col-desserts">
+                            <span class="item">Nice cream</span>
+                            <span class="item">Chia pudding</span>
+                            <span class="item">Mousse</span>
+                            <span class="item">Yaourt grec</span>
+                            <span class="item">Skyr</span>
+                            <span class="item">Fromage blanc</span>
+                            <span class="item">Compote</span>
+                            <span class="item">Fruits pochés</span>
+                            <span class="item">Salade de fruits</span>
+                            <span class="item">Energy balls</span>
+                            <span class="item">Bark chocolat</span>
+                            <span class="item">Smoothie bowl</span>
+                            <span class="item">Panna cotta</span>
+                            <span class="item">Tiramisù</span>
+                            <span class="item">Cheesecake cru</span>
+                            <span class="item">Tarte crue</span>
+                            <span class="item">Muffins</span>
+                            <span class="item">Cookies</span>
+                            <span class="item">Granola</span>
+                            <span class="item">Parfait</span>
+                            <span class="item">Sorbet</span>
+                            <span class="item">Pudding</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // PWA Installation
+        let deferredPrompt;
+        const installBanner = document.getElementById('installBanner');
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBanner.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                installBanner.style.display = 'none';
+            }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            installBanner.style.display = 'none';
+        });
+
+        // Sélection interactive des items
+        document.querySelectorAll('.item').forEach(item => {
+            item.addEventListener('click', function() {
+                this.classList.toggle('selected');
+            });
+        });
+
+        // Service Worker pour fonctionnement offline
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const swCode = `
+                    const CACHE_NAME = 'repas-healthy-v1';
+                    const urlsToCache = ['/'];
+                    
+                    self.addEventListener('install', event => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME)
+                                .then(cache => cache.addAll(urlsToCache))
+                        );
+                    });
+                    
+                    self.addEventListener('fetch', event => {
+                        event.respondWith(
+                            caches.match(event.request)
+                                .then(response => response || fetch(event.request))
+                        );
+                    });
+                `;
+                
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                
+                navigator.serviceWorker.register(swUrl)
+                    .then(() => console.log('SW registered'))
+                    .catch(() => console.log('SW registration failed'));
+            });
+        }
+    </script>
+</body>
+</html>
