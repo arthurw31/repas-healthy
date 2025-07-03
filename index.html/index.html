@@ -3,243 +3,448 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inspiration Repas Healthy</title>
-    <meta name="theme-color" content="#667eea">
-    <meta name="description" content="Générateur d'idées pour repas healthy">
+    <title>Meal Planner Pro</title>
+    <meta name="theme-color" content="#0f172a">
+    <meta name="description" content="Smart Meal Planning Platform">
     
     <!-- PWA Manifest -->
-    <link rel="manifest" data-href="data:application/json;base64,ewogICJuYW1lIjogIkluc3BpcmF0aW9uIFJlcGFzIEhlYWx0aHkiLAogICJzaG9ydF9uYW1lIjogIlJlcGFzIEhlYWx0aHkiLAogICJkZXNjcmlwdGlvbiI6ICJHZW5lcmF0ZXVyIGQnaWRlZXMgcG91ciByZXBhcyBoZWFsdGh5IiwKICAic3RhcnRfdXJsIjogIi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmZmZmZmYiLAogICJ0aGVtZV9jb2xvciI6ICIjNjY3ZWVhIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTVRJNElpQm9aV2xuYUhROUlqRXlPQ0lpSUhodGJHNXpQU0pvZEhSd09pOHZkM2QzTG5jekxtOXlaeTh5TURBd0wzTjJaeUkrUEhKbFkzUWdkMmxrZEdnOUlqRXlPQ0lpSUdobGFXZG9kRDBpTVRJNElpQm1hV3hzUFNJak5qWTNaV1ZoSWk4K1BIUmxlSFFnZUQwaU5qUWlJSGs5SWpZMElpQm1iMjUwTFdaaGJXbHNlVDBpUVhKcFlXd2lJR1p2Ym5RdGMybDZaVDBpTXpaaUlpQm1hV3hzUFNJamRtWm1abVptSWo0NFl6OHZKM1JsZUhRK1BDOXpkbWMrIiwKICAgICAgInNpemVzIjogIjEyOHgxMjgiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfQogIF0KfQ==">
+    <link rel="manifest" data-href="data:application/json;base64,ewogICJuYW1lIjogIk1lYWwgUGxhbm5lciBQcm8iLAogICJzaG9ydF9uYW1lIjogIk1lYWxQcm8iLAogICJkZXNjcmlwdGlvbiI6ICJBSS1Qb3dlcmVkIE1lYWwgUGxhbm5pbmcgUGxhdGZvcm0iLAogICJzdGFydF91cmwiOiAiLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBmMTcyYSIsCiAgInRoZW1lX2NvbG9yIjogIiMwZjE3MmEiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlNVEk0SWlCb1pXbG5hSFE5SWpFeU9DSWlJSGh0Ykc1elBTSm9kSFJ3T2k4dmQzZDNMbmN6TG05eVp5OHlNREF3TDNOMlp5SStQSEpsWTNRZ2QybGtkR2c5SWpFeU9DSWlJR2hsYVdkb2REMGlNVEk0SWlCbWFXeHNQU0lqTUdZeE56SmhJaTgrUEhSbGVIUWdlRDBpTmpRaUlIazlJalkwSWlCbWIyNTBMV1poYldsc2VUMGlRWEpwWVd3aUlHWnZiblF0YzJsNlpUMGlNelppSWlCbWFXeHNQU0lqWm1abVptWm1JajQ0WXo4dkszUmxlSFErUEM5emRtYysiLAogICAgICAic2l6ZXMiOiAiMTI4eDEyOCIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
     
     <!-- Apple Touch Icon -->
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgZmlsbD0iIzY2N2VlYSIvPjx0ZXh0IHg9IjY0IiB5PSI2NCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjM2IiBmaWxsPSIjZmZmZmZmIj7wn42dPC90ZXh0Pjwvc3ZnPg==">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgZmlsbD0iIzBmMTcyYSIvPjx0ZXh0IHg9IjY0IiB5PSI2NCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjM2IiBmaWxsPSIjZmZmZmZmIj7wn42dPC90ZXh0Pjwvc3ZnPg==">
     
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f8fafc;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #0f172a;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+        }
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 10px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+            overflow-x: hidden;
         }
         
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
+        /* Navigation */
+        .nav {
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--gray-200);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0 24px;
         }
         
-        .header {
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
+            height: 72px;
         }
         
-        h1 {
-            color: #333;
-            font-size: 2em;
-            font-weight: 300;
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
         }
         
-        .header-buttons {
+        .nav-actions {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
         }
         
-        .random-menu-btn {
-            background: linear-gradient(45deg, #4ecdc4, #44a08d);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .random-menu-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        
-        .edit-toggle {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .edit-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        
-        .edit-toggle.active {
-            background: linear-gradient(45deg, #4ecdc4, #44a08d);
-        }
-        
-        
-        .random-result {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--gray-50) 0%, #fefefe 100%);
+            padding: 80px 24px 120px;
             text-align: center;
-            font-size: 16px;
-            font-weight: 500;
-            min-height: 80px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .random-result.show {
-            display: flex;
-        }
-        
-        .menu-item {
-            background: rgba(255,255,255,0.2);
-            padding: 8px 15px;
-            border-radius: 20px;
-            margin: 5px;
-            display: inline-block;
-            font-size: 14px;
-        }
-        
-        .install-banner {
-            background: linear-gradient(45deg, #4ecdc4, #44a08d);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            display: none;
-        }
-        
-        .install-btn {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid white;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            margin-left: 10px;
-            cursor: pointer;
-        }
-        
-        .table-container {
-            overflow-x: auto;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 15px;
+            position: relative;
             overflow: hidden;
         }
         
-        th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 10px;
-            font-size: 14px;
-            font-weight: 600;
-            text-align: left;
-            vertical-align: top;
-            position: sticky;
+        .hero::before {
+            content: '';
+            position: absolute;
             top: 0;
-            z-index: 10;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(245, 158, 11, 0.1) 0%, transparent 50%);
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
             position: relative;
+            z-index: 2;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-600) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 24px;
+            letter-spacing: -0.025em;
+            line-height: 1.1;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--gray-600);
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.39);
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px 0 rgba(99, 102, 241, 0.5);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--gray-700);
+            border: 2px solid var(--gray-200);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--gray-300);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-success {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.39);
+        }
+        
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(245, 158, 11, 0.39);
+        }
+        
+        .btn-warning:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: -60px auto 0;
+            padding: 0 24px 80px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--gray-200);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+        
+        /* Random Result */
+        .random-result {
+            background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
+            color: white;
+            padding: 32px;
+            border-radius: 20px;
+            margin-bottom: 32px;
+            text-align: center;
+            display: none;
+            animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.4);
+        }
+        
+        .random-result.show {
+            display: block;
+        }
+        
+        .random-result h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .menu-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+        
+        .menu-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 500;
+        }
+        
+        .menu-item-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+        
+        .menu-item-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Main Dashboard */
+        .dashboard {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-800) 100%);
+            color: white;
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .dashboard-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .dashboard-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: var(--gray-200);
+        }
+        
+        .category-section {
+            background: white;
+            padding: 24px;
+            min-height: 500px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--gray-100);
+        }
+        
+        .category-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+        
+        .category-emoji {
+            font-size: 1.5rem;
         }
         
         .add-category-btn {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 12px;
-            margin-left: 8px;
+            background: var(--gray-100);
+            border: none;
+            border-radius: 8px;
+            padding: 6px 10px;
             cursor: pointer;
             font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-600);
             display: none;
+            transition: all 0.2s ease;
+        }
+        
+        .add-category-btn:hover {
+            background: var(--gray-200);
         }
         
         .edit-mode .add-category-btn {
-            display: inline-block;
+            display: block;
         }
         
-        td {
-            padding: 15px 10px;
-            vertical-align: top;
-            border-right: 1px solid #e9ecef;
-            background: #fafbfc;
-            position: relative;
-        }
-        
-        td:last-child {
-            border-right: none;
-        }
-        
+        /* Items */
         .item {
             display: block;
-            padding: 6px 10px;
-            margin: 3px 0;
-            background: white;
-            border-radius: 6px;
-            font-size: 12px;
-            color: #555;
-            border-left: 3px solid;
-            transition: all 0.2s ease;
+            padding: 12px 16px;
+            margin: 8px 0;
+            background: var(--gray-50);
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-700);
+            border: 2px solid transparent;
             cursor: pointer;
-            user-select: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            user-select: none;
         }
         
-        .item:hover, .item:active {
-            transform: translateX(3px);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        .item:hover {
+            background: white;
+            border-color: var(--gray-200);
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
         }
         
         .item.selected {
-            background: #e3f2fd;
-            color: #1976d2;
-            font-weight: 500;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-color: var(--primary);
+            color: var(--primary-dark);
         }
         
         .delete-btn {
             position: absolute;
-            right: 5px;
+            right: 8px;
             top: 50%;
             transform: translateY(-50%);
-            background: #ff4757;
+            background: var(--danger);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 10px;
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
             cursor: pointer;
             display: none;
+            transition: all 0.2s ease;
+        }
+        
+        .delete-btn:hover {
+            transform: translateY(-50%) scale(1.1);
         }
         
         .edit-mode .item:hover .delete-btn {
@@ -247,16 +452,18 @@
         }
         
         .add-item-btn {
-            background: #f0f0f0;
-            border: 2px dashed #ccc;
-            color: #666;
+            background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-50) 100%);
+            border: 2px dashed var(--gray-300);
+            color: var(--gray-500);
             text-align: center;
-            padding: 8px;
-            margin: 3px 0;
-            border-radius: 6px;
+            padding: 16px;
+            margin: 8px 0;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 14px;
+            font-weight: 600;
             display: none;
+            transition: all 0.3s ease;
         }
         
         .edit-mode .add-item-btn {
@@ -264,184 +471,263 @@
         }
         
         .add-item-btn:hover {
-            background: #e0e0e0;
-            border-color: #999;
+            background: white;
+            border-color: var(--gray-400);
+            color: var(--gray-700);
         }
         
         .item-input {
             width: 100%;
-            padding: 6px 10px;
-            margin: 3px 0;
-            border: 2px solid #4ecdc4;
-            border-radius: 6px;
-            font-size: 12px;
+            padding: 12px 16px;
+            margin: 8px 0;
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
             background: white;
+            transition: all 0.3s ease;
         }
         
-        /* Couleurs par colonne */
-        .col-entrees .item { border-left-color: #ff6b6b; }
-        .col-entrees .item:hover { background: #fff5f5; }
-        
-        .col-sauces .item { border-left-color: #4ecdc4; }
-        .col-sauces .item:hover { background: #f0fdfc; }
-        
-        .col-proteines .item { border-left-color: #45b7d1; }
-        .col-proteines .item:hover { background: #f0f9ff; }
-        
-        .col-glucides .item { border-left-color: #96ceb4; }
-        .col-glucides .item:hover { background: #f0fdf4; }
-        
-        .col-legumes .item { border-left-color: #feca57; }
-        .col-legumes .item:hover { background: #fffbeb; }
-        
-        .col-cuissons .item { border-left-color: #ff9ff3; }
-        .col-cuissons .item:hover { background: #fdf4ff; }
-        
-        .col-desserts .item { border-left-color: #a8e6cf; }
-        .col-desserts .item:hover { background: #f0fdf4; }
-        
-        .emoji {
-            font-size: 1.1em;
-            margin-right: 5px;
+        .item-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
         }
         
-        /* Mobile optimizations */
+        /* Category specific colors */
+        .category-section:nth-child(1) .item:hover { border-color: #ef4444; }
+        .category-section:nth-child(2) .item:hover { border-color: #06b6d4; }
+        .category-section:nth-child(3) .item:hover { border-color: #3b82f6; }
+        .category-section:nth-child(4) .item:hover { border-color: #10b981; }
+        .category-section:nth-child(5) .item:hover { border-color: #f59e0b; }
+        .category-section:nth-child(6) .item:hover { border-color: #8b5cf6; }
+        .category-section:nth-child(7) .item:hover { border-color: #ec4899; }
+        
+        /* Mobile */
+        @media (max-width: 1200px) {
+            .content-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .content-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
         @media (max-width: 768px) {
-            body {
-                padding: 5px;
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero {
+                padding: 60px 16px 80px;
             }
             
             .container {
-                padding: 15px;
-                border-radius: 15px;
+                padding: 0 16px 60px;
+                margin-top: -40px;
             }
             
-            .header {
+            .nav-content {
+                padding: 0 16px;
+                height: 64px;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-header {
+                padding: 20px 24px;
                 flex-direction: column;
-                align-items: stretch;
                 text-align: center;
             }
             
-            .header-buttons {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-buttons {
                 flex-direction: column;
-                gap: 10px;
+                align-items: center;
             }
             
-            h1 {
-                font-size: 1.8em;
-                margin-bottom: 15px;
+            .btn {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
             }
             
-            th {
-                padding: 12px 8px;
-                font-size: 12px;
-            }
-            
-            td {
-                padding: 12px 8px;
-            }
-            
-            .item {
-                font-size: 11px;
-                padding: 5px 8px;
-                margin: 2px 0;
-            }
-            
-            .table-container {
-                border-radius: 10px;
+            .category-section {
+                min-height: 300px;
             }
         }
         
-        @media (max-width: 480px) {
-            .container {
-                padding: 10px;
-            }
-            
-            h1 {
-                font-size: 1.5em;
-            }
-            
-            th {
-                padding: 10px 6px;
-                font-size: 11px;
-            }
-            
-            td {
-                padding: 10px 6px;
-            }
-            
-            .item {
-                font-size: 10px;
-                padding: 4px 6px;
-            }
+        .install-banner {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            text-align: center;
+            display: none;
+            box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.3);
+        }
+        
+        .install-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-left: 12px;
+            cursor: pointer;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🍽️ Inspiration Repas Healthy</h1>
-            <div class="header-buttons">
-                <button class="random-menu-btn" id="randomMenuBtn">🎲 Menu Aléatoire</button>
-                <button class="edit-toggle" id="editToggle">✏️ Mode Édition</button>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-content">
+            <a href="#" class="logo">🍽️ MealPro</a>
+            <div class="nav-actions">
+                <button class="btn btn-success" id="randomMenuBtn">
+                    🎲 Generate Menu
+                </button>
+                <button class="btn btn-warning edit-toggle" id="editToggle">
+                    ✏️ Edit Mode
+                </button>
             </div>
         </div>
-        
-        <div class="random-result" id="randomResult">
-            <div><strong>🎯 Ton Menu du Jour :</strong></div>
-            <div id="menuContent"></div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Plan. Cook. Enjoy</h1>
+            <p>Smart meal planning that adapts to your lifestyle. Create healthy, delicious meals with zero hassle.</p>
         </div>
-        
+    </section>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalItems">147</div>
+                <div class="stat-label">Recipe Combinations</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="menusGenerated">0</div>
+                <div class="stat-label">Menus Generated</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Possibilities</div>
+            </div>
+        </div>
+
+        <!-- Install Banner -->
         <div class="install-banner" id="installBanner">
-            📱 Installe cette app sur ton téléphone pour un accès rapide !
-            <button class="install-btn" id="installBtn">Installer</button>
+            📱 Install this app on your device for quick access!
+            <button class="install-btn" id="installBtn">Install Now</button>
         </div>
-        
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th><span class="emoji">🥗</span>ENTRÉES <button class="add-category-btn">+</button></th>
-                        <th><span class="emoji">🥄</span>BASES SAUCES <button class="add-category-btn">+</button></th>
-                        <th><span class="emoji">🍖</span>PROTÉINES & CUISSONS <button class="add-category-btn">+</button></th>
-                        <th><span class="emoji">🌾</span>GLUCIDES <button class="add-category-btn">+</button></th>
-                        <th><span class="emoji">🥬</span>LÉGUMES <button class="add-category-btn">+</button></th>
-                        <th><span class="emoji">⚡</span>TECHNIQUES CUISSON <button class="add-category-btn">+</button></th>
-                        <th><span class="emoji">🍨</span>DESSERTS <button class="add-category-btn">+</button></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="col-entrees" data-category="entrees">
-                            <div class="add-item-btn">+ Ajouter une entrée</div>
-                        </td>
-                        
-                        <td class="col-sauces" data-category="sauces">
-                            <div class="add-item-btn">+ Ajouter une sauce</div>
-                        </td>
-                        
-                        <td class="col-proteines" data-category="proteines">
-                            <div class="add-item-btn">+ Ajouter une cuisson</div>
-                        </td>
-                        
-                        <td class="col-glucides" data-category="glucides">
-                            <div class="add-item-btn">+ Ajouter un glucide</div>
-                        </td>
-                        
-                        <td class="col-legumes" data-category="legumes">
-                            <div class="add-item-btn">+ Ajouter une cuisson</div>
-                        </td>
-                        
-                        <td class="col-cuissons" data-category="cuissons">
-                            <div class="add-item-btn">+ Ajouter une technique</div>
-                        </td>
-                        
-                        <td class="col-desserts" data-category="desserts">
-                            <div class="add-item-btn">+ Ajouter un dessert</div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+
+        <!-- Random Result -->
+        <div class="random-result" id="randomResult">
+            <h3>🎯 Your Personalized Menu</h3>
+            <div class="menu-items" id="menuContent"></div>
+        </div>
+
+        <!-- Main Dashboard -->
+        <div class="dashboard">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Meal Planning Dashboard</div>
+                <div class="dashboard-actions">
+                    <span style="font-size: 14px; opacity: 0.8;">Customize your ingredients below</span>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="category-section" data-category="entrees">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <span class="category-emoji">🥗</span>
+                            Starters
+                        </div>
+                        <button class="add-category-btn">+ Add</button>
+                    </div>
+                    <div class="add-item-btn">+ Add new starter</div>
+                </div>
+
+                <div class="category-section" data-category="sauces">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <span class="category-emoji">🥄</span>
+                            Sauce Base
+                        </div>
+                        <button class="add-category-btn">+ Add</button>
+                    </div>
+                    <div class="add-item-btn">+ Add new sauce</div>
+                </div>
+
+                <div class="category-section" data-category="proteines">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <span class="category-emoji">🍖</span>
+                            Protein Style
+                        </div>
+                        <button class="add-category-btn">+ Add</button>
+                    </div>
+                    <div class="add-item-btn">+ Add cooking method</div>
+                </div>
+
+                <div class="category-section" data-category="glucides">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <span class="category-emoji">🌾</span>
+                            Carbs
+                        </div>
+                        <button class="add-category-btn">+ Add</button>
+                    </div>
+                    <div class="add-item-btn">+ Add new carb</div>
+                </div>
+
+                <div class="category-section" data-category="legumes">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <span class="category-emoji">🥬</span>
+                            Vegetables
+                        </div>
+                        <button class="add-category-btn">+ Add</button>
+                    </div>
+                    <div class="add-item-btn">+ Add cooking style</div>
+                </div>
+
+                <div class="category-section" data-category="cuissons">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <span class="category-emoji">⚡</span>
+                            Techniques
+                        </div>
+                        <button class="add-category-btn">+ Add</button>
+                    </div>
+                    <div class="add-item-btn">+ Add technique</div>
+                </div>
+
+                <div class="category-section" data-category="desserts">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <span class="category-emoji">🍨</span>
+                            Desserts
+                        </div>
+                        <button class="add-category-btn">+ Add</button>
+                    </div>
+                    <div class="add-item-btn">+ Add new dessert</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -459,8 +745,8 @@
 
         // Chargement des données depuis le stockage local ou utilisation des données initiales
         let userData = JSON.parse(localStorage.getItem('mealPlannerData')) || JSON.parse(JSON.stringify(initialData));
-
         let editMode = false;
+        let menusGenerated = parseInt(localStorage.getItem('menusGenerated')) || 0;
 
         // PWA Installation
         let deferredPrompt;
@@ -486,16 +772,23 @@
             installBanner.style.display = 'none';
         });
 
+        // Mise à jour des statistiques
+        function updateStats() {
+            const totalItems = Object.values(userData).reduce((total, items) => total + items.length, 0);
+            document.getElementById('totalItems').textContent = totalItems;
+            document.getElementById('menusGenerated').textContent = menusGenerated;
+        }
+
         // Génération de menu aléatoire
         function generateRandomMenu() {
             const menu = {};
             const menuLabels = {
-                entrees: "🥗 Entrée",
+                entrees: "🥗 Starter",
                 sauces: "🥄 Sauce", 
-                proteines: "🍖 Protéine",
-                glucides: "🌾 Glucide",
-                legumes: "🥬 Légumes", 
-                cuissons: "⚡ Cuisson",
+                proteines: "🍖 Protein",
+                glucides: "🌾 Carbs",
+                legumes: "🥬 Vegetables", 
+                cuissons: "⚡ Technique",
                 desserts: "🍨 Dessert"
             };
             
@@ -511,11 +804,21 @@
             
             let menuHTML = '';
             Object.keys(menu).forEach(category => {
-                menuHTML += `<span class="menu-item">${menuLabels[category]}: ${menu[category]}</span>`;
+                menuHTML += `
+                    <div class="menu-item">
+                        <div class="menu-item-label">${menuLabels[category]}</div>
+                        <div class="menu-item-value">${menu[category]}</div>
+                    </div>
+                `;
             });
             
             menuContent.innerHTML = menuHTML;
             randomResult.classList.add('show');
+            
+            // Mise à jour du compteur
+            menusGenerated++;
+            localStorage.setItem('menusGenerated', menusGenerated);
+            updateStats();
             
             // Scroll vers le résultat
             randomResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -528,8 +831,8 @@
         document.getElementById('editToggle').addEventListener('click', function() {
             editMode = !editMode;
             document.body.classList.toggle('edit-mode', editMode);
-            this.textContent = editMode ? '✅ Sauvegarder' : '✏️ Mode Édition';
-            this.classList.toggle('active', editMode);
+            this.textContent = editMode ? '✅ Save Changes' : '✏️ Edit Mode';
+            this.className = editMode ? 'btn btn-success' : 'btn btn-warning';
             
             if (!editMode) {
                 saveData();
@@ -544,23 +847,24 @@
         // Rendu des données
         function renderData() {
             Object.keys(userData).forEach(category => {
-                const column = document.querySelector(`[data-category="${category}"]`);
-                const addBtn = column.querySelector('.add-item-btn');
+                const section = document.querySelector(`[data-category="${category}"]`);
+                const addBtn = section.querySelector('.add-item-btn');
                 
                 // Supprime les anciens items (sauf le bouton d'ajout)
-                column.querySelectorAll('.item').forEach(item => item.remove());
+                section.querySelectorAll('.item').forEach(item => item.remove());
                 
                 // Ajoute les nouveaux items
                 userData[category].forEach(item => {
                     const itemEl = createItemElement(item, category);
-                    column.insertBefore(itemEl, addBtn);
+                    section.insertBefore(itemEl, addBtn);
                 });
             });
+            updateStats();
         }
 
         // Création d'un élément item
         function createItemElement(text, category) {
-            const item = document.createElement('span');
+            const item = document.createElement('div');
             item.className = 'item';
             item.textContent = text;
             
@@ -598,11 +902,11 @@
         function addItem(category) {
             const input = document.createElement('input');
             input.className = 'item-input';
-            input.placeholder = 'Tape ton nouvel élément...';
+            input.placeholder = 'Enter new item...';
             
-            const column = document.querySelector(`[data-category="${category}"]`);
-            const addBtn = column.querySelector('.add-item-btn');
-            column.insertBefore(input, addBtn);
+            const section = document.querySelector(`[data-category="${category}"]`);
+            const addBtn = section.querySelector('.add-item-btn');
+            section.insertBefore(input, addBtn);
             
             input.focus();
             
@@ -632,7 +936,7 @@
         // Event listeners pour les boutons d'ajout
         document.querySelectorAll('.add-item-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                const category = btn.closest('td').dataset.category;
+                const category = btn.closest('[data-category]').dataset.category;
                 addItem(category);
             });
         });
@@ -644,7 +948,7 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 const swCode = `
-                    const CACHE_NAME = 'repas-healthy-v2';
+                    const CACHE_NAME = 'meal-planner-pro-v1';
                     const urlsToCache = ['/'];
                     
                     self.addEventListener('install', event => {
