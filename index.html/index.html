@@ -44,21 +44,31 @@
         
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--gray-50);
-            color: var(--gray-900);
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 25%, #e2e8f0 50%, #cbd5e1 75%, #94a3b8 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            color: #1f2937;
             line-height: 1.6;
             overflow-x: hidden;
         }
         
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
         /* Navigation */
         .nav {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--gray-200);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(30px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
             position: sticky;
             top: 0;
             z-index: 100;
             padding: 0 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
         
         .nav-content {
@@ -67,14 +77,18 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 72px;
+            height: 80px;
         }
         
         .logo {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--primary);
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 50%, #e2e8f0 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             text-decoration: none;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
         }
         
         .nav-actions {
@@ -85,8 +99,9 @@
         
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, var(--gray-50) 0%, #fefefe 100%);
-            padding: 80px 24px 120px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            padding: 100px 24px 140px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -100,9 +115,9 @@
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(245, 158, 11, 0.1) 0%, transparent 50%);
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.25) 0%, transparent 50%);
         }
         
         .hero-content {
@@ -113,22 +128,21 @@
         }
         
         .hero h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-600) 100%);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: #1f2937;
             margin-bottom: 24px;
             letter-spacing: -0.025em;
             line-height: 1.1;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
         
         .hero p {
-            font-size: 1.25rem;
-            color: var(--gray-600);
+            font-size: 1.4rem;
+            color: #374151;
             margin-bottom: 40px;
-            font-weight: 400;
+            font-weight: 500;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         
         .hero-buttons {
@@ -143,62 +157,80 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-weight: 600;
+            padding: 16px 32px;
+            border-radius: 25px;
+            font-weight: 700;
             font-size: 15px;
             text-decoration: none;
             border: none;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
         }
         
         .btn-primary {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.39);
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 50%, #e2e8f0 100%);
+            color: #1f2937;
+            box-shadow: 0 15px 35px rgba(255, 255, 255, 0.4);
         }
         
         .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px 0 rgba(99, 102, 241, 0.5);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(255, 255, 255, 0.6);
         }
         
         .btn-secondary {
-            background: white;
-            color: var(--gray-700);
-            border: 2px solid var(--gray-200);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 35px rgba(255, 255, 255, 0.2);
         }
         
         .btn-secondary:hover {
-            border-color: var(--gray-300);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px 0 rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.35);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(255, 255, 255, 0.3);
         }
         
         .btn-success {
-            background: var(--accent);
+            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #34d399 100%);
             color: white;
-            box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.39);
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
         }
         
         .btn-success:hover {
-            background: #059669;
-            transform: translateY(-2px);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(16, 185, 129, 0.6);
         }
         
         .btn-warning {
-            background: var(--warning);
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #fbbf24 100%);
             color: white;
-            box-shadow: 0 4px 14px 0 rgba(245, 158, 11, 0.39);
+            box-shadow: 0 15px 35px rgba(245, 158, 11, 0.4);
         }
         
         .btn-warning:hover {
-            background: #d97706;
-            transform: translateY(-2px);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(245, 158, 11, 0.6);
         }
         
         /* Main Container */
@@ -208,40 +240,6 @@
             padding: 0 24px 80px;
             position: relative;
             z-index: 10;
-        }
-        
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
-        }
-        
-        .stat-card {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--gray-200);
-            transition: all 0.3s ease;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.1);
-        }
-        
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-        
-        .stat-label {
-            color: var(--gray-600);
-            font-weight: 500;
         }
         
         /* Random Result */
@@ -281,6 +279,14 @@
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
         }
         
         .menu-item-label {
@@ -307,27 +313,46 @@
         
         /* Main Dashboard */
         .dashboard {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--gray-200);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(30px);
+            border-radius: 30px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             overflow: hidden;
+            position: relative;
+        }
+        
+        .dashboard::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+            pointer-events: none;
         }
         
         .dashboard-header {
-            background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-800) 100%);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(55, 65, 81, 0.9) 100%);
+            backdrop-filter: blur(20px);
             color: white;
-            padding: 24px 32px;
+            padding: 30px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .dashboard-title {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .dashboard-actions {
@@ -345,12 +370,19 @@
         }
         
         .category-section {
-            background: white;
-            padding: 24px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px);
+            padding: 30px;
             min-height: 500px;
             position: relative;
             display: flex;
             flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .category-section:hover {
+            background: rgba(255, 255, 255, 0.5);
         }
         
         .category-header {
@@ -397,33 +429,38 @@
         }
         
         /* Items */
+        /* Items */
         .item {
             display: block;
-            padding: 12px 16px;
-            margin: 8px 0;
-            background: var(--gray-50);
-            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
             font-size: 14px;
-            font-weight: 500;
-            color: var(--gray-700);
-            border: 2px solid transparent;
+            font-weight: 600;
+            color: #374151;
+            border: 2px solid rgba(255, 255, 255, 0.3);
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             user-select: none;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
         
         .item:hover {
-            background: white;
-            border-color: var(--gray-200);
-            transform: translateX(4px);
-            box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            z-index: 10;
         }
         
         .item.selected {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            border-color: var(--primary);
-            color: var(--primary-dark);
+            background: linear-gradient(135deg, rgba(219, 234, 254, 0.9) 0%, rgba(191, 219, 254, 0.9) 100%);
+            border: 2px solid #3b82f6;
+            color: #1e40af;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
         }
         
         .delete-btn {
@@ -613,22 +650,6 @@
 
     <!-- Main Container -->
     <div class="container">
-        <!-- Stats Cards -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number" id="totalItems">147</div>
-                <div class="stat-label">Recipe Combinations</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="menusGenerated">0</div>
-                <div class="stat-label">Menus Generated</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">∞</div>
-                <div class="stat-label">Possibilities</div>
-            </div>
-        </div>
-
         <!-- Install Banner -->
         <div class="install-banner" id="installBanner">
             📱 Install this app on your device for quick access!
@@ -646,7 +667,7 @@
             <div class="dashboard-header">
                 <div class="dashboard-title">Meal Planning Dashboard</div>
                 <div class="dashboard-actions">
-                    <span style="font-size: 14px; opacity: 0.8;">Customize your ingredients below</span>
+                    <span style="font-size: 14px; opacity: 0.8;">💡 Double-cliquez sur un élément pour des recettes</span>
                 </div>
             </div>
 
@@ -655,77 +676,77 @@
                     <div class="category-header">
                         <div class="category-title">
                             <span class="category-emoji">🥗</span>
-                            Starters
+                            Entrée
                         </div>
                         <button class="add-category-btn">+ Add</button>
                     </div>
-                    <div class="add-item-btn">+ Add new starter</div>
+                    <div class="add-item-btn">+ Ajouter une entrée</div>
                 </div>
 
                 <div class="category-section" data-category="sauces">
                     <div class="category-header">
                         <div class="category-title">
                             <span class="category-emoji">🥄</span>
-                            Sauce Base
+                            Base Sauce
                         </div>
                         <button class="add-category-btn">+ Add</button>
                     </div>
-                    <div class="add-item-btn">+ Add new sauce</div>
+                    <div class="add-item-btn">+ Ajouter une base sauce</div>
                 </div>
 
                 <div class="category-section" data-category="proteines">
                     <div class="category-header">
                         <div class="category-title">
                             <span class="category-emoji">🍖</span>
-                            Protein Style
+                            Protéine
                         </div>
                         <button class="add-category-btn">+ Add</button>
                     </div>
-                    <div class="add-item-btn">+ Add cooking method</div>
+                    <div class="add-item-btn">+ Ajouter une protéine</div>
                 </div>
 
                 <div class="category-section" data-category="glucides">
                     <div class="category-header">
                         <div class="category-title">
                             <span class="category-emoji">🌾</span>
-                            Carbs
+                            Féculent
                         </div>
                         <button class="add-category-btn">+ Add</button>
                     </div>
-                    <div class="add-item-btn">+ Add new carb</div>
+                    <div class="add-item-btn">+ Ajouter un féculent</div>
                 </div>
 
                 <div class="category-section" data-category="legumes">
                     <div class="category-header">
                         <div class="category-title">
                             <span class="category-emoji">🥬</span>
-                            Vegetables
+                            Légumes
                         </div>
                         <button class="add-category-btn">+ Add</button>
                     </div>
-                    <div class="add-item-btn">+ Add cooking style</div>
+                    <div class="add-item-btn">+ Ajouter des légumes</div>
                 </div>
 
                 <div class="category-section" data-category="cuissons">
                     <div class="category-header">
                         <div class="category-title">
                             <span class="category-emoji">⚡</span>
-                            Techniques
+                            Technique Cuisson
                         </div>
                         <button class="add-category-btn">+ Add</button>
                     </div>
-                    <div class="add-item-btn">+ Add technique</div>
+                    <div class="add-item-btn">+ Ajouter une technique</div>
                 </div>
 
                 <div class="category-section" data-category="desserts">
                     <div class="category-header">
                         <div class="category-title">
                             <span class="category-emoji">🍨</span>
-                            Desserts
+                            Dessert
                         </div>
                         <button class="add-category-btn">+ Add</button>
                     </div>
-                    <div class="add-item-btn">+ Add new dessert</div>
+                    <div class="add-item-btn">+ Ajouter un dessert</div>
                 </div>
             </div>
         </div>
@@ -774,21 +795,19 @@
 
         // Mise à jour des statistiques
         function updateStats() {
-            const totalItems = Object.values(userData).reduce((total, items) => total + items.length, 0);
-            document.getElementById('totalItems').textContent = totalItems;
-            document.getElementById('menusGenerated').textContent = menusGenerated;
+            // Stats supprimées - plus besoin de cette fonction
         }
 
         // Génération de menu aléatoire
         function generateRandomMenu() {
             const menu = {};
             const menuLabels = {
-                entrees: "🥗 Starter",
-                sauces: "🥄 Sauce", 
-                proteines: "🍖 Protein",
-                glucides: "🌾 Carbs",
-                legumes: "🥬 Vegetables", 
-                cuissons: "⚡ Technique",
+                entrees: "🥗 Entrée",
+                sauces: "🥄 Base Sauce", 
+                proteines: "🍖 Protéine",
+                glucides: "🌾 Féculent",
+                legumes: "🥬 Légumes", 
+                cuissons: "⚡ Technique Cuisson",
                 desserts: "🍨 Dessert"
             };
             
@@ -805,7 +824,7 @@
             let menuHTML = '';
             Object.keys(menu).forEach(category => {
                 menuHTML += `
-                    <div class="menu-item">
+                    <div class="menu-item" ondblclick="searchRecipe('${menu[category].replace(/'/g, "\\'")}')">
                         <div class="menu-item-label">${menuLabels[category]}</div>
                         <div class="menu-item-value">${menu[category]}</div>
                     </div>
@@ -818,7 +837,6 @@
             // Mise à jour du compteur
             menusGenerated++;
             localStorage.setItem('menusGenerated', menusGenerated);
-            updateStats();
             
             // Scroll vers le résultat
             randomResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -859,7 +877,6 @@
                     section.insertBefore(itemEl, addBtn);
                 });
             });
-            updateStats();
         }
 
         // Création d'un élément item
@@ -879,14 +896,75 @@
             
             item.appendChild(deleteBtn);
             
-            // Sélection
+            // Sélection et recherche
             item.addEventListener('click', function() {
                 if (!editMode) {
                     this.classList.toggle('selected');
                 }
             });
             
+            // Double-clic pour recherche web
+            item.addEventListener('dblclick', function() {
+                if (!editMode) {
+                    searchRecipe(text);
+                }
+            });
+            
             return item;
+        }
+        
+        // Fonction de recherche de recette (accessible globalement)
+        window.searchRecipe = function(ingredient) {
+            const searchQuery = `recette ${ingredient} healthy`;
+            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+            
+            // Ouvre dans un nouvel onglet
+            window.open(searchUrl, '_blank');
+            
+            // Feedback visuel
+            showSearchFeedback(ingredient);
+        }
+        
+        // Feedback visuel pour la recherche
+        function showSearchFeedback(ingredient) {
+            // Créer une notification temporaire
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 12px;
+                font-weight: 600;
+                z-index: 1000;
+                box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
+                animation: slideInRight 0.3s ease;
+            `;
+            notification.textContent = `🔍 Recherche: "${ingredient}"`;
+            
+            // Ajouter l'animation CSS
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(notification);
+            
+            // Supprimer après 3 secondes
+            setTimeout(() => {
+                notification.style.animation = 'slideInRight 0.3s ease reverse';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
         }
 
         // Suppression d'un item
