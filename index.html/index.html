@@ -385,6 +385,27 @@
             background: rgba(255, 255, 255, 0.5);
         }
         
+        /* Mobile - Scroll horizontal */
+        @media (max-width: 768px) {
+            .content-grid {
+                display: flex;
+                overflow-x: auto;
+                gap: 16px;
+                padding: 16px;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .category-section {
+                min-width: 280px;
+                flex-shrink: 0;
+                scroll-snap-align: start;
+                border-radius: 20px;
+                min-height: 400px;
+                padding: 20px;
+            }
+        }
+        
         .category-header {
             display: flex;
             align-items: center;
