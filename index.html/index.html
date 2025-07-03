@@ -892,20 +892,26 @@
         document.getElementById('randomMenuBtn').addEventListener('click', generateRandomMenu);
 
         // Mode édition
-        document.getElementById('editToggle').addEventListener('click', function() {
+        document.getElementById('editToggle').addEventListener('click', async function() {
             editMode = !editMode;
             document.body.classList.toggle('edit-mode', editMode);
             this.textContent = editMode ? '✅ Save Changes' : '✏️ Edit Mode';
             this.className = editMode ? 'btn btn-success' : 'btn btn-warning';
             
             if (!editMode) {
-                saveData();
+                await saveData();
             }
         });
 
-        // Sauvegarde des données
-        function saveData() {
+        // Sauvegarde des données avec sync GitHub
+        async function saveData() {
+            // Sauvegarde locale d'abord
             localStorage.setItem('mealPlannerData', JSON.stringify(userData));
+            
+            // Puis sync GitHub si en ligne
+            if (isOnline) {
+                await saveToGitHub(userData);
+            }
         }
 
         // Rendu des données
@@ -1062,16 +1068,17 @@
         }
 
         // Suppression d'un item
-        function deleteItem(text, category) {
+        async function deleteItem(text, category) {
             const index = userData[category].indexOf(text);
             if (index > -1) {
                 userData[category].splice(index, 1);
                 renderData();
+                await saveData();
             }
         }
 
         // Ajout d'un item
-        function addItem(category) {
+        async function addItem(category) {
             const input = document.createElement('input');
             input.className = 'item-input';
             input.placeholder = 'Enter new item...';
@@ -1082,23 +1089,25 @@
             
             input.focus();
             
-            input.addEventListener('keypress', (e) => {
+            input.addEventListener('keypress', async (e) => {
                 if (e.key === 'Enter') {
                     const text = input.value.trim();
                     if (text && !userData[category].includes(text)) {
                         userData[category].push(text);
                         renderData();
+                        await saveData();
                     } else {
                         input.remove();
                     }
                 }
             });
             
-            input.addEventListener('blur', () => {
+            input.addEventListener('blur', async () => {
                 const text = input.value.trim();
                 if (text && !userData[category].includes(text)) {
                     userData[category].push(text);
                     renderData();
+                    await saveData();
                 } else {
                     input.remove();
                 }
@@ -1113,8 +1122,21 @@
             });
         });
 
+        // Détection du statut en ligne/hors ligne
+        window.addEventListener('online', () => {
+            isOnline = true;
+            showSyncStatus('🌐 Connexion rétablie', 'synced');
+            // Tenter une synchronisation
+            saveData();
+        });
+
+        window.addEventListener('offline', () => {
+            isOnline = false;
+            showSyncStatus('📴 Mode hors ligne', 'local');
+        });
+
         // Initialisation
-        renderData();
+        initializeData();
 
         // Service Worker pour fonctionnement offline
         if ('serviceWorker' in navigator) {
