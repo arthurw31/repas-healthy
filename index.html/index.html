@@ -97,6 +97,20 @@
             align-items: center;
         }
         
+        @media (max-width: 768px) {
+            .nav-actions {
+                gap: 8px;
+            }
+            
+            .nav-actions .btn {
+                padding: 10px 16px;
+                font-size: 13px;
+                font-weight: 600;
+                width: auto;
+                max-width: none;
+            }
+        }
+        
         /* Hero Section */
         .hero {
             background: rgba(255, 255, 255, 0.1);
@@ -844,8 +858,19 @@
             
             let menuHTML = '';
             Object.keys(menu).forEach(category => {
+                const categoryTerms = {
+                    entrees: "entrée",
+                    sauces: "sauce",
+                    proteines: "protéine", 
+                    glucides: "féculent",
+                    legumes: "légumes",
+                    cuissons: "cuisson",
+                    desserts: "dessert"
+                };
+                const categoryTerm = categoryTerms[category] || category;
+                
                 menuHTML += `
-                    <div class="menu-item" ondblclick="searchRecipe('${menu[category].replace(/'/g, "\\'")}')">
+                    <div class="menu-item" ondblclick="searchRecipeWithCategory('${menu[category].replace(/'/g, "\\'")}', '${category}')">
                         <div class="menu-item-label">${menuLabels[category]}</div>
                         <div class="menu-item-value">${menu[category]}</div>
                     </div>
@@ -924,17 +949,41 @@
                 }
             });
             
-            // Double-clic pour recherche web
+            // Double-clic pour recherche web avec catégorie
             item.addEventListener('dblclick', function() {
                 if (!editMode) {
-                    searchRecipe(text);
+                    searchRecipeWithCategory(text, category);
                 }
             });
             
             return item;
         }
         
-        // Fonction de recherche de recette (accessible globalement)
+        // Fonction de recherche avec catégorie
+        function searchRecipeWithCategory(ingredient, category) {
+            // Mapping des catégories vers des termes de recherche français
+            const categoryTerms = {
+                entrees: "entrée",
+                sauces: "sauce",
+                proteines: "protéine",
+                glucides: "féculent",
+                legumes: "légumes",
+                cuissons: "cuisson",
+                desserts: "dessert"
+            };
+            
+            const categoryTerm = categoryTerms[category] || category;
+            const searchQuery = `${categoryTerm} ${ingredient} healthy recette`;
+            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+            
+            // Ouvre dans un nouvel onglet
+            window.open(searchUrl, '_blank');
+            
+            // Feedback visuel avec catégorie
+            showSearchFeedback(`${categoryTerm} ${ingredient}`);
+        }
+        
+        // Fonction de recherche de recette (accessible globalement pour le menu)
         window.searchRecipe = function(ingredient) {
             const searchQuery = `recette ${ingredient} healthy`;
             const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
@@ -944,6 +993,30 @@
             
             // Feedback visuel
             showSearchFeedback(ingredient);
+        }
+        
+        // Fonction de recherche avec catégorie (accessible globalement)
+        window.searchRecipeWithCategory = function(ingredient, category) {
+            // Mapping des catégories vers des termes de recherche français
+            const categoryTerms = {
+                entrees: "entrée",
+                sauces: "sauce",
+                proteines: "protéine",
+                glucides: "féculent", 
+                legumes: "légumes",
+                cuissons: "cuisson",
+                desserts: "dessert"
+            };
+            
+            const categoryTerm = categoryTerms[category] || category;
+            const searchQuery = `${categoryTerm} ${ingredient} healthy recette`;
+            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+            
+            // Ouvre dans un nouvel onglet
+            window.open(searchUrl, '_blank');
+            
+            // Feedback visuel avec catégorie
+            showSearchFeedback(`${categoryTerm} ${ingredient}`);
         }
         
         // Feedback visuel pour la recherche
