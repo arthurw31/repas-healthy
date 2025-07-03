@@ -892,26 +892,20 @@
         document.getElementById('randomMenuBtn').addEventListener('click', generateRandomMenu);
 
         // Mode édition
-        document.getElementById('editToggle').addEventListener('click', async function() {
+        document.getElementById('editToggle').addEventListener('click', function() {
             editMode = !editMode;
             document.body.classList.toggle('edit-mode', editMode);
             this.textContent = editMode ? '✅ Save Changes' : '✏️ Edit Mode';
             this.className = editMode ? 'btn btn-success' : 'btn btn-warning';
             
             if (!editMode) {
-                await saveData();
+                saveData();
             }
         });
 
-        // Sauvegarde des données avec sync GitHub
-        async function saveData() {
-            // Sauvegarde locale d'abord
+        // Sauvegarde des données (local pour l'instant)
+        function saveData() {
             localStorage.setItem('mealPlannerData', JSON.stringify(userData));
-            
-            // Puis sync GitHub si en ligne
-            if (isOnline) {
-                await saveToGitHub(userData);
-            }
         }
 
         // Rendu des données
@@ -1068,17 +1062,17 @@
         }
 
         // Suppression d'un item
-        async function deleteItem(text, category) {
+        function deleteItem(text, category) {
             const index = userData[category].indexOf(text);
             if (index > -1) {
                 userData[category].splice(index, 1);
                 renderData();
-                await saveData();
+                saveData();
             }
         }
 
         // Ajout d'un item
-        async function addItem(category) {
+        function addItem(category) {
             const input = document.createElement('input');
             input.className = 'item-input';
             input.placeholder = 'Enter new item...';
@@ -1089,25 +1083,25 @@
             
             input.focus();
             
-            input.addEventListener('keypress', async (e) => {
+            input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     const text = input.value.trim();
                     if (text && !userData[category].includes(text)) {
                         userData[category].push(text);
                         renderData();
-                        await saveData();
+                        saveData();
                     } else {
                         input.remove();
                     }
                 }
             });
             
-            input.addEventListener('blur', async () => {
+            input.addEventListener('blur', () => {
                 const text = input.value.trim();
                 if (text && !userData[category].includes(text)) {
                     userData[category].push(text);
                     renderData();
-                    await saveData();
+                    saveData();
                 } else {
                     input.remove();
                 }
@@ -1122,21 +1116,8 @@
             });
         });
 
-        // Détection du statut en ligne/hors ligne
-        window.addEventListener('online', () => {
-            isOnline = true;
-            showSyncStatus('🌐 Connexion rétablie', 'synced');
-            // Tenter une synchronisation
-            saveData();
-        });
-
-        window.addEventListener('offline', () => {
-            isOnline = false;
-            showSyncStatus('📴 Mode hors ligne', 'local');
-        });
-
         // Initialisation
-        initializeData();
+        renderData();
 
         // Service Worker pour fonctionnement offline
         if ('serviceWorker' in navigator) {
