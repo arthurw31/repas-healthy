@@ -13,6 +13,11 @@
     <!-- Apple Touch Icon -->
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgZmlsbD0iIzBmMTcyYSIvPjx0ZXh0IHg9IjY0IiB5PSI2NCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjM2IiBmaWxsPSIjZmZmZmZmIj7wn42dPC90ZXh0Pjwvc3ZnPg==">
     
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
@@ -399,7 +404,7 @@
             background: rgba(255, 255, 255, 0.5);
         }
         
-        /* Mobile - Scroll horizontal */
+        /* Mobile - Maintenir les colonnes côte à côte */
         @media (max-width: 768px) {
             .content-grid {
                 display: flex;
@@ -463,7 +468,6 @@
             display: block;
         }
         
-        /* Items */
         /* Items */
         .item {
             display: block;
@@ -574,16 +578,30 @@
         .category-section:nth-child(6) .item:hover { border-color: #8b5cf6; }
         .category-section:nth-child(7) .item:hover { border-color: #ec4899; }
         
-        /* Mobile */
+        /* Mobile - Gardez toujours les colonnes côte à côte */
         @media (max-width: 1200px) {
             .content-grid {
-                grid-template-columns: repeat(4, 1fr);
+                display: flex;
+                overflow-x: auto;
+                gap: 16px;
+                padding: 16px;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .category-section {
+                min-width: 280px;
+                flex-shrink: 0;
+                scroll-snap-align: start;
+                border-radius: 20px;
+                min-height: 400px;
+                padding: 20px;
             }
         }
         
         @media (max-width: 900px) {
-            .content-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .category-section {
+                min-width: 250px;
             }
         }
         
@@ -657,14 +675,115 @@
             cursor: pointer;
             font-weight: 600;
         }
+
+        /* Simple auth overlay - minimal style */
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .auth-box {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .auth-overlay.show .auth-box {
+            transform: scale(1);
+        }
+
+        .auth-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #1f2937;
+        }
+
+        .google-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px 24px;
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .google-btn:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .sync-indicator {
+            font-size: 12px;
+            color: #10b981;
+            margin-left: 8px;
+        }
     </style>
 </head>
 <body>
+    <!-- Simple auth overlay -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-box">
+            <h2 class="auth-title">🍽️ MealPro</h2>
+            <p style="color: #6b7280; margin-bottom: 30px;">Connectez-vous pour synchroniser vos données</p>
+            
+            <button class="google-btn" id="googleSignIn">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Continuer avec Google
+            </button>
+            
+            <p style="font-size: 12px; color: #9ca3af;">
+                Vos données seront synchronisées en toute sécurité
+            </p>
+        </div>
+    </div>
+
     <!-- Navigation -->
     <nav class="nav">
         <div class="nav-content">
             <a href="#" class="logo">🍽️ MealPro</a>
             <div class="nav-actions">
+                <span class="sync-indicator" id="syncStatus" style="display: none;">✅ Synchronisé</span>
                 <button class="btn btn-success" id="randomMenuBtn">
                     🎲 Generate Menu
                 </button>
@@ -788,6 +907,27 @@
     </div>
 
     <script>
+        // Configuration Firebase - VOS CLÉS RÉELLES
+        const firebaseConfig = {
+            apiKey: "AlzaSyDunACCEQRqr4jglstPI6BUy_GsSCTqKuw",
+            authDomain: "mealpro-4a148.firebaseapp.com",
+            projectId: "mealpro-4a148",
+            storageBucket: "mealpro-4a148.firebasestorage.app",
+            messagingSenderId: "48009871807",
+            appId: "1:48009871807:web:e746015ce5c8557adcd172",
+            measurementId: "G-Q2XD8SVTJQ"
+        };
+
+        // Initialiser Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Variables globales
+        let currentUser = null;
+        let editMode = false;
+        let menusGenerated = parseInt(localStorage.getItem('menusGenerated')) || 0;
+
         // Données initiales
         const initialData = {
             entrees: ["Soupe froide", "Gaspacho", "Velouté", "Soupe miso", "Bouillon", "Consommé", "Salade verte", "Salade composée", "Salade de céréales", "Bowl cru", "Crudités", "Carpaccio", "Tartare", "Ceviche", "Hummus", "Guacamole", "Baba ganoush", "Tapenade", "Dips", "Mousse", "Terrine"],
@@ -801,39 +941,120 @@
 
         // Chargement des données depuis le stockage local ou utilisation des données initiales
         let userData = JSON.parse(localStorage.getItem('mealPlannerData')) || JSON.parse(JSON.stringify(initialData));
-        let editMode = false;
-        let menusGenerated = parseInt(localStorage.getItem('menusGenerated')) || 0;
 
-        // PWA Installation
-        let deferredPrompt;
-        const installBanner = document.getElementById('installBanner');
-        const installBtn = document.getElementById('installBtn');
+        // Authentification Google
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
+        googleProvider.addScope('email');
+        googleProvider.addScope('profile');
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBanner.style.display = 'block';
-        });
-
-        installBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                deferredPrompt = null;
-                installBanner.style.display = 'none';
+        // Gestion de l'état d'authentification
+        auth.onAuthStateChanged(async (user) => {
+            currentUser = user;
+            if (user) {
+                // Utilisateur connecté
+                document.getElementById('authOverlay').classList.remove('show');
+                document.getElementById('syncStatus').style.display = 'inline';
+                document.getElementById('syncStatus').textContent = '⏳ Chargement...';
+                
+                // Charger les données depuis Firebase
+                await loadUserData();
+                renderData();
+                
+                document.getElementById('syncStatus').textContent = '✅ Synchronisé';
+            } else {
+                // Utilisateur non connecté - montrer l'overlay
+                document.getElementById('authOverlay').classList.add('show');
+                document.getElementById('syncStatus').style.display = 'none';
+                
+                // Utiliser les données locales
+                renderData();
             }
         });
 
-        window.addEventListener('appinstalled', () => {
-            installBanner.style.display = 'none';
+        // Connexion Google
+        document.getElementById('googleSignIn').addEventListener('click', async () => {
+            try {
+                const result = await auth.signInWithPopup(googleProvider);
+                
+                // Vérifier si c'est un nouvel utilisateur
+                if (result.additionalUserInfo.isNewUser) {
+                    await initializeUserData();
+                }
+            } catch (error) {
+                console.error('Erreur de connexion:', error);
+                alert('Erreur de connexion. Veuillez réessayer.');
+            }
         });
 
-        // Mise à jour des statistiques
-        function updateStats() {
-            // Stats supprimées - plus besoin de cette fonction
+        // Initialiser les données utilisateur dans Firebase
+        async function initializeUserData() {
+            if (!currentUser) return;
+            
+            try {
+                await db.collection('users').doc(currentUser.uid).set({
+                    email: currentUser.email,
+                    displayName: currentUser.displayName,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    data: userData, // Utilise les données locales existantes
+                    menusGenerated: menusGenerated
+                });
+            } catch (error) {
+                console.error('Erreur initialisation:', error);
+            }
         }
 
-        // Génération de menu aléatoire
+        // Charger les données utilisateur depuis Firebase
+        async function loadUserData() {
+            if (!currentUser) return;
+            
+            try {
+                const doc = await db.collection('users').doc(currentUser.uid).get();
+                
+                if (doc.exists) {
+                    const data = doc.data();
+                    userData = data.data || userData;
+                    menusGenerated = data.menusGenerated || menusGenerated;
+                } else {
+                    // Nouveau utilisateur - initialiser avec les données locales
+                    await initializeUserData();
+                }
+            } catch (error) {
+                console.error('Erreur chargement:', error);
+                // Continuer avec les données locales en cas d'erreur
+            }
+        }
+
+        // Sauvegarder les données
+        async function saveData() {
+            // Toujours sauvegarder localement
+            localStorage.setItem('mealPlannerData', JSON.stringify(userData));
+            localStorage.setItem('menusGenerated', menusGenerated.toString());
+            
+            // Sauvegarder dans Firebase si connecté
+            if (currentUser) {
+                try {
+                    document.getElementById('syncStatus').textContent = '⏳ Sync...';
+                    
+                    await db.collection('users').doc(currentUser.uid).update({
+                        data: userData,
+                        menusGenerated: menusGenerated,
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    document.getElementById('syncStatus').textContent = '✅ Synchronisé';
+                } catch (error) {
+                    console.error('Erreur sync:', error);
+                    document.getElementById('syncStatus').textContent = '❌ Erreur sync';
+                    
+                    // Retour au statut normal après 3 secondes
+                    setTimeout(() => {
+                        document.getElementById('syncStatus').textContent = '✅ Local';
+                    }, 3000);
+                }
+            }
+        }
+
+        // Générer un menu aléatoire
         function generateRandomMenu() {
             const menu = {};
             const menuLabels = {
@@ -858,17 +1079,6 @@
             
             let menuHTML = '';
             Object.keys(menu).forEach(category => {
-                const categoryTerms = {
-                    entrees: "entrée",
-                    sauces: "sauce",
-                    proteines: "protéine", 
-                    glucides: "féculent",
-                    legumes: "légumes",
-                    cuissons: "cuisson",
-                    desserts: "dessert"
-                };
-                const categoryTerm = categoryTerms[category] || category;
-                
                 menuHTML += `
                     <div class="menu-item" ondblclick="searchRecipeWithCategory('${menu[category].replace(/'/g, "\\'")}', '${category}')">
                         <div class="menu-item-label">${menuLabels[category]}</div>
@@ -882,7 +1092,7 @@
             
             // Mise à jour du compteur
             menusGenerated++;
-            localStorage.setItem('menusGenerated', menusGenerated);
+            saveData();
             
             // Scroll vers le résultat
             randomResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -902,11 +1112,6 @@
                 saveData();
             }
         });
-
-        // Sauvegarde des données (local pour l'instant)
-        function saveData() {
-            localStorage.setItem('mealPlannerData', JSON.stringify(userData));
-        }
 
         // Rendu des données
         function renderData() {
@@ -961,7 +1166,6 @@
         
         // Fonction de recherche avec catégorie
         function searchRecipeWithCategory(ingredient, category) {
-            // Mapping des catégories vers des termes de recherche français
             const categoryTerms = {
                 entrees: "entrée",
                 sauces: "sauce",
@@ -976,28 +1180,12 @@
             const searchQuery = `${categoryTerm} ${ingredient} healthy recette`;
             const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
             
-            // Ouvre dans un nouvel onglet
             window.open(searchUrl, '_blank');
-            
-            // Feedback visuel avec catégorie
             showSearchFeedback(`${categoryTerm} ${ingredient}`);
         }
         
-        // Fonction de recherche de recette (accessible globalement pour le menu)
-        window.searchRecipe = function(ingredient) {
-            const searchQuery = `recette ${ingredient} healthy`;
-            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
-            
-            // Ouvre dans un nouvel onglet
-            window.open(searchUrl, '_blank');
-            
-            // Feedback visuel
-            showSearchFeedback(ingredient);
-        }
-        
-        // Fonction de recherche avec catégorie (accessible globalement)
+        // Fonction de recherche accessible globalement
         window.searchRecipeWithCategory = function(ingredient, category) {
-            // Mapping des catégories vers des termes de recherche français
             const categoryTerms = {
                 entrees: "entrée",
                 sauces: "sauce",
@@ -1012,16 +1200,12 @@
             const searchQuery = `${categoryTerm} ${ingredient} healthy recette`;
             const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
             
-            // Ouvre dans un nouvel onglet
             window.open(searchUrl, '_blank');
-            
-            // Feedback visuel avec catégorie
             showSearchFeedback(`${categoryTerm} ${ingredient}`);
         }
         
         // Feedback visuel pour la recherche
         function showSearchFeedback(ingredient) {
-            // Créer une notification temporaire
             const notification = document.createElement('div');
             notification.style.cssText = `
                 position: fixed;
@@ -1038,7 +1222,6 @@
             `;
             notification.textContent = `🔍 Recherche: "${ingredient}"`;
             
-            // Ajouter l'animation CSS
             const style = document.createElement('style');
             style.textContent = `
                 @keyframes slideInRight {
@@ -1050,7 +1233,6 @@
             
             document.body.appendChild(notification);
             
-            // Supprimer après 3 secondes
             setTimeout(() => {
                 notification.style.animation = 'slideInRight 0.3s ease reverse';
                 setTimeout(() => {
@@ -1119,6 +1301,30 @@
         // Initialisation
         renderData();
 
+        // PWA Installation
+        let deferredPrompt;
+        const installBanner = document.getElementById('installBanner');
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBanner.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                installBanner.style.display = 'none';
+            }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            installBanner.style.display = 'none';
+        });
+
         // Service Worker pour fonctionnement offline
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -1149,6 +1355,16 @@
                     .catch(() => console.log('SW registration failed'));
             });
         }
+
+        // Fermer l'overlay en cliquant à l'extérieur
+        document.getElementById('authOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                // Ne pas fermer - l'utilisateur doit se connecter pour utiliser l'app
+                // document.getElementById('authOverlay').classList.remove('show');
+            }
+        });
+
+        console.log('🍽️ Meal Planner Pro avec Firebase backend prêt!');
     </script>
 </body>
 </html>
