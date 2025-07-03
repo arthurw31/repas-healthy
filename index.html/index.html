@@ -1186,27 +1186,33 @@
             }
         }
 
-        // Ajouter un nouvel élément dans une catégorie
+        // Ajouter un nouvel élément dans une catégorie (avec debug)
         async function addItemToCategory(category, itemName) {
-            if (!currentUser || !itemName.trim()) return false;
+            if (!itemName.trim()) return false;
             
             try {
-                // Ajouter à Firestore
-                const docRef = await db.collection('users')
-                    .doc(currentUser.uid)
-                    .collection(category)
-                    .add({
-                        name: itemName.trim(),
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        isFavorite: false,
-                        isDefault: false,
-                        tags: []
-                    });
+                console.log(`Tentative d'ajout: "${itemName}" dans ${category}`);
+                
+                if (currentUser) {
+                    // Ajouter à Firestore
+                    const docRef = await db.collection('users')
+                        .doc(currentUser.uid)
+                        .collection(category)
+                        .add({
+                            name: itemName.trim(),
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            isFavorite: false,
+                            isDefault: false,
+                            tags: []
+                        });
+                    
+                    console.log(`Élément ajouté à Firestore avec ID: ${docRef.id}`);
+                }
                 
                 // Ajouter localement pour affichage immédiat
                 if (!userData[category]) userData[category] = [];
                 userData[category].push({
-                    id: docRef.id,
+                    id: currentUser ? 'temp-' + Date.now() : 'local-' + Date.now(),
                     name: itemName.trim(),
                     isFavorite: false,
                     isDefault: false,
@@ -1214,7 +1220,7 @@
                     tags: []
                 });
                 
-                console.log(`Élément "${itemName}" ajouté à ${category}`);
+                console.log(`Élément "${itemName}" ajouté localement à ${category}`);
                 return true;
             } catch (error) {
                 console.error('Erreur ajout élément:', error);
@@ -1222,29 +1228,36 @@
             }
         }
 
-        // Supprimer un élément d'une catégorie
+        // Supprimer un élément d'une catégorie (avec debug)
         async function deleteItemFromCategory(category, itemId, itemName) {
-            if (!currentUser) return false;
-            
             try {
-                // Supprimer de Firestore
-                if (itemId && itemId !== 'local') {
+                console.log(`Tentative de suppression: "${itemName}" (ID: ${itemId}) de ${category}`);
+                
+                if (currentUser && itemId && itemId !== 'local' && !itemId.startsWith('temp-')) {
+                    // Supprimer de Firestore
                     await db.collection('users')
                         .doc(currentUser.uid)
                         .collection(category)
                         .doc(itemId)
                         .delete();
+                    
+                    console.log(`Élément supprimé de Firestore`);
                 }
                 
                 // Supprimer localement
-                userData[category] = userData[category].filter(item => {
-                    const name = typeof item === 'string' ? item : item.name;
-                    const id = typeof item === 'string' ? 'local' : item.id;
-                    return !(name === itemName && (id === itemId || itemId === 'local'));
-                });
+                if (userData[category]) {
+                    const initialLength = userData[category].length;
+                    userData[category] = userData[category].filter(item => {
+                        const name = typeof item === 'string' ? item : item.name;
+                        const id = typeof item === 'string' ? 'local' : item.id;
+                        return !(name === itemName && (id === itemId || itemId === 'local' || itemId.startsWith('temp-')));
+                    });
+                    
+                    console.log(`Éléments locaux: ${initialLength} → ${userData[category].length}`);
+                    return userData[category].length < initialLength;
+                }
                 
-                console.log(`Élément "${itemName}" supprimé de ${category}`);
-                return true;
+                return false;
             } catch (error) {
                 console.error('Erreur suppression élément:', error);
                 return false;
@@ -1388,8 +1401,8 @@
             return item;
         }
 
-        // Suppression d'un item (mise à jour)
-        function deleteItem(text, category) {
+        // Suppression d'un item (fonction corrigée)
+        async function deleteItem(text, category) {
             // Trouver l'ID de l'élément
             let itemId = 'local';
             if (userData[category]) {
@@ -1402,9 +1415,13 @@
                 }
             }
             
-            deleteItemFromCategory(category, itemId, text).then(() => {
+            const success = await deleteItemFromCategory(category, itemId, text);
+            if (success) {
                 renderData();
-            });
+                showNotification(`"${text}" supprimé`, 'success');
+            } else {
+                showNotification('Erreur lors de la suppression', 'error');
+            }
         }
 
         // Ajout d'un item (mise à jour)
