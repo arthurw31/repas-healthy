@@ -947,22 +947,33 @@
         googleProvider.addScope('email');
         googleProvider.addScope('profile');
 
-        // Gestion de l'état d'authentification
+        // Gestion de l'état d'authentification avec gestion d'erreur
         auth.onAuthStateChanged(async (user) => {
+            console.log('État d\'authentification changé:', user ? user.email : 'non connecté');
             currentUser = user;
+            
             if (user) {
                 // Utilisateur connecté
+                console.log('Utilisateur connecté:', user.email);
                 document.getElementById('authOverlay').classList.remove('show');
                 document.getElementById('syncStatus').style.display = 'inline';
                 document.getElementById('syncStatus').textContent = '⏳ Chargement...';
                 
-                // Charger les données depuis Firebase
-                await loadUserData();
-                renderData();
-                
-                document.getElementById('syncStatus').textContent = '✅ Synchronisé';
+                try {
+                    // Charger les données depuis Firebase
+                    await loadUserData();
+                    renderData();
+                    document.getElementById('syncStatus').textContent = '✅ Synchronisé';
+                    console.log('Données chargées avec succès');
+                } catch (error) {
+                    console.error('Erreur lors du chargement des données:', error);
+                    document.getElementById('syncStatus').textContent = '❌ Erreur';
+                    // Utiliser les données locales en cas d'erreur
+                    renderData();
+                }
             } else {
-                // Utilisateur non connecté - montrer l'overlay
+                // Utilisateur non connecté
+                console.log('Utilisateur non connecté - affichage overlay');
                 document.getElementById('authOverlay').classList.add('show');
                 document.getElementById('syncStatus').style.display = 'none';
                 
@@ -971,18 +982,50 @@
             }
         });
 
-        // Connexion Google
+        // Connexion Google avec gestion d'erreur détaillée
         document.getElementById('googleSignIn').addEventListener('click', async () => {
             try {
+                console.log('Tentative de connexion Google...');
+                
+                // Vérifier si Firebase est initialisé
+                if (!firebase.apps.length) {
+                    throw new Error('Firebase non initialisé');
+                }
+                
+                // Tentative de connexion
                 const result = await auth.signInWithPopup(googleProvider);
+                console.log('Connexion réussie:', result.user.email);
                 
                 // Vérifier si c'est un nouvel utilisateur
                 if (result.additionalUserInfo.isNewUser) {
+                    console.log('Nouvel utilisateur - initialisation des données');
                     await initializeUserData();
                 }
             } catch (error) {
-                console.error('Erreur de connexion:', error);
-                alert('Erreur de connexion. Veuillez réessayer.');
+                console.error('Erreur de connexion détaillée:', error);
+                console.error('Code d\'erreur:', error.code);
+                console.error('Message d\'erreur:', error.message);
+                
+                let errorMessage = 'Erreur de connexion inconnue';
+                
+                switch(error.code) {
+                    case 'auth/popup-blocked':
+                        errorMessage = 'Popup bloqué. Autorisez les popups pour ce site.';
+                        break;
+                    case 'auth/popup-closed-by-user':
+                        errorMessage = 'Connexion annulée.';
+                        break;
+                    case 'auth/unauthorized-domain':
+                        errorMessage = 'Domaine non autorisé. Contactez l\'administrateur.';
+                        break;
+                    case 'auth/operation-not-allowed':
+                        errorMessage = 'Connexion Google non activée.';
+                        break;
+                    default:
+                        errorMessage = `Erreur: ${error.message}`;
+                }
+                
+                alert(errorMessage);
             }
         });
 
@@ -1364,7 +1407,27 @@
             }
         });
 
-        console.log('🍽️ Meal Planner Pro avec Firebase backend prêt!');
+        // Test de la configuration Firebase au chargement
+        window.addEventListener('load', () => {
+            console.log('=== DIAGNOSTIC FIREBASE ===');
+            console.log('Configuration Firebase:', firebaseConfig);
+            console.log('Firebase apps:', firebase.apps.length);
+            console.log('Auth instance:', auth);
+            console.log('Firestore instance:', db);
+            console.log('URL actuelle:', window.location.href);
+            console.log('Domaine:', window.location.hostname);
+            console.log('=== FIN DIAGNOSTIC ===');
+            
+            // Test de connexion Firestore
+            db.collection('test').doc('connection').set({
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                test: true
+            }).then(() => {
+                console.log('✅ Test Firestore réussi');
+            }).catch((error) => {
+                console.error('❌ Test Firestore échoué:', error);
+            });
+        });
     </script>
 </body>
 </html>
