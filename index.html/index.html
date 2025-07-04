@@ -1404,12 +1404,66 @@
         // Event listener pour le bouton menu aléatoire
         document.getElementById('randomMenuBtn').addEventListener('click', generateRandomMenu);
 
-        // Suppression simplifiée
-        function deleteItemSimple(itemName, category) {
+        // Fonction de suppression simplifiée et forcée
+        async function deleteItemSimple(itemName, category) {
             console.log(`🗑️ deleteItemSimple: "${itemName}" de ${category}`);
             
+            if (currentUser) {
+                try {
+                    console.log(`🔍 Recherche de "${itemName}" dans Firebase...`);
+                    
+                    // Méthode 1: Recherche par nom exact
+                    const snapshot = await db.collection('users')
+                        .doc(currentUser.uid)
+                        .collection(category)
+                        .where('name', '==', itemName)
+                        .get();
+                    
+                    console.log(`📊 Documents trouvés avec nom exact: ${snapshot.size}`);
+                    
+                    if (!snapshot.empty) {
+                        // Supprimer tous les documents trouvés
+                        const deletePromises = [];
+                        snapshot.forEach(doc => {
+                            console.log(`🗑️ Suppression doc ID: ${doc.id}, data:`, doc.data());
+                            deletePromises.push(doc.ref.delete());
+                        });
+                        
+                        await Promise.all(deletePromises);
+                        console.log(`✅ ${deletePromises.length} document(s) supprimé(s) de Firebase`);
+                    } else {
+                        console.log(`⚠️ Aucun document trouvé avec le nom "${itemName}"`);
+                        
+                        // Méthode 2: Lister TOUS les documents et chercher manuellement
+                        console.log('🔍 Recherche manuelle dans tous les documents...');
+                        const allDocs = await db.collection('users')
+                            .doc(currentUser.uid)
+                            .collection(category)
+                            .get();
+                        
+                        console.log(`📊 Total documents dans ${category}: ${allDocs.size}`);
+                        
+                        allDocs.forEach(doc => {
+                            const data = doc.data();
+                            console.log(`📄 Doc ${doc.id}:`, data);
+                            
+                            // Comparaison flexible
+                            if (data.name === itemName || 
+                                data.name?.toLowerCase() === itemName.toLowerCase() ||
+                                data.name?.trim() === itemName.trim()) {
+                                console.log(`🎯 MATCH trouvé! Suppression de ${doc.id}`);
+                                doc.ref.delete();
+                            }
+                        });
+                    }
+                } catch (error) {
+                    console.error('❌ Erreur suppression Firebase:', error);
+                }
+            }
+            
+            // Suppression locale
             if (!userData[category]) {
-                console.log('❌ Catégorie non trouvée');
+                console.log(`❌ Catégorie ${category} non trouvée localement`);
                 return;
             }
             
@@ -1420,40 +1474,49 @@
             });
             
             if (userData[category].length < initialLength) {
-                console.log(`✅ Élément "${itemName}" supprimé de ${category}`);
+                console.log(`✅ Élément "${itemName}" supprimé localement`);
                 saveDataLocal();
                 renderData();
                 showNotification(`"${itemName}" supprimé`, 'success');
-                
-                // Sync Firebase en arrière-plan
-                if (currentUser) {
-                    syncDeleteToFirebase(category, itemName);
-                }
             } else {
-                console.log('❌ Élément non trouvé pour suppression');
+                console.log('❌ Élément non trouvé localement');
             }
         }
 
-        // Synchronisation suppression Firebase
-        async function syncDeleteToFirebase(category, itemName) {
-            if (!currentUser) return;
+        // Fonction pour lister tous les éléments Firebase (debug)
+        async function debugListFirebaseItems(category) {
+            if (!currentUser) {
+                console.log('❌ Pas d\'utilisateur connecté');
+                return;
+            }
             
             try {
-                console.log(`🔄 Suppression Firebase: ${itemName} de ${category}`);
+                console.log(`🔍 === DEBUG ${category.toUpperCase()} ===`);
+                
                 const snapshot = await db.collection('users')
                     .doc(currentUser.uid)
                     .collection(category)
-                    .where('name', '==', itemName)
                     .get();
                 
-                snapshot.forEach(async (doc) => {
-                    await doc.ref.delete();
-                    console.log('✅ Suppression Firebase réussie');
+                console.log(`📊 Total documents dans ${category}: ${snapshot.size}`);
+                
+                snapshot.forEach((doc, index) => {
+                    const data = doc.data();
+                    console.log(`${index + 1}. ID: ${doc.id}`);
+                    console.log(`   Nom: "${data.name}"`);
+                    console.log(`   Créé: ${data.createdAt?.toDate()}`);
+                    console.log(`   Favori: ${data.isFavorite}`);
+                    console.log('   ---');
                 });
+                
+                console.log(`🔍 === FIN DEBUG ${category.toUpperCase()} ===`);
             } catch (error) {
-                console.error('❌ Erreur suppression Firebase:', error);
+                console.error(`❌ Erreur debug ${category}:`, error);
             }
         }
+
+        // Ajouter le debug au window pour pouvoir l'appeler depuis la console
+        window.debugFirebase = debugListFirebaseItems;
 
         // Debug du mode edit
         document.getElementById('editToggle').addEventListener('click', function() {
