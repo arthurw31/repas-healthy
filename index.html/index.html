@@ -1088,16 +1088,38 @@
                         const items = [];
                         querySnapshot.forEach((doc) => {
                             const data = doc.data();
-                            console.log(`📄 Document ${category}:`, doc.id, data);
+                            console.log(`📄 Document ${category} (${doc.id}):`, data);
+                            
+                            // Gérer différentes structures de données
+                            let itemName = null;
+                            
                             if (data && data.name) {
+                                // Structure normale avec champ 'name'
+                                itemName = data.name;
+                            } else if (typeof data === 'string') {
+                                // Document est directement une chaîne
+                                itemName = data;
+                            } else if (data && Object.keys(data).length === 1) {
+                                // Document avec une seule propriété - prendre la valeur
+                                const firstKey = Object.keys(data)[0];
+                                itemName = data[firstKey];
+                            } else if (doc.id && !doc.id.startsWith('temp-') && !doc.id.startsWith('local-')) {
+                                // Utiliser l'ID du document si pas d'autre choix
+                                itemName = doc.id;
+                            }
+                            
+                            if (itemName && typeof itemName === 'string' && itemName.trim()) {
                                 items.push({
                                     id: doc.id,
-                                    name: data.name,
+                                    name: itemName.trim(),
                                     isFavorite: data.isFavorite || false,
-                                    isDefault: data.isDefault || false,
-                                    createdAt: data.createdAt,
+                                    isDefault: data.isDefault !== false, // Par défaut true
+                                    createdAt: data.createdAt || new Date(),
                                     tags: data.tags || []
                                 });
+                                console.log(`✅ Élément ajouté: "${itemName}"`);
+                            } else {
+                                console.log(`⚠️ Document ignoré - pas de nom valide:`, data);
                             }
                         });
                         
