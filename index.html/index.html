@@ -748,23 +748,986 @@
             transform: translateY(-2px);
         }
 
-        .sync-indicator {
-            font-size: 14px;
-            color: #10b981;
-            font-weight: 600;
-            padding: 8px 16px;
-            background: rgba(16, 185, 129, 0.1);
-            border-radius: 8px;
+        /* Styles pour les nouveaux éléments */
+        .item.favorite {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 193, 7, 0.1) 100%);
+            border-color: #ffd700;
         }
         
-        .skip-auth {
-            color: #6b7280;
-            font-size: 14px;
-            cursor: pointer;
-            text-decoration: underline;
-            margin-top: 10px;
+        .item.custom {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+            border-left: 4px solid #10b981;
         }
         
-        .skip-auth:hover {
-            color: #374151;
+        .favorite-icon {
+            animation: sparkle 2s infinite;
         }
+        
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Simple auth overlay -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-box">
+            <h2 class="auth-title">🍽️ MealPro</h2>
+            <p style="color: #6b7280; margin-bottom: 30px;">Connectez-vous pour synchroniser vos données</p>
+            
+            <button class="google-btn" id="googleSignIn">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Continuer avec Google
+            </button>
+            
+            <p style="font-size: 12px; color: #9ca3af;">
+                Vos données seront synchronisées en toute sécurité
+            </p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-content">
+            <a href="#" class="logo">🍽️ MealPro</a>
+            <div class="nav-actions">
+                <span class="sync-indicator" id="syncStatus" style="display: none;">✅ Synchronisé</span>
+                <button class="btn btn-success" id="randomMenuBtn">
+                    🎲 Generate Menu
+                </button>
+                <button class="btn btn-warning edit-toggle" id="editToggle">
+                    ✏️ Edit Mode
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Plan. Cook. Enjoy</h1>
+            <p>Smart meal planning that adapts to your lifestyle. Create healthy, delicious meals with zero hassle.</p>
+        </div>
+    </section>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Install Banner -->
+        <div class="install-banner" id="installBanner">
+            📱 Install this app on your device for quick access!
+            <button class="install-btn" id="installBtn">Install Now</button>
+        </div>
+
+        <!-- Random Result -->
+        <div class="random-result" id="randomResult">
+            <h3>🎯 Your Personalized Menu</h3>
+            <div class="menu-items" id="menuContent"></div>
+        </div>
+
+        <!-- Main Dashboard -->
+        <div class="dashboard">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Meal Planning Dashboard</div>
+                <div class="dashboard-actions">
+                    <span style="font-size: 14px; opacity: 0.8;">💡 Double-cliquez sur un élément pour des recettes</span>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="category-section" data-category="entrees">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <span class="category-emoji">🥗</span>
+                            Entrée
+                        </div>
+                        <button class="add-category-btn">+ Add</button>
+                    </div>
+                    <div class="add-item-btn">+ Ajouter une entrée</div>
+                </div>
+
+                <div class="category-section" data-category="sauces">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <span class="category-emoji">🥄</span>
+                            Base Sauce
+                        </div>
+                        <button class="add-category-btn">+ Add</button>
+                    </div>
+                    <div class="add-item-btn">+ Ajouter une base sauce</div>
+                </div>
+
+                <div class="category-section" data-category="proteines">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <span class="category-emoji">🍖</span>
+                            Protéine
+                        </div>
+                        <button class="add-category-btn">+ Add</button>
+                    </div>
+                    <div class="add-item-btn">+ Ajouter une protéine</div>
+                </div>
+
+                <div class="category-section" data-category="glucides">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <span class="category-emoji">🌾</span>
+                            Féculent
+                        </div>
+                        <button class="add-category-btn">+ Add</button>
+                    </div>
+                    <div class="add-item-btn">+ Ajouter un féculent</div>
+                </div>
+
+                <div class="category-section" data-category="legumes">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <span class="category-emoji">🥬</span>
+                            Légumes
+                        </div>
+                        <button class="add-category-btn">+ Add</button>
+                    </div>
+                    <div class="add-item-btn">+ Ajouter des légumes</div>
+                </div>
+
+                <div class="category-section" data-category="cuissons">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <span class="category-emoji">⚡</span>
+                            Technique Cuisson
+                        </div>
+                        <button class="add-category-btn">+ Add</button>
+                    </div>
+                    <div class="add-item-btn">+ Ajouter une technique</div>
+                </div>
+
+                <div class="category-section" data-category="desserts">
+                    <div class="category-header">
+                        <div class="category-title">
+                            <span class="category-emoji">🍨</span>
+                            Dessert
+                        </div>
+                        <button class="add-category-btn">+ Add</button>
+                    </div>
+                    <div class="add-item-btn">+ Ajouter un dessert</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration Firebase - CLÉS CORRIGÉES
+        const firebaseConfig = {
+            apiKey: "AIzaSyDunACCEQRqr4jglsPl6BUy_Gs5SCTqKuw",
+            authDomain: "mealpro-4a148.firebaseapp.com",
+            projectId: "mealpro-4a148",
+            storageBucket: "mealpro-4a148.firebasestorage.app",
+            messagingSenderId: "480098718071",
+            appId: "1:480098718071:web:e746015ce5c8557adcd172",
+            measurementId: "G-Q2XD8SVTJQ"
+        };
+
+        // Initialiser Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Variables globales
+        let currentUser = null;
+        let editMode = false;
+        let menusGenerated = parseInt(localStorage.getItem('menusGenerated')) || 0;
+
+        // Données initiales
+        const initialData = {
+            entrees: ["Soupe froide", "Gaspacho", "Velouté", "Soupe miso", "Bouillon", "Consommé", "Salade verte", "Salade composée", "Salade de céréales", "Bowl cru", "Crudités", "Carpaccio", "Tartare", "Ceviche", "Hummus", "Guacamole", "Baba ganoush", "Tapenade", "Dips", "Mousse", "Terrine"],
+            sauces: ["Base fromage blanc", "Base yaourt grec", "Base sauce soja", "Base miso", "Base tahini", "Mayo avocat", "Mayo yaourt", "Vinaigrette classique", "Vinaigrette asiatique", "Pesto", "Chimichurri", "Sauce verte", "Sauce épicée", "Sauce crémeuse", "Marinade", "Émulsion"],
+            proteines: ["Grillé", "Air fryer", "Mariné", "Mi-cuit", "Fumé", "Vapeur", "Papillote", "Sauté", "Poêlé", "Effiloché", "Mollet", "Brouillé", "En omelette", "Confit", "Cru", "Slow cook", "Sous-vide", "Rôti", "Braisé", "En sauce", "Pané", "Laqué"],
+            glucides: ["Riz complet", "Riz noir", "Riz rouge", "Quinoa", "Boulgour", "Épeautre", "Sarrasin", "Farro", "Orge", "Millet", "Avoine salée", "Pâtes complètes", "Pâtes légumineuses", "Shiratakis", "Patate douce", "Pommes de terre", "Courge", "Riz de chou-fleur", "Courgetti", "Pain complet", "Galettes", "Polenta"],
+            legumes: ["Vapeur", "Air fryer", "Grillés", "Rôtis four", "Poêlés", "Sautés wok", "Braisés", "Confits", "Papillote", "Crus", "Massés", "Marinés", "Lacto-fermentés", "Pickles", "Glacés", "À l'étouffée", "Tempura", "Fumés", "En soupe", "En purée", "En chips", "Spiralés"],
+            cuissons: ["Air Fryer 180°C", "Plancha haute température", "Grill/Barbecue", "Poêle antiadhésive", "Wok sauté rapide", "Four 200°C chaleur tournante", "Four vapeur 85°C", "Cuisson vapeur douce", "Papillote hermétique", "Pochage eau frémissante", "Marinade à froid", "Sous-vide basse température", "Smoking fumage léger", "Searing haute température", "Braisage cocotte", "Slow cooking mijoteuse", "Fermentation lactique", "Déshydratation", "Cru mariné acidulé", "Confit huile d'olive"],
+            desserts: ["Nice cream", "Chia pudding", "Mousse", "Yaourt grec", "Skyr", "Fromage blanc", "Compote", "Fruits pochés", "Salade de fruits", "Energy balls", "Bark chocolat", "Smoothie bowl", "Panna cotta", "Tiramisù", "Cheesecake cru", "Tarte crue", "Muffins", "Cookies", "Granola", "Parfait", "Sorbet", "Pudding"]
+        };
+
+        // Chargement des données depuis le stockage local ou utilisation des données initiales
+        let userData = JSON.parse(localStorage.getItem('mealPlannerData')) || JSON.parse(JSON.stringify(initialData));
+
+        // Authentification Google
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
+        googleProvider.addScope('email');
+        googleProvider.addScope('profile');
+
+        // Gestion de l'état d'authentification avec gestion d'erreur
+        auth.onAuthStateChanged(async (user) => {
+            console.log('État d\'authentification changé:', user ? user.email : 'non connecté');
+            currentUser = user;
+            
+            if (user) {
+                // Utilisateur connecté
+                console.log('Utilisateur connecté:', user.email);
+                document.getElementById('authOverlay').classList.remove('show');
+                document.getElementById('syncStatus').style.display = 'inline';
+                document.getElementById('syncStatus').textContent = '⏳ Chargement...';
+                
+                try {
+                    // Charger les données depuis Firebase
+                    await loadUserData();
+                    renderData();
+                    document.getElementById('syncStatus').textContent = '✅ Synchronisé';
+                    console.log('Données chargées avec succès');
+                } catch (error) {
+                    console.error('Erreur lors du chargement des données:', error);
+                    document.getElementById('syncStatus').textContent = '❌ Erreur';
+                    // Utiliser les données locales en cas d'erreur
+                    renderData();
+                }
+            } else {
+                // Utilisateur non connecté
+                console.log('Utilisateur non connecté - affichage overlay');
+                document.getElementById('authOverlay').classList.add('show');
+                document.getElementById('syncStatus').style.display = 'none';
+                
+                // Utiliser les données locales
+                renderData();
+            }
+        });
+
+        // Connexion Google avec gestion d'erreur détaillée
+        document.getElementById('googleSignIn').addEventListener('click', async () => {
+            try {
+                console.log('Tentative de connexion Google...');
+                
+                // Vérifier si Firebase est initialisé
+                if (!firebase.apps.length) {
+                    throw new Error('Firebase non initialisé');
+                }
+                
+                // Tentative de connexion
+                const result = await auth.signInWithPopup(googleProvider);
+                console.log('Connexion réussie:', result.user.email);
+                
+                // Vérifier si c'est un nouvel utilisateur
+                if (result.additionalUserInfo.isNewUser) {
+                    console.log('Nouvel utilisateur - initialisation des données');
+                    await initializeUserData();
+                }
+            } catch (error) {
+                console.error('Erreur de connexion détaillée:', error);
+                console.error('Code d\'erreur:', error.code);
+                console.error('Message d\'erreur:', error.message);
+                
+                let errorMessage = 'Erreur de connexion inconnue';
+                
+                switch(error.code) {
+                    case 'auth/popup-blocked':
+                        errorMessage = 'Popup bloqué. Autorisez les popups pour ce site.';
+                        break;
+                    case 'auth/popup-closed-by-user':
+                        errorMessage = 'Connexion annulée.';
+                        break;
+                    case 'auth/unauthorized-domain':
+                        errorMessage = 'Domaine non autorisé. Contactez l\'administrateur.';
+                        break;
+                    case 'auth/operation-not-allowed':
+                        errorMessage = 'Connexion Google non activée.';
+                        break;
+                    default:
+                        errorMessage = `Erreur: ${error.message}`;
+                }
+                
+                alert(errorMessage);
+            }
+        });
+
+        // Initialiser les données utilisateur dans Firebase avec structure organisée
+        async function initializeUserData() {
+            if (!currentUser) return;
+            
+            try {
+                console.log('Initialisation des données utilisateur...');
+                
+                // Créer le document utilisateur principal
+                await db.collection('users').doc(currentUser.uid).set({
+                    email: currentUser.email,
+                    displayName: currentUser.displayName,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    menusGenerated: menusGenerated,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // Créer les collections pour chaque catégorie
+                const categories = Object.keys(initialData);
+                
+                for (const category of categories) {
+                    console.log(`Initialisation de la catégorie: ${category}`);
+                    
+                    // Créer une sous-collection pour chaque catégorie
+                    const categoryRef = db.collection('users').doc(currentUser.uid).collection(category);
+                    
+                    // Ajouter chaque élément de la catégorie
+                    for (const item of initialData[category]) {
+                        await categoryRef.add({
+                            name: item,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            isFavorite: false,
+                            isDefault: true, // Marquer les éléments par défaut
+                            tags: []
+                        });
+                    }
+                }
+                
+                console.log('Initialisation terminée avec succès');
+            } catch (error) {
+                console.error('Erreur initialisation:', error);
+            }
+        }
+
+        // Charger les données utilisateur depuis Firebase avec nouvelle structure
+        async function loadUserData() {
+            if (!currentUser) return;
+            
+            try {
+                console.log('Chargement des données utilisateur...');
+                
+                // Charger les infos utilisateur
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    menusGenerated = userData.menusGenerated || 0;
+                    
+                    // Charger chaque catégorie depuis ses sous-collections
+                    const categories = Object.keys(initialData);
+                    
+                    for (const category of categories) {
+                        console.log(`Chargement de la catégorie: ${category}`);
+                        
+                        const categorySnapshot = await db.collection('users')
+                            .doc(currentUser.uid)
+                            .collection(category)
+                            .orderBy('createdAt', 'asc')
+                            .get();
+                        
+                        // Convertir les documents en array simple pour compatibilité
+                        userData[category] = [];
+                        categorySnapshot.forEach(doc => {
+                            const data = doc.data();
+                            userData[category].push({
+                                id: doc.id,
+                                name: data.name,
+                                isFavorite: data.isFavorite || false,
+                                isDefault: data.isDefault || false,
+                                createdAt: data.createdAt,
+                                tags: data.tags || []
+                            });
+                        });
+                    }
+                    
+                    console.log('Données chargées:', userData);
+                } else {
+                    // Nouveau utilisateur - initialiser
+                    console.log('Nouvel utilisateur détecté');
+                    await initializeUserData();
+                    await loadUserData(); // Recharger après initialisation
+                    return;
+                }
+            } catch (error) {
+                console.error('Erreur chargement:', error);
+                // Fallback vers les données par défaut
+                Object.keys(initialData).forEach(category => {
+                    userData[category] = initialData[category].map(name => ({
+                        id: Date.now() + Math.random(),
+                        name: name,
+                        isFavorite: false,
+                        isDefault: true,
+                        createdAt: new Date(),
+                        tags: []
+                    }));
+                });
+            }
+        }
+
+        // Sauvegarder les données avec nouvelle structure
+        async function saveData() {
+            // Toujours sauvegarder localement (format simple pour compatibilité)
+            const simpleData = {};
+            Object.keys(userData).forEach(category => {
+                simpleData[category] = userData[category].map(item => 
+                    typeof item === 'string' ? item : item.name
+                );
+            });
+            localStorage.setItem('mealPlannerData', JSON.stringify(simpleData));
+            localStorage.setItem('menusGenerated', menusGenerated.toString());
+            
+            // Sauvegarder dans Firebase si connecté
+            if (currentUser) {
+                try {
+                    document.getElementById('syncStatus').textContent = '⏳ Sync...';
+                    
+                    // Mettre à jour le compteur de menus
+                    await db.collection('users').doc(currentUser.uid).update({
+                        menusGenerated: menusGenerated,
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    document.getElementById('syncStatus').textContent = '✅ Synchronisé';
+                } catch (error) {
+                    console.error('Erreur sync:', error);
+                    document.getElementById('syncStatus').textContent = '❌ Erreur sync';
+                    
+                    setTimeout(() => {
+                        document.getElementById('syncStatus').textContent = '✅ Local';
+                    }, 3000);
+                }
+            }
+        }
+
+        // Ajouter un nouvel élément dans une catégorie (avec debug)
+        async function addItemToCategory(category, itemName) {
+            if (!itemName.trim()) return false;
+            
+            try {
+                console.log(`Tentative d'ajout: "${itemName}" dans ${category}`);
+                
+                if (currentUser) {
+                    // Ajouter à Firestore
+                    const docRef = await db.collection('users')
+                        .doc(currentUser.uid)
+                        .collection(category)
+                        .add({
+                            name: itemName.trim(),
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            isFavorite: false,
+                            isDefault: false,
+                            tags: []
+                        });
+                    
+                    console.log(`Élément ajouté à Firestore avec ID: ${docRef.id}`);
+                }
+                
+                // Ajouter localement pour affichage immédiat
+                if (!userData[category]) userData[category] = [];
+                userData[category].push({
+                    id: currentUser ? 'temp-' + Date.now() : 'local-' + Date.now(),
+                    name: itemName.trim(),
+                    isFavorite: false,
+                    isDefault: false,
+                    createdAt: new Date(),
+                    tags: []
+                });
+                
+                console.log(`Élément "${itemName}" ajouté localement à ${category}`);
+                return true;
+            } catch (error) {
+                console.error('Erreur ajout élément:', error);
+                return false;
+            }
+        }
+
+        // Supprimer un élément d'une catégorie (avec debug)
+        async function deleteItemFromCategory(category, itemId, itemName) {
+            try {
+                console.log(`Tentative de suppression: "${itemName}" (ID: ${itemId}) de ${category}`);
+                
+                if (currentUser && itemId && itemId !== 'local' && !itemId.startsWith('temp-')) {
+                    // Supprimer de Firestore
+                    await db.collection('users')
+                        .doc(currentUser.uid)
+                        .collection(category)
+                        .doc(itemId)
+                        .delete();
+                    
+                    console.log(`Élément supprimé de Firestore`);
+                }
+                
+                // Supprimer localement
+                if (userData[category]) {
+                    const initialLength = userData[category].length;
+                    userData[category] = userData[category].filter(item => {
+                        const name = typeof item === 'string' ? item : item.name;
+                        const id = typeof item === 'string' ? 'local' : item.id;
+                        return !(name === itemName && (id === itemId || itemId === 'local' || itemId.startsWith('temp-')));
+                    });
+                    
+                    console.log(`Éléments locaux: ${initialLength} → ${userData[category].length}`);
+                    return userData[category].length < initialLength;
+                }
+                
+                return false;
+            } catch (error) {
+                console.error('Erreur suppression élément:', error);
+                return false;
+            }
+        }
+
+        // Générer un menu aléatoire avec nouvelle structure
+        function generateRandomMenu() {
+            const menu = {};
+            const menuLabels = {
+                entrees: "🥗 Entrée",
+                sauces: "🥄 Base Sauce", 
+                proteines: "🍖 Protéine",
+                glucides: "🌾 Féculent",
+                legumes: "🥬 Légumes", 
+                cuissons: "⚡ Technique Cuisson",
+                desserts: "🍨 Dessert"
+            };
+            
+            Object.keys(userData).forEach(category => {
+                if (userData[category] && userData[category].length > 0) {
+                    const randomIndex = Math.floor(Math.random() * userData[category].length);
+                    const selectedItem = userData[category][randomIndex];
+                    const itemName = typeof selectedItem === 'string' ? selectedItem : selectedItem.name;
+                    menu[category] = itemName;
+                }
+            });
+            
+            const menuContent = document.getElementById('menuContent');
+            const randomResult = document.getElementById('randomResult');
+            
+            let menuHTML = '';
+            Object.keys(menu).forEach(category => {
+                menuHTML += `
+                    <div class="menu-item" ondblclick="searchRecipeWithCategory('${menu[category].replace(/'/g, "\\'")}', '${category}')">
+                        <div class="menu-item-label">${menuLabels[category]}</div>
+                        <div class="menu-item-value">${menu[category]}</div>
+                    </div>
+                `;
+            });
+            
+            menuContent.innerHTML = menuHTML;
+            randomResult.classList.add('show');
+            
+            // Mise à jour du compteur
+            menusGenerated++;
+            saveData();
+            
+            // Scroll vers le résultat
+            randomResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Event listener pour le bouton menu aléatoire
+        document.getElementById('randomMenuBtn').addEventListener('click', generateRandomMenu);
+
+        // Mode édition
+        document.getElementById('editToggle').addEventListener('click', function() {
+            editMode = !editMode;
+            document.body.classList.toggle('edit-mode', editMode);
+            this.textContent = editMode ? '✅ Save Changes' : '✏️ Edit Mode';
+            this.className = editMode ? 'btn btn-success' : 'btn btn-warning';
+            
+            if (!editMode) {
+                saveData();
+            }
+        });
+
+        // Rendu des données avec nouvelle structure
+        function renderData() {
+            Object.keys(userData).forEach(category => {
+                const section = document.querySelector(`[data-category="${category}"]`);
+                if (!section) return;
+                
+                const addBtn = section.querySelector('.add-item-btn');
+                
+                // Supprime les anciens items (sauf le bouton d'ajout)
+                section.querySelectorAll('.item').forEach(item => item.remove());
+                
+                // Ajoute les nouveaux items
+                if (userData[category]) {
+                    userData[category].forEach(item => {
+                        const itemName = typeof item === 'string' ? item : item.name;
+                        const itemId = typeof item === 'string' ? 'local' : item.id;
+                        const isFavorite = typeof item === 'string' ? false : item.isFavorite;
+                        const isDefault = typeof item === 'string' ? true : item.isDefault;
+                        
+                        const itemEl = createItemElement(itemName, category, itemId, isFavorite, isDefault);
+                        section.insertBefore(itemEl, addBtn);
+                    });
+                }
+            });
+        }
+
+        // Création d'un élément item avec métadonnées
+        function createItemElement(text, category, itemId = 'local', isFavorite = false, isDefault = true) {
+            const item = document.createElement('div');
+            item.className = 'item';
+            if (isFavorite) item.classList.add('favorite');
+            if (!isDefault) item.classList.add('custom');
+            
+            // Contenu principal
+            const content = document.createElement('span');
+            content.className = 'item-content';
+            content.textContent = text;
+            item.appendChild(content);
+            
+            // Indicateur favori
+            if (isFavorite) {
+                const favoriteIcon = document.createElement('span');
+                favoriteIcon.className = 'favorite-icon';
+                favoriteIcon.innerHTML = '⭐';
+                favoriteIcon.style.cssText = 'position: absolute; top: 8px; right: 32px; font-size: 12px;';
+                item.appendChild(favoriteIcon);
+            }
+            
+            // Bouton de suppression
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.innerHTML = '×';
+            deleteBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                await deleteItemFromCategory(category, itemId, text);
+                renderData();
+            });
+            item.appendChild(deleteBtn);
+            
+            // Sélection et recherche
+            item.addEventListener('click', function() {
+                if (!editMode) {
+                    this.classList.toggle('selected');
+                }
+            });
+            
+            // Double-clic pour recherche web avec catégorie
+            item.addEventListener('dblclick', function() {
+                if (!editMode) {
+                    searchRecipeWithCategory(text, category);
+                }
+            });
+            
+            return item;
+        }
+
+        // Suppression d'un item (fonction corrigée)
+        async function deleteItem(text, category) {
+            // Trouver l'ID de l'élément
+            let itemId = 'local';
+            if (userData[category]) {
+                const item = userData[category].find(item => {
+                    const name = typeof item === 'string' ? item : item.name;
+                    return name === text;
+                });
+                if (item && typeof item === 'object') {
+                    itemId = item.id;
+                }
+            }
+            
+            const success = await deleteItemFromCategory(category, itemId, text);
+            if (success) {
+                renderData();
+                showNotification(`"${text}" supprimé`, 'success');
+            } else {
+                showNotification('Erreur lors de la suppression', 'error');
+            }
+        }
+
+        // Ajout d'un item (mise à jour)
+        function addItem(category) {
+            const input = document.createElement('input');
+            input.className = 'item-input';
+            input.placeholder = 'Entrez un nouvel élément...';
+            
+            const section = document.querySelector(`[data-category="${category}"]`);
+            const addBtn = section.querySelector('.add-item-btn');
+            section.insertBefore(input, addBtn);
+            
+            input.focus();
+            
+            const handleSave = async () => {
+                const text = input.value.trim();
+                if (text) {
+                    // Vérifier si l'élément existe déjà
+                    const exists = userData[category] && userData[category].some(item => {
+                        const name = typeof item === 'string' ? item : item.name;
+                        return name.toLowerCase() === text.toLowerCase();
+                    });
+                    
+                    if (!exists) {
+                        const success = await addItemToCategory(category, text);
+                        if (success) {
+                            renderData();
+                            showNotification(`"${text}" ajouté avec succès!`, 'success');
+                        } else {
+                            showNotification('Erreur lors de l\'ajout', 'error');
+                        }
+                    } else {
+                        showNotification('Cet élément existe déjà', 'warning');
+                    }
+                }
+                input.remove();
+            };
+            
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleSave();
+                }
+            });
+            
+            input.addEventListener('blur', handleSave);
+        }
+
+        // Système de notifications amélioré
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const colors = {
+                success: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                error: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                warning: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                info: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'
+            };
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${colors[type]};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 12px;
+                font-weight: 600;
+                z-index: 1000;
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+                animation: slideInRight 0.3s ease;
+                max-width: 300px;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideInRight 0.3s ease reverse';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        // Fonction de recherche avec catégorie
+        function searchRecipeWithCategory(ingredient, category) {
+            const categoryTerms = {
+                entrees: "entrée",
+                sauces: "sauce",
+                proteines: "protéine",
+                glucides: "féculent",
+                legumes: "légumes",
+                cuissons: "cuisson",
+                desserts: "dessert"
+            };
+            
+            const categoryTerm = categoryTerms[category] || category;
+            const searchQuery = `${categoryTerm} ${ingredient} healthy recette`;
+            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+            
+            window.open(searchUrl, '_blank');
+            showSearchFeedback(`${categoryTerm} ${ingredient}`);
+        }
+        
+        // Fonction de recherche accessible globalement
+        window.searchRecipeWithCategory = function(ingredient, category) {
+            const categoryTerms = {
+                entrees: "entrée",
+                sauces: "sauce",
+                proteines: "protéine",
+                glucides: "féculent", 
+                legumes: "légumes",
+                cuissons: "cuisson",
+                desserts: "dessert"
+            };
+            
+            const categoryTerm = categoryTerms[category] || category;
+            const searchQuery = `${categoryTerm} ${ingredient} healthy recette`;
+            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+            
+            window.open(searchUrl, '_blank');
+            showSearchFeedback(`${categoryTerm} ${ingredient}`);
+        }
+        
+        // Feedback visuel pour la recherche
+        function showSearchFeedback(ingredient) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 12px;
+                font-weight: 600;
+                z-index: 1000;
+                box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
+                animation: slideInRight 0.3s ease;
+            `;
+            notification.textContent = `🔍 Recherche: "${ingredient}"`;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideInRight 0.3s ease reverse';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Suppression d'un item
+        function deleteItem(text, category) {
+            const index = userData[category].indexOf(text);
+            if (index > -1) {
+                userData[category].splice(index, 1);
+                renderData();
+                saveData();
+            }
+        }
+
+        // Ajout d'un item
+        function addItem(category) {
+            const input = document.createElement('input');
+            input.className = 'item-input';
+            input.placeholder = 'Enter new item...';
+            
+            const section = document.querySelector(`[data-category="${category}"]`);
+            const addBtn = section.querySelector('.add-item-btn');
+            section.insertBefore(input, addBtn);
+            
+            input.focus();
+            
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const text = input.value.trim();
+                    if (text && !userData[category].includes(text)) {
+                        userData[category].push(text);
+                        renderData();
+                        saveData();
+                    } else {
+                        input.remove();
+                    }
+                }
+            });
+            
+            input.addEventListener('blur', () => {
+                const text = input.value.trim();
+                if (text && !userData[category].includes(text)) {
+                    userData[category].push(text);
+                    renderData();
+                    saveData();
+                } else {
+                    input.remove();
+                }
+            });
+        }
+
+        // Event listeners pour les boutons d'ajout
+        document.querySelectorAll('.add-item-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const category = btn.closest('[data-category]').dataset.category;
+                addItem(category);
+            });
+        });
+
+        // Initialisation
+        renderData();
+
+        // PWA Installation
+        let deferredPrompt;
+        const installBanner = document.getElementById('installBanner');
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBanner.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                installBanner.style.display = 'none';
+            }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            installBanner.style.display = 'none';
+        });
+
+        // Service Worker pour fonctionnement offline
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const swCode = `
+                    const CACHE_NAME = 'meal-planner-pro-v1';
+                    const urlsToCache = ['/'];
+                    
+                    self.addEventListener('install', event => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME)
+                                .then(cache => cache.addAll(urlsToCache))
+                        );
+                    });
+                    
+                    self.addEventListener('fetch', event => {
+                        event.respondWith(
+                            caches.match(event.request)
+                                .then(response => response || fetch(event.request))
+                        );
+                    });
+                `;
+                
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                
+                navigator.serviceWorker.register(swUrl)
+                    .then(() => console.log('SW registered'))
+                    .catch(() => console.log('SW registration failed'));
+            });
+        }
+
+        // Fermer l'overlay en cliquant à l'extérieur
+        document.getElementById('authOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                // Ne pas fermer - l'utilisateur doit se connecter pour utiliser l'app
+                // document.getElementById('authOverlay').classList.remove('show');
+            }
+        });
+
+        // Test de la configuration Firebase au chargement
+        window.addEventListener('load', () => {
+            console.log('=== DIAGNOSTIC FIREBASE ===');
+            console.log('Configuration Firebase:', firebaseConfig);
+            console.log('Firebase apps:', firebase.apps.length);
+            console.log('Auth instance:', auth);
+            console.log('Firestore instance:', db);
+            console.log('URL actuelle:', window.location.href);
+            console.log('Domaine:', window.location.hostname);
+            console.log('=== FIN DIAGNOSTIC ===');
+            
+            // Test de connexion Firestore
+            db.collection('test').doc('connection').set({
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                test: true
+            }).then(() => {
+                console.log('✅ Test Firestore réussi');
+            }).catch((error) => {
+                console.error('❌ Test Firestore échoué:', error);
+            });
+        });
+    </script>
+</body>
+</html>
