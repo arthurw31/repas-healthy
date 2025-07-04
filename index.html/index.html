@@ -801,9 +801,6 @@
                 <button class="btn btn-secondary" id="logoutBtn" style="display: none; font-size: 12px; padding: 8px 16px;">
                     🚪 Déco
                 </button>
-                <button class="btn btn-primary" id="refreshDataBtn" style="display: none; font-size: 12px; padding: 8px 16px;">
-                    🔄 Sync
-                </button>
                 <button class="btn btn-success" id="randomMenuBtn">
                     🎲 Generate Menu
                 </button>
@@ -967,7 +964,7 @@
         googleProvider.addScope('email');
         googleProvider.addScope('profile');
 
-        // Gestion de l'état d'authentification avec gestion d'erreur
+        // Gestion de l'état d'authentification avec synchronisation automatique
         auth.onAuthStateChanged(async (user) => {
             console.log('État d\'authentification changé:', user ? user.email : 'non connecté');
             currentUser = user;
@@ -978,12 +975,11 @@
                 document.getElementById('authOverlay').classList.remove('show');
                 document.getElementById('syncStatus').style.display = 'inline';
                 document.getElementById('logoutBtn').style.display = 'inline-block';
-                document.getElementById('refreshDataBtn').style.display = 'inline-block';
                 document.getElementById('syncStatus').textContent = '⏳ Chargement...';
                 
                 try {
-                    // Charger les données depuis Firebase
-                    await loadUserData();
+                    // Charger les données depuis Firebase avec force refresh
+                    await loadUserDataFresh();
                     renderData();
                     document.getElementById('syncStatus').textContent = '✅ Synchronisé';
                     console.log('Données chargées avec succès');
@@ -991,6 +987,7 @@
                     console.error('Erreur lors du chargement des données:', error);
                     document.getElementById('syncStatus').textContent = '❌ Erreur';
                     // Utiliser les données locales en cas d'erreur
+                    loadUserDataFromLocal();
                     renderData();
                 }
             } else {
@@ -999,20 +996,125 @@
                 document.getElementById('authOverlay').classList.add('show');
                 document.getElementById('syncStatus').style.display = 'none';
                 document.getElementById('logoutBtn').style.display = 'none';
-                document.getElementById('refreshDataBtn').style.display = 'none';
                 
                 // Utiliser les données locales
+                loadUserDataFromLocal();
                 renderData();
             }
         });
 
-        // Fonction de déconnexion
+        // Charger les données fraîches depuis Firebase (sans cache local)
+        async function loadUserDataFresh() {
+            if (!currentUser) return;
+            
+            try {
+                console.log('🔄 Chargement frais des données depuis Firebase...');
+                
+                // Vider les données locales d'abord
+                userData = {};
+                
+                // Charger les infos utilisateur
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                
+                if (userDoc.exists) {
+                    const userDocData = userDoc.data();
+                    menusGenerated = userDocData.menusGenerated || 0;
+                    
+                    // Charger chaque catégorie depuis ses sous-collections
+                    const categories = Object.keys(initialData);
+                    
+                    for (const category of categories) {
+                        console.log(`📥 Chargement frais de la catégorie: ${category}`);
+                        
+                        const categorySnapshot = await db.collection('users')
+                            .doc(currentUser.uid)
+                            .collection(category)
+                            .orderBy('createdAt', 'asc')
+                            .get();
+                        
+                        // Convertir les documents en array
+                        userData[category] = [];
+                        categorySnapshot.forEach(doc => {
+                            const data = doc.data();
+                            userData[category].push({
+                                id: doc.id,
+                                name: data.name,
+                                isFavorite: data.isFavorite || false,
+                                isDefault: data.isDefault || false,
+                                createdAt: data.createdAt,
+                                tags: data.tags || []
+                            });
+                        });
+                        
+                        console.log(`✅ ${category}: ${userData[category].length} éléments chargés`);
+                    }
+                    
+                    // Sauvegarder localement pour cache
+                    saveDataLocal();
+                    
+                } else {
+                    // Nouveau utilisateur - initialiser
+                    console.log('🆕 Nouvel utilisateur détecté');
+                    await initializeUserData();
+                    await loadUserDataFresh(); // Recharger après initialisation
+                    return;
+                }
+            } catch (error) {
+                console.error('❌ Erreur chargement frais:', error);
+                throw error;
+            }
+        }
+
+        // Charger depuis les données locales (fallback)
+        function loadUserDataFromLocal() {
+            try {
+                const localData = localStorage.getItem('mealPlannerData');
+                if (localData) {
+                    const simpleData = JSON.parse(localData);
+                    userData = {};
+                    
+                    Object.keys(simpleData).forEach(category => {
+                        userData[category] = simpleData[category].map(name => ({
+                            id: 'local-' + Date.now() + Math.random(),
+                            name: name,
+                            isFavorite: false,
+                            isDefault: true,
+                            createdAt: new Date(),
+                            tags: []
+                        }));
+                    });
+                    
+                    console.log('📱 Données locales chargées');
+                } else {
+                    // Utiliser les données par défaut
+                    userData = {};
+                    Object.keys(initialData).forEach(category => {
+                        userData[category] = initialData[category].map(name => ({
+                            id: 'default-' + Date.now() + Math.random(),
+                            name: name,
+                            isFavorite: false,
+                            isDefault: true,
+                            createdAt: new Date(),
+                            tags: []
+                        }));
+                    });
+                    console.log('🏠 Données par défaut chargées');
+                }
+                
+                menusGenerated = parseInt(localStorage.getItem('menusGenerated')) || 0;
+            } catch (error) {
+                console.error('❌ Erreur chargement local:', error);
+            }
+        }
+
+        // Fonction de déconnexion (sans bouton sync)
         function signOut() {
             auth.signOut().then(() => {
                 console.log('Déconnexion réussie');
                 // Vider les données locales
-                userData = JSON.parse(JSON.stringify(initialData));
+                userData = {};
                 localStorage.removeItem('mealPlannerData');
+                loadUserDataFromLocal();
                 renderData();
                 showNotification('Déconnecté avec succès', 'info');
             }).catch((error) => {
@@ -1021,37 +1123,8 @@
             });
         }
 
-        // Fonction de synchronisation forcée
-        async function forceRefreshData() {
-            if (!currentUser) {
-                showNotification('Connectez-vous d\'abord', 'warning');
-                return;
-            }
-
-            try {
-                document.getElementById('syncStatus').textContent = '🔄 Rechargement...';
-                console.log('🔄 Synchronisation forcée...');
-                
-                // Vider les données locales
-                userData = {};
-                
-                // Recharger depuis Firebase
-                await loadUserData();
-                renderData();
-                
-                document.getElementById('syncStatus').textContent = '✅ Synchronisé';
-                showNotification('Données actualisées!', 'success');
-                console.log('✅ Synchronisation forcée terminée');
-            } catch (error) {
-                console.error('Erreur synchronisation forcée:', error);
-                document.getElementById('syncStatus').textContent = '❌ Erreur';
-                showNotification('Erreur lors de la synchronisation', 'error');
-            }
-        }
-
-        // Event listeners pour les nouveaux boutons
+        // Event listener pour la déconnexion seulement
         document.getElementById('logoutBtn').addEventListener('click', signOut);
-        document.getElementById('refreshDataBtn').addEventListener('click', forceRefreshData);
 
         // Connexion Google avec gestion mobile améliorée
         document.getElementById('googleSignIn').addEventListener('click', async () => {
