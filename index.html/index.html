@@ -1295,20 +1295,45 @@
             }
         }
 
-        // Supprimer un élément d'une catégorie (avec debug)
+        // Supprimer un élément d'une catégorie (VERSION CORRIGÉE)
         async function deleteItemFromCategory(category, itemId, itemName) {
             try {
-                console.log(`Tentative de suppression: "${itemName}" (ID: ${itemId}) de ${category}`);
+                console.log(`🗑️ Suppression Firebase: "${itemName}" (ID: ${itemId}) de ${category}`);
                 
-                if (currentUser && itemId && itemId !== 'local' && !itemId.startsWith('temp-')) {
-                    // Supprimer de Firestore
-                    await db.collection('users')
-                        .doc(currentUser.uid)
-                        .collection(category)
-                        .doc(itemId)
-                        .delete();
-                    
-                    console.log(`Élément supprimé de Firestore`);
+                if (currentUser) {
+                    // Si on a un ID spécifique, l'utiliser
+                    if (itemId && itemId !== 'local' && !itemId.startsWith('temp-')) {
+                        console.log(`🔥 Suppression directe par ID: ${itemId}`);
+                        await db.collection('users')
+                            .doc(currentUser.uid)
+                            .collection(category)
+                            .doc(itemId)
+                            .delete();
+                        console.log('✅ Suppression par ID réussie');
+                    } else {
+                        // Sinon, chercher par nom
+                        console.log(`🔍 Recherche par nom: "${itemName}"`);
+                        const snapshot = await db.collection('users')
+                            .doc(currentUser.uid)
+                            .collection(category)
+                            .where('name', '==', itemName)
+                            .get();
+                        
+                        console.log(`📊 Documents trouvés: ${snapshot.size}`);
+                        
+                        if (!snapshot.empty) {
+                            const deletePromises = [];
+                            snapshot.forEach(doc => {
+                                console.log(`🗑️ Suppression document ID: ${doc.id}, name: ${doc.data().name}`);
+                                deletePromises.push(doc.ref.delete());
+                            });
+                            
+                            await Promise.all(deletePromises);
+                            console.log('✅ Suppression par nom réussie');
+                        } else {
+                            console.log('⚠️ Aucun document trouvé avec ce nom');
+                        }
+                    }
                 }
                 
                 // Supprimer localement
@@ -1316,17 +1341,16 @@
                     const initialLength = userData[category].length;
                     userData[category] = userData[category].filter(item => {
                         const name = typeof item === 'string' ? item : item.name;
-                        const id = typeof item === 'string' ? 'local' : item.id;
-                        return !(name === itemName && (id === itemId || itemId === 'local' || itemId.startsWith('temp-')));
+                        return name !== itemName;
                     });
                     
-                    console.log(`Éléments locaux: ${initialLength} → ${userData[category].length}`);
+                    console.log(`📊 Éléments locaux: ${initialLength} → ${userData[category].length}`);
                     return userData[category].length < initialLength;
                 }
                 
                 return false;
             } catch (error) {
-                console.error('Erreur suppression élément:', error);
+                console.error('❌ Erreur suppression Firebase:', error);
                 return false;
             }
         }
