@@ -1313,9 +1313,62 @@
         // Event listener pour le bouton menu aléatoire
         document.getElementById('randomMenuBtn').addEventListener('click', generateRandomMenu);
 
-        // Mode édition
+        // Suppression simplifiée
+        function deleteItemSimple(itemName, category) {
+            console.log(`🗑️ deleteItemSimple: "${itemName}" de ${category}`);
+            
+            if (!userData[category]) {
+                console.log('❌ Catégorie non trouvée');
+                return;
+            }
+            
+            const initialLength = userData[category].length;
+            userData[category] = userData[category].filter(item => {
+                const name = typeof item === 'string' ? item : item.name;
+                return name !== itemName;
+            });
+            
+            if (userData[category].length < initialLength) {
+                console.log(`✅ Élément "${itemName}" supprimé de ${category}`);
+                saveDataLocal();
+                renderData();
+                showNotification(`"${itemName}" supprimé`, 'success');
+                
+                // Sync Firebase en arrière-plan
+                if (currentUser) {
+                    syncDeleteToFirebase(category, itemName);
+                }
+            } else {
+                console.log('❌ Élément non trouvé pour suppression');
+            }
+        }
+
+        // Synchronisation suppression Firebase
+        async function syncDeleteToFirebase(category, itemName) {
+            if (!currentUser) return;
+            
+            try {
+                console.log(`🔄 Suppression Firebase: ${itemName} de ${category}`);
+                const snapshot = await db.collection('users')
+                    .doc(currentUser.uid)
+                    .collection(category)
+                    .where('name', '==', itemName)
+                    .get();
+                
+                snapshot.forEach(async (doc) => {
+                    await doc.ref.delete();
+                    console.log('✅ Suppression Firebase réussie');
+                });
+            } catch (error) {
+                console.error('❌ Erreur suppression Firebase:', error);
+            }
+        }
+
+        // Debug du mode edit
         document.getElementById('editToggle').addEventListener('click', function() {
             editMode = !editMode;
+            console.log(`🔧 Mode edit changé: ${editMode}`);
+            
             document.body.classList.toggle('edit-mode', editMode);
             this.textContent = editMode ? '✅ Save Changes' : '✏️ Edit Mode';
             this.className = editMode ? 'btn btn-success' : 'btn btn-warning';
@@ -1323,6 +1376,9 @@
             if (!editMode) {
                 saveData();
             }
+            
+            console.log('🎨 Classes body:', document.body.className);
+            console.log('👁️ Boutons d\'ajout visibles:', document.querySelectorAll('.add-item-btn').length);
         });
 
         // Rendu des données avec nouvelle structure
@@ -1373,14 +1429,20 @@
                 item.appendChild(favoriteIcon);
             }
             
-            // Bouton de suppression
+            // Bouton de suppression (version debug)
             const deleteBtn = document.createElement('button');
             deleteBtn.className = 'delete-btn';
             deleteBtn.innerHTML = '×';
-            deleteBtn.addEventListener('click', async (e) => {
+            deleteBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                await deleteItemFromCategory(category, itemId, text);
-                renderData();
+                console.log(`🗑️ Tentative de suppression: "${text}" de ${category}`);
+                console.log('🔧 Mode edit:', editMode);
+                
+                if (editMode) {
+                    deleteItemSimple(text, category);
+                } else {
+                    console.log('⚠️ Mode edit non activé pour suppression');
+                }
             });
             item.appendChild(deleteBtn);
             
@@ -1633,13 +1695,185 @@
             });
         }
 
-        // Event listeners pour les boutons d'ajout
-        document.querySelectorAll('.add-item-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const category = btn.closest('[data-category]').dataset.category;
-                addItem(category);
-            });
+        // Event listeners pour les boutons d'ajout (avec debug)
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔧 Initialisation des event listeners...');
+            
+            // Attendre un peu que le DOM soit complètement chargé
+            setTimeout(() => {
+                const addButtons = document.querySelectorAll('.add-item-btn');
+                console.log(`📝 Trouvé ${addButtons.length} boutons d'ajout`);
+                
+                addButtons.forEach((btn, index) => {
+                    console.log(`🎯 Configuration bouton ${index + 1}`);
+                    
+                    // Supprimer les anciens listeners
+                    btn.replaceWith(btn.cloneNode(true));
+                    const newBtn = document.querySelectorAll('.add-item-btn')[index];
+                    
+                    newBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const categoryElement = newBtn.closest('[data-category]');
+                        const category = categoryElement ? categoryElement.dataset.category : null;
+                        
+                        console.log(`🎯 Clic sur bouton d'ajout pour catégorie: ${category}`);
+                        console.log('📍 Élément catégorie:', categoryElement);
+                        console.log('🔧 Mode edit actuel:', editMode);
+                        
+                        if (category) {
+                            addItemSimple(category);
+                        } else {
+                            console.error('❌ Impossible de trouver la catégorie');
+                        }
+                    });
+                    
+                    console.log(`✅ Bouton ${index + 1} configuré pour catégorie:`, btn.closest('[data-category]')?.dataset.category);
+                });
+            }, 1000);
         });
+
+        // Version simplifiée de l'ajout d'élément
+        function addItemSimple(category) {
+            console.log(`🚀 addItemSimple appelé pour: ${category}`);
+            console.log('👤 Utilisateur connecté:', currentUser ? currentUser.email : 'Non connecté');
+            console.log('📝 Mode edit:', editMode);
+            
+            if (!editMode) {
+                console.log('⚠️ Mode edit non activé');
+                return;
+            }
+            
+            const section = document.querySelector(`[data-category="${category}"]`);
+            if (!section) {
+                console.error(`❌ Section pour ${category} introuvable`);
+                return;
+            }
+            
+            const addBtn = section.querySelector('.add-item-btn');
+            if (!addBtn) {
+                console.error(`❌ Bouton d'ajout pour ${category} introuvable`);
+                return;
+            }
+            
+            console.log('✅ Section et bouton trouvés, création de l\'input...');
+            
+            // Créer l'input
+            const input = document.createElement('input');
+            input.className = 'item-input';
+            input.placeholder = 'Entrez un nouvel élément...';
+            input.style.display = 'block';
+            input.style.width = '100%';
+            
+            // Insérer l'input
+            section.insertBefore(input, addBtn);
+            input.focus();
+            
+            console.log('✅ Input créé et inséré');
+            
+            // Gérer la sauvegarde
+            const handleSave = () => {
+                const text = input.value.trim();
+                console.log(`💾 Tentative de sauvegarde: "${text}"`);
+                
+                if (text) {
+                    // Ajouter directement aux données locales
+                    if (!userData[category]) {
+                        userData[category] = [];
+                        console.log(`📁 Catégorie ${category} initialisée`);
+                    }
+                    
+                    // Vérifier si existe déjà
+                    const exists = userData[category].some(item => {
+                        const name = typeof item === 'string' ? item : item.name;
+                        return name.toLowerCase() === text.toLowerCase();
+                    });
+                    
+                    if (!exists) {
+                        userData[category].push({
+                            id: 'local-' + Date.now(),
+                            name: text,
+                            isFavorite: false,
+                            isDefault: false,
+                            createdAt: new Date(),
+                            tags: []
+                        });
+                        
+                        console.log(`✅ Élément "${text}" ajouté à ${category}`);
+                        console.log('📊 Données actuelles:', userData[category]);
+                        
+                        // Sauvegarder et recharger
+                        saveDataLocal();
+                        renderData();
+                        showNotification(`"${text}" ajouté!`, 'success');
+                        
+                        // Essayer de synchroniser avec Firebase si connecté
+                        if (currentUser) {
+                            syncNewItemToFirebase(category, text);
+                        }
+                    } else {
+                        console.log('⚠️ Élément existe déjà');
+                        showNotification('Cet élément existe déjà', 'warning');
+                    }
+                } else {
+                    console.log('⚠️ Texte vide');
+                }
+                
+                input.remove();
+            };
+            
+            // Event listeners pour l'input
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    console.log('⌨️ Touche Entrée pressée');
+                    handleSave();
+                }
+            });
+            
+            input.addEventListener('blur', () => {
+                console.log('👁️ Input a perdu le focus');
+                handleSave();
+            });
+        }
+
+        // Sauvegarde locale simple
+        function saveDataLocal() {
+            try {
+                const simpleData = {};
+                Object.keys(userData).forEach(category => {
+                    simpleData[category] = userData[category].map(item => 
+                        typeof item === 'string' ? item : item.name
+                    );
+                });
+                localStorage.setItem('mealPlannerData', JSON.stringify(simpleData));
+                console.log('💾 Données sauvegardées localement');
+            } catch (error) {
+                console.error('❌ Erreur sauvegarde locale:', error);
+            }
+        }
+
+        // Synchronisation Firebase en arrière-plan
+        async function syncNewItemToFirebase(category, itemName) {
+            if (!currentUser) return;
+            
+            try {
+                console.log(`🔄 Synchronisation Firebase: ${itemName} → ${category}`);
+                await db.collection('users')
+                    .doc(currentUser.uid)
+                    .collection(category)
+                    .add({
+                        name: itemName,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        isFavorite: false,
+                        isDefault: false,
+                        tags: []
+                    });
+                console.log('✅ Synchronisation Firebase réussie');
+            } catch (error) {
+                console.error('❌ Erreur synchronisation Firebase:', error);
+            }
+        }
 
         // Initialisation
         renderData();
