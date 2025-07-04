@@ -1695,17 +1695,18 @@
             });
         }
 
-        // Event listeners pour les boutons d'ajout (avec debug)
+        // Event listeners pour TOUS les boutons d'ajout (avec debug)
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🔧 Initialisation des event listeners...');
             
             // Attendre un peu que le DOM soit complètement chargé
             setTimeout(() => {
+                // Boutons d'ajout principaux (en bas)
                 const addButtons = document.querySelectorAll('.add-item-btn');
-                console.log(`📝 Trouvé ${addButtons.length} boutons d'ajout`);
+                console.log(`📝 Trouvé ${addButtons.length} boutons d'ajout principaux`);
                 
                 addButtons.forEach((btn, index) => {
-                    console.log(`🎯 Configuration bouton ${index + 1}`);
+                    console.log(`🎯 Configuration bouton principal ${index + 1}`);
                     
                     // Supprimer les anciens listeners
                     btn.replaceWith(btn.cloneNode(true));
@@ -1718,9 +1719,7 @@
                         const categoryElement = newBtn.closest('[data-category]');
                         const category = categoryElement ? categoryElement.dataset.category : null;
                         
-                        console.log(`🎯 Clic sur bouton d'ajout pour catégorie: ${category}`);
-                        console.log('📍 Élément catégorie:', categoryElement);
-                        console.log('🔧 Mode edit actuel:', editMode);
+                        console.log(`🎯 Clic sur bouton principal pour catégorie: ${category}`);
                         
                         if (category) {
                             addItemSimple(category);
@@ -1728,9 +1727,42 @@
                             console.error('❌ Impossible de trouver la catégorie');
                         }
                     });
-                    
-                    console.log(`✅ Bouton ${index + 1} configuré pour catégorie:`, btn.closest('[data-category]')?.dataset.category);
                 });
+
+                // Boutons "+ Add" dans les headers
+                const addCategoryButtons = document.querySelectorAll('.add-category-btn');
+                console.log(`➕ Trouvé ${addCategoryButtons.length} boutons "+ Add" dans les headers`);
+                
+                addCategoryButtons.forEach((btn, index) => {
+                    console.log(`➕ Configuration bouton header ${index + 1}`);
+                    
+                    // Supprimer les anciens listeners
+                    btn.replaceWith(btn.cloneNode(true));
+                    const newBtn = document.querySelectorAll('.add-category-btn')[index];
+                    
+                    newBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const categoryElement = newBtn.closest('[data-category]');
+                        const category = categoryElement ? categoryElement.dataset.category : null;
+                        
+                        console.log(`➕ Clic sur bouton "+ Add" pour catégorie: ${category}`);
+                        console.log('🔧 Mode edit actuel:', editMode);
+                        
+                        if (category && editMode) {
+                            addItemSimple(category);
+                        } else if (!editMode) {
+                            console.log('⚠️ Mode edit non activé pour bouton "+ Add"');
+                            showNotification('Activez le mode Edit d\'abord', 'warning');
+                        } else {
+                            console.error('❌ Impossible de trouver la catégorie pour "+ Add"');
+                        }
+                    });
+                    
+                    console.log(`✅ Bouton "+ Add" ${index + 1} configuré pour:`, newBtn.closest('[data-category]')?.dataset.category);
+                });
+                
             }, 1000);
         });
 
