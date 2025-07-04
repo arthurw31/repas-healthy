@@ -801,6 +801,9 @@
                 <button class="btn btn-secondary" id="logoutBtn" style="display: none; font-size: 12px; padding: 8px 16px;">
                     🚪 Déco
                 </button>
+                <button class="btn btn-primary" id="resetDataBtn" style="display: none; font-size: 12px; padding: 8px 16px; background: #f59e0b;">
+                    🔄 Réinit
+                </button>
                 <button class="btn btn-success" id="randomMenuBtn">
                     🎲 Generate Menu
                 </button>
@@ -975,6 +978,7 @@
                 document.getElementById('authOverlay').classList.remove('show');
                 document.getElementById('syncStatus').style.display = 'inline';
                 document.getElementById('logoutBtn').style.display = 'inline-block';
+                document.getElementById('resetDataBtn').style.display = 'inline-block';
                 document.getElementById('syncStatus').textContent = '⏳ Chargement...';
                 
                 try {
@@ -1003,50 +1007,100 @@
             }
         });
 
-        // Charger les données fraîches depuis Firebase (sans cache local)
+        // Charger les données avec diagnostic complet
         async function loadUserDataFresh() {
             if (!currentUser) return;
             
             try {
                 console.log('🔄 Chargement frais des données depuis Firebase...');
+                console.log('👤 User ID:', currentUser.uid);
                 
                 // Vider les données locales d'abord
                 userData = {};
                 
                 // Charger les infos utilisateur
                 const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                console.log('📄 Document utilisateur existe:', userDoc.exists);
                 
                 if (userDoc.exists) {
                     const userDocData = userDoc.data();
+                    console.log('📊 Données utilisateur:', userDocData);
                     menusGenerated = userDocData.menusGenerated || 0;
                     
-                    // Charger chaque catégorie depuis ses sous-collections
-                    const categories = Object.keys(initialData);
-                    
-                    for (const category of categories) {
-                        console.log(`📥 Chargement frais de la catégorie: ${category}`);
+                    // VÉRIFIER D'ABORD L'ANCIENNE STRUCTURE
+                    if (userDocData.data) {
+                        console.log('🔍 ANCIENNE STRUCTURE DÉTECTÉE!');
+                        console.log('📦 Données dans "data":', userDocData.data);
                         
-                        const categorySnapshot = await db.collection('users')
-                            .doc(currentUser.uid)
-                            .collection(category)
-                            .orderBy('createdAt', 'asc')
-                            .get();
-                        
-                        // Convertir les documents en array
-                        userData[category] = [];
-                        categorySnapshot.forEach(doc => {
-                            const data = doc.data();
-                            userData[category].push({
-                                id: doc.id,
-                                name: data.name,
-                                isFavorite: data.isFavorite || false,
-                                isDefault: data.isDefault || false,
-                                createdAt: data.createdAt,
-                                tags: data.tags || []
-                            });
+                        // Migrer depuis l'ancienne structure
+                        const oldData = userDocData.data;
+                        Object.keys(oldData).forEach(category => {
+                            userData[category] = oldData[category].map((name, index) => ({
+                                id: 'migrated-' + Date.now() + '-' + index,
+                                name: name,
+                                isFavorite: false,
+                                isDefault: true,
+                                createdAt: new Date(),
+                                tags: []
+                            }));
+                            console.log(`📦 ${category}: ${userData[category].length} éléments migrés`);
                         });
                         
-                        console.log(`✅ ${category}: ${userData[category].length} éléments chargés`);
+                        // Migrer vers la nouvelle structure
+                        console.log('🔄 Migration vers nouvelle structure...');
+                        await migrateToNewStructure();
+                        return;
+                    }
+                    
+                    // NOUVELLE STRUCTURE - Charger les collections
+                    const categories = Object.keys(initialData);
+                    let totalItems = 0;
+                    
+                    for (const category of categories) {
+                        console.log(`📥 Chargement de la catégorie: ${category}`);
+                        console.log(`🗂️ Chemin: users/${currentUser.uid}/${category}`);
+                        
+                        try {
+                            // Essayer SANS orderBy d'abord
+                            const categorySnapshot = await db.collection('users')
+                                .doc(currentUser.uid)
+                                .collection(category)
+                                .get();
+                            
+                            console.log(`📊 Documents trouvés dans ${category}: ${categorySnapshot.size}`);
+                            
+                            // Convertir les documents en array
+                            userData[category] = [];
+                            categorySnapshot.forEach(doc => {
+                                const data = doc.data();
+                                console.log(`📄 Document ${doc.id}:`, data);
+                                userData[category].push({
+                                    id: doc.id,
+                                    name: data.name,
+                                    isFavorite: data.isFavorite || false,
+                                    isDefault: data.isDefault || false,
+                                    createdAt: data.createdAt,
+                                    tags: data.tags || []
+                                });
+                            });
+                            
+                            totalItems += userData[category].length;
+                            console.log(`✅ ${category}: ${userData[category].length} éléments chargés`);
+                            
+                        } catch (error) {
+                            console.error(`❌ Erreur chargement ${category}:`, error);
+                            userData[category] = [];
+                        }
+                    }
+                    
+                    console.log(`📊 Total des éléments chargés: ${totalItems}`);
+                    
+                    // Si aucun élément trouvé, réinitialiser
+                    if (totalItems === 0) {
+                        console.log('⚠️ Aucun élément trouvé, réinitialisation...');
+                        await initializeUserData();
+                        await loadUserDataFresh();
+                        return;
                     }
                     
                     // Sauvegarder localement pour cache
@@ -1056,12 +1110,51 @@
                     // Nouveau utilisateur - initialiser
                     console.log('🆕 Nouvel utilisateur détecté');
                     await initializeUserData();
-                    await loadUserDataFresh(); // Recharger après initialisation
+                    await loadUserDataFresh();
                     return;
                 }
             } catch (error) {
                 console.error('❌ Erreur chargement frais:', error);
                 throw error;
+            }
+        }
+
+        // Fonction de migration depuis l'ancienne structure
+        async function migrateToNewStructure() {
+            if (!currentUser) return;
+            
+            try {
+                console.log('🔄 Migration vers nouvelle structure...');
+                
+                const categories = Object.keys(userData);
+                for (const category of categories) {
+                    console.log(`📤 Migration de ${category}...`);
+                    
+                    const categoryRef = db.collection('users').doc(currentUser.uid).collection(category);
+                    
+                    for (const item of userData[category]) {
+                        await categoryRef.add({
+                            name: item.name,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            isFavorite: item.isFavorite || false,
+                            isDefault: item.isDefault || true,
+                            tags: item.tags || []
+                        });
+                    }
+                    
+                    console.log(`✅ ${category} migré (${userData[category].length} éléments)`);
+                }
+                
+                // Supprimer l'ancienne structure
+                await db.collection('users').doc(currentUser.uid).update({
+                    data: firebase.firestore.FieldValue.delete()
+                });
+                
+                console.log('🎉 Migration terminée avec succès!');
+                showNotification('Migration des données terminée!', 'success');
+                
+            } catch (error) {
+                console.error('❌ Erreur migration:', error);
             }
         }
 
@@ -1123,8 +1216,52 @@
             });
         }
 
-        // Event listener pour la déconnexion seulement
+        // Fonction de réinitialisation des données
+        async function resetUserData() {
+            if (!currentUser) return;
+            
+            try {
+                console.log('🔄 Réinitialisation des données...');
+                document.getElementById('syncStatus').textContent = '🔄 Réinit...';
+                
+                // Supprimer toutes les collections existantes
+                const categories = Object.keys(initialData);
+                for (const category of categories) {
+                    const snapshot = await db.collection('users')
+                        .doc(currentUser.uid)
+                        .collection(category)
+                        .get();
+                    
+                    const deletePromises = [];
+                    snapshot.forEach(doc => {
+                        deletePromises.push(doc.ref.delete());
+                    });
+                    await Promise.all(deletePromises);
+                }
+                
+                // Réinitialiser avec les données par défaut
+                await initializeUserData();
+                
+                // Recharger
+                await loadUserDataFresh();
+                renderData();
+                
+                document.getElementById('syncStatus').textContent = '✅ Réinitialisé';
+                showNotification('Données réinitialisées avec succès!', 'success');
+                
+                setTimeout(() => {
+                    document.getElementById('syncStatus').textContent = '✅ Synchronisé';
+                }, 2000);
+                
+            } catch (error) {
+                console.error('❌ Erreur réinitialisation:', error);
+                showNotification('Erreur lors de la réinitialisation', 'error');
+            }
+        }
+
+        // Event listeners
         document.getElementById('logoutBtn').addEventListener('click', signOut);
+        document.getElementById('resetDataBtn').addEventListener('click', resetUserData);
 
         // Connexion Google avec gestion mobile améliorée
         document.getElementById('googleSignIn').addEventListener('click', async () => {
