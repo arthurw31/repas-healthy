@@ -798,6 +798,12 @@
             <a href="#" class="logo">🍽️ MealPro</a>
             <div class="nav-actions">
                 <span class="sync-indicator" id="syncStatus" style="display: none;">✅ Synchronisé</span>
+                <button class="btn btn-secondary" id="logoutBtn" style="display: none; font-size: 12px; padding: 8px 16px;">
+                    🚪 Déco
+                </button>
+                <button class="btn btn-primary" id="refreshDataBtn" style="display: none; font-size: 12px; padding: 8px 16px;">
+                    🔄 Sync
+                </button>
                 <button class="btn btn-success" id="randomMenuBtn">
                     🎲 Generate Menu
                 </button>
@@ -971,6 +977,8 @@
                 console.log('Utilisateur connecté:', user.email);
                 document.getElementById('authOverlay').classList.remove('show');
                 document.getElementById('syncStatus').style.display = 'inline';
+                document.getElementById('logoutBtn').style.display = 'inline-block';
+                document.getElementById('refreshDataBtn').style.display = 'inline-block';
                 document.getElementById('syncStatus').textContent = '⏳ Chargement...';
                 
                 try {
@@ -990,13 +998,62 @@
                 console.log('Utilisateur non connecté - affichage overlay');
                 document.getElementById('authOverlay').classList.add('show');
                 document.getElementById('syncStatus').style.display = 'none';
+                document.getElementById('logoutBtn').style.display = 'none';
+                document.getElementById('refreshDataBtn').style.display = 'none';
                 
                 // Utiliser les données locales
                 renderData();
             }
         });
 
-        // Connexion Google avec gestion d'erreur détaillée
+        // Fonction de déconnexion
+        function signOut() {
+            auth.signOut().then(() => {
+                console.log('Déconnexion réussie');
+                // Vider les données locales
+                userData = JSON.parse(JSON.stringify(initialData));
+                localStorage.removeItem('mealPlannerData');
+                renderData();
+                showNotification('Déconnecté avec succès', 'info');
+            }).catch((error) => {
+                console.error('Erreur déconnexion:', error);
+                showNotification('Erreur lors de la déconnexion', 'error');
+            });
+        }
+
+        // Fonction de synchronisation forcée
+        async function forceRefreshData() {
+            if (!currentUser) {
+                showNotification('Connectez-vous d\'abord', 'warning');
+                return;
+            }
+
+            try {
+                document.getElementById('syncStatus').textContent = '🔄 Rechargement...';
+                console.log('🔄 Synchronisation forcée...');
+                
+                // Vider les données locales
+                userData = {};
+                
+                // Recharger depuis Firebase
+                await loadUserData();
+                renderData();
+                
+                document.getElementById('syncStatus').textContent = '✅ Synchronisé';
+                showNotification('Données actualisées!', 'success');
+                console.log('✅ Synchronisation forcée terminée');
+            } catch (error) {
+                console.error('Erreur synchronisation forcée:', error);
+                document.getElementById('syncStatus').textContent = '❌ Erreur';
+                showNotification('Erreur lors de la synchronisation', 'error');
+            }
+        }
+
+        // Event listeners pour les nouveaux boutons
+        document.getElementById('logoutBtn').addEventListener('click', signOut);
+        document.getElementById('refreshDataBtn').addEventListener('click', forceRefreshData);
+
+        // Connexion Google avec gestion mobile améliorée
         document.getElementById('googleSignIn').addEventListener('click', async () => {
             try {
                 console.log('Tentative de connexion Google...');
@@ -1005,10 +1062,20 @@
                 if (!firebase.apps.length) {
                     throw new Error('Firebase non initialisé');
                 }
+
+                // Configuration pour mobile
+                googleProvider.setCustomParameters({
+                    prompt: 'select_account' // Force la sélection de compte
+                });
                 
                 // Tentative de connexion
                 const result = await auth.signInWithPopup(googleProvider);
                 console.log('Connexion réussie:', result.user.email);
+                
+                // Forcer le rechargement des données
+                setTimeout(async () => {
+                    await forceRefreshData();
+                }, 1000);
                 
                 // Vérifier si c'est un nouvel utilisateur
                 if (result.additionalUserInfo.isNewUser) {
