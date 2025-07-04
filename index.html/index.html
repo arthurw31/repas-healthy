@@ -8,7 +8,7 @@
     <meta name="description" content="Smart Meal Planning Platform">
     
     <!-- PWA Manifest -->
-    <link rel="manifest" data-href="data:application/json;base64,ewogICJuYW1lIjogIk1lYWwgUGxhbm5lciBQcm8iLAogICJzaG9ydF9uYW1lIjogIk1lYWxQcm8iLAogICJkZXNjcmlwdGlvbiI6ICJBSS1Qb3dlcmVkIE1lYWwgUGxhbm5pbmcgUGxhdGZvcm0iLAogICJzdGFydF91cmwiOiAiLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBmMTcyYSIsCiAgInRoZW1lX2NvbG9yIjogIiMwZjE3MmEiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlNVEk0SWlCb1pXbG5hSFE5SWpFeU9DSWlJSGh0Ykc1elBTSm9kSFJ3T2k4dmQzZDNMbmN6TG05eVp5OHlNREF3TDNOMlp5SStQSEpsWTNRZ2QybGtkR2c5SWpFeU9DSWlJR2hsYVdkb2REMGlNVEk0SWlCbWFXeHNQU0lqTUdZeE56SmhJaTgrUEhSbGVIUWdlRDBpTmpRaUlIazlJalkwSWlCbWIyNTBMV1poYldsc2VUMGlRWEpwWVd3aUlHWnZiblF0YzJsNlpUMGlNelppSWlCbWFXeHNQU0lqWm1abVptWm1JajQ0WXo4dkszUmxlSFErUEM5emRtYysiLAogICAgICAic2l6ZXMiOiAiMTI4eDEyOCIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
+    <link rel="manifest" data-href="data:application/json;base64,ewogICJuYW1lIjogIk1lYWwgUGxhbm5lciBQcm8iLAogICJzaG9ydF9uYW1lIjogIk1lYWxQcm8iLAogICJkZXNjcmlwdGlvbiI6ICJBSS1Qb3dlcmVkIE1lYWwgUGxhbm5pbmcgUGxhdGZvcm0iLAogICJzdGFydF91cmwiOiAiLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBmMTcyYSIsCiAgInRoZW1lX2NvbG9yIjogIiMwZjE3MmEiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI3YVdSMGFEMGlNVEk0SWlCb1pXbG5hSFE5SWpFeU9DSWlJSGh0Ykc1elBTSm9kSFJ3T2k4dmQzZDNMbmN6TG05eVp5OHlNREF3TDNOMlp5SStQSEpsWTNRZ2QybGtkR2c5SWpFeU9DSWlJR2hsYVdkb2REMGlNVEk0SWlCbWFXeHNQU0lqTUdZeE56SmhJaTgrUEhSbGVIUWdlRDBpTmpRaUlIazlJalkwSWlCbWIyNTBMV1poYldsc2VUMGlRWEpwWVd3aUlHWnZiblF0YzJsNlpUMGlNelppSWlCbWFXeHNQU0lqWm1abVptWm1JajQ0WXo4dkszUmxlSFErUEM5emRtYysiLAogICAgICAic2l6ZXMiOiAiMTI4eDEyOCIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
     
     <!-- Apple Touch Icon -->
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgZmlsbD0iIzBmMTcyYSIvPjx0ZXh0IHg9IjY0IiB5PSI2NCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjM2IiBmaWxsPSIjZmZmZmZmIj7wn42dPC90ZXh0Pjwvc3ZnPg==">
@@ -100,6 +100,24 @@
             display: flex;
             gap: 12px;
             align-items: center;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #374151;
+        }
+        
+        .user-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
         
         @media (max-width: 768px) {
@@ -797,6 +815,10 @@
         <div class="nav-content">
             <a href="#" class="logo">🍽️ MealPro</a>
             <div class="nav-actions">
+                <div class="user-info" id="userInfo" style="display: none;">
+                    <img class="user-avatar" id="userAvatar" src="" alt="Avatar">
+                    <span id="userName"></span>
+                </div>
                 <span class="sync-indicator" id="syncStatus" style="display: none;">✅ Synchronisé</span>
                 <button class="btn btn-secondary" id="logoutBtn" style="display: none; font-size: 12px; padding: 8px 16px;">
                     🚪 Déco
@@ -947,9 +969,10 @@
         let currentUser = null;
         let editMode = false;
         let menusGenerated = parseInt(localStorage.getItem('menusGenerated')) || 0;
+        const categories = ['entrees', 'sauces', 'proteines', 'glucides', 'legumes', 'cuissons', 'desserts'];
 
-        // Données initiales
-        const initialData = {
+        // Données par défaut
+        const defaultData = {
             entrees: ["Soupe froide", "Gaspacho", "Velouté", "Soupe miso", "Bouillon", "Consommé", "Salade verte", "Salade composée", "Salade de céréales", "Bowl cru", "Crudités", "Carpaccio", "Tartare", "Ceviche", "Hummus", "Guacamole", "Baba ganoush", "Tapenade", "Dips", "Mousse", "Terrine"],
             sauces: ["Base fromage blanc", "Base yaourt grec", "Base sauce soja", "Base miso", "Base tahini", "Mayo avocat", "Mayo yaourt", "Vinaigrette classique", "Vinaigrette asiatique", "Pesto", "Chimichurri", "Sauce verte", "Sauce épicée", "Sauce crémeuse", "Marinade", "Émulsion"],
             proteines: ["Grillé", "Air fryer", "Mariné", "Mi-cuit", "Fumé", "Vapeur", "Papillote", "Sauté", "Poêlé", "Effiloché", "Mollet", "Brouillé", "En omelette", "Confit", "Cru", "Slow cook", "Sous-vide", "Rôti", "Braisé", "En sauce", "Pané", "Laqué"],
@@ -959,122 +982,115 @@
             desserts: ["Nice cream", "Chia pudding", "Mousse", "Yaourt grec", "Skyr", "Fromage blanc", "Compote", "Fruits pochés", "Salade de fruits", "Energy balls", "Bark chocolat", "Smoothie bowl", "Panna cotta", "Tiramisù", "Cheesecake cru", "Tarte crue", "Muffins", "Cookies", "Granola", "Parfait", "Sorbet", "Pudding"]
         };
 
-        // Chargement des données depuis le stockage local ou utilisation des données initiales
-        let userData = JSON.parse(localStorage.getItem('mealPlannerData')) || JSON.parse(JSON.stringify(initialData));
+        // Variable pour stocker les données utilisateur
+        let userData = {};
 
-        // Authentification Google
-        const googleProvider = new firebase.auth.GoogleAuthProvider();
-        googleProvider.addScope('email');
-        googleProvider.addScope('profile');
-
-        // Gestion de l'état d'authentification avec synchronisation automatique
+        // Gestion de l'état d'authentification avec diagnostic amélioré
         auth.onAuthStateChanged(async (user) => {
-            console.log('État d\'authentification changé:', user ? user.email : 'non connecté');
+            console.log('=== CHANGEMENT ÉTAT AUTH ===');
+            console.log('Utilisateur:', user ? user.email : 'non connecté');
             currentUser = user;
             
             if (user) {
                 // Utilisateur connecté
-                console.log('Utilisateur connecté:', user.email);
+                console.log('🔗 Utilisateur connecté:', user.email);
                 document.getElementById('authOverlay').classList.remove('show');
+                
+                // Afficher les informations utilisateur
+                const userInfo = document.getElementById('userInfo');
+                const userAvatar = document.getElementById('userAvatar');
+                const userName = document.getElementById('userName');
+                
+                if (user.photoURL) {
+                    userAvatar.src = user.photoURL;
+                }
+                userName.textContent = user.displayName || user.email.split('@')[0];
+                userInfo.style.display = 'flex';
+                
                 document.getElementById('syncStatus').style.display = 'inline';
                 document.getElementById('logoutBtn').style.display = 'inline-block';
                 document.getElementById('resetDataBtn').style.display = 'inline-block';
                 document.getElementById('syncStatus').textContent = '⏳ Chargement...';
                 
                 try {
-                    // Charger les données depuis Firebase avec force refresh
-                    await loadUserDataFresh();
+                    // Charger les données avec diagnostic complet
+                    await loadFreshDataFromFirebase();
                     renderData();
                     document.getElementById('syncStatus').textContent = '✅ Synchronisé';
-                    console.log('Données chargées avec succès');
+                    console.log('✅ Données chargées avec succès');
+                    showNotification(`Bienvenue ${user.displayName || 'Utilisateur'}!`, 'success');
                 } catch (error) {
-                    console.error('Erreur lors du chargement des données:', error);
+                    console.error('❌ Erreur chargement données:', error);
                     document.getElementById('syncStatus').textContent = '❌ Erreur';
-                    // Utiliser les données locales en cas d'erreur
-                    loadUserDataFromLocal();
+                    loadLocalData();
                     renderData();
+                    showNotification('Erreur de synchronisation - mode local', 'warning');
                 }
             } else {
                 // Utilisateur non connecté
-                console.log('Utilisateur non connecté - affichage overlay');
+                console.log('👤 Utilisateur non connecté');
                 document.getElementById('authOverlay').classList.add('show');
                 document.getElementById('syncStatus').style.display = 'none';
                 document.getElementById('logoutBtn').style.display = 'none';
+                document.getElementById('resetDataBtn').style.display = 'none';
+                document.getElementById('userInfo').style.display = 'none';
                 
-                // Utiliser les données locales
-                loadUserDataFromLocal();
+                // Charger données locales
+                loadLocalData();
                 renderData();
             }
         });
 
-        // Charger les données avec diagnostic complet
-        async function loadUserDataFresh() {
-            if (!currentUser) return;
+        // Fonction de chargement avec diagnostic complet et migration automatique
+        async function loadFreshDataFromFirebase() {
+            if (!currentUser) {
+                console.log('❌ Pas d\'utilisateur connecté pour charger les données');
+                loadLocalData();
+                return;
+            }
+
+            console.log('📥 Chargement frais des données depuis Firebase');
             
+            // Vérifier d'abord si l'utilisateur existe et sa structure
+            const userDocRef = db.collection('users').doc(currentUser.uid);
             try {
-                console.log('🔄 Chargement frais des données depuis Firebase...');
-                console.log('👤 User ID:', currentUser.uid);
+                const userDocSnap = await userDocRef.get();
+                console.log('📄 Document utilisateur existe:', userDocSnap.exists);
                 
-                // Vider les données locales d'abord
-                userData = {};
-                
-                // Charger les infos utilisateur
-                const userDoc = await db.collection('users').doc(currentUser.uid).get();
-                console.log('📄 Document utilisateur existe:', userDoc.exists);
-                
-                if (userDoc.exists) {
-                    const userDocData = userDoc.data();
-                    console.log('📊 Données utilisateur:', userDocData);
-                    menusGenerated = userDocData.menusGenerated || 0;
+                if (userDocSnap.exists) {
+                    const userData_doc = userDocSnap.data();
+                    console.log('📊 Données utilisateur:', userData_doc);
                     
-                    // VÉRIFIER D'ABORD L'ANCIENNE STRUCTURE
-                    if (userDocData.data) {
+                    // Vérifier s'il y a l'ancienne structure (data field)
+                    if (userData_doc.data) {
                         console.log('🔍 ANCIENNE STRUCTURE DÉTECTÉE!');
-                        console.log('📦 Données dans "data":', userDocData.data);
+                        console.log('📊 Données de l\'ancienne structure:', userData_doc.data);
                         
-                        // Migrer depuis l'ancienne structure
-                        const oldData = userDocData.data;
-                        Object.keys(oldData).forEach(category => {
-                            userData[category] = oldData[category].map((name, index) => ({
-                                id: 'migrated-' + Date.now() + '-' + index,
-                                name: name,
-                                isFavorite: false,
-                                isDefault: true,
-                                createdAt: new Date(),
-                                tags: []
-                            }));
-                            console.log(`📦 ${category}: ${userData[category].length} éléments migrés`);
-                        });
-                        
-                        // Migrer vers la nouvelle structure
-                        console.log('🔄 Migration vers nouvelle structure...');
-                        await migrateToNewStructure();
+                        // Migrer vers la nouvelle structure automatiquement
+                        await migrateOldToNewStructure(userData_doc.data);
                         return;
                     }
+                }
+                
+                // Initialiser userData
+                userData = {};
+                
+                // Charger depuis les collections séparées avec diagnostic détaillé
+                for (const category of categories) {
+                    console.log(`📥 Chargement collection: users/${currentUser.uid}/${category}`);
                     
-                    // NOUVELLE STRUCTURE - Charger les collections
-                    const categories = Object.keys(initialData);
-                    let totalItems = 0;
-                    
-                    for (const category of categories) {
-                        console.log(`📥 Chargement de la catégorie: ${category}`);
-                        console.log(`🗂️ Chemin: users/${currentUser.uid}/${category}`);
+                    try {
+                        const userCollectionRef = db.collection('users').doc(currentUser.uid).collection(category);
+                        const querySnapshot = await userCollectionRef.get();
                         
-                        try {
-                            // Essayer SANS orderBy d'abord
-                            const categorySnapshot = await db.collection('users')
-                                .doc(currentUser.uid)
-                                .collection(category)
-                                .get();
-                            
-                            console.log(`📊 Documents trouvés dans ${category}: ${categorySnapshot.size}`);
-                            
-                            // Convertir les documents en array
-                            userData[category] = [];
-                            categorySnapshot.forEach(doc => {
-                                const data = doc.data();
-                                console.log(`📄 Document ${doc.id}:`, data);
-                                userData[category].push({
+                        console.log(`📊 Nombre de documents dans ${category}:`, querySnapshot.size);
+                        
+                        const items = [];
+                        querySnapshot.forEach((doc) => {
+                            const data = doc.data();
+                            console.log(`📄 Document ${category}:`, doc.id, data);
+                            if (data && data.name) {
+                                items.push({
                                     id: doc.id,
                                     name: data.name,
                                     isFavorite: data.isFavorite || false,
@@ -1082,71 +1098,77 @@
                                     createdAt: data.createdAt,
                                     tags: data.tags || []
                                 });
-                            });
-                            
-                            totalItems += userData[category].length;
-                            console.log(`✅ ${category}: ${userData[category].length} éléments chargés`);
-                            
-                        } catch (error) {
-                            console.error(`❌ Erreur chargement ${category}:`, error);
-                            userData[category] = [];
-                        }
+                            }
+                        });
+                        
+                        userData[category] = items;
+                        console.log(`✅ ${category}: ${items.length} éléments chargés:`, items.map(i => i.name));
+                    } catch (error) {
+                        console.error(`❌ Erreur chargement ${category}:`, error);
+                        userData[category] = [];
                     }
-                    
-                    console.log(`📊 Total des éléments chargés: ${totalItems}`);
-                    
-                    // Si aucun élément trouvé, réinitialiser
-                    if (totalItems === 0) {
-                        console.log('⚠️ Aucun élément trouvé, réinitialisation...');
-                        await initializeUserData();
-                        await loadUserDataFresh();
-                        return;
-                    }
-                    
-                    // Sauvegarder localement pour cache
-                    saveDataLocal();
-                    
-                } else {
-                    // Nouveau utilisateur - initialiser
-                    console.log('🆕 Nouvel utilisateur détecté');
-                    await initializeUserData();
-                    await loadUserDataFresh();
-                    return;
                 }
+                
+                // Si toutes les catégories sont vides, initialiser avec les données par défaut
+                const totalItems = categories.reduce((sum, cat) => sum + (userData[cat] ? userData[cat].length : 0), 0);
+                console.log(`📊 Total d'éléments chargés: ${totalItems}`);
+                
+                if (totalItems === 0) {
+                    console.log('🔄 Aucune donnée trouvée, initialisation avec données par défaut');
+                    await initializeUserData();
+                    // Recharger après initialisation
+                    await loadFreshDataFromFirebase();
+                }
+                
             } catch (error) {
-                console.error('❌ Erreur chargement frais:', error);
+                console.error('❌ Erreur lecture document utilisateur:', error);
                 throw error;
             }
         }
 
-        // Fonction de migration depuis l'ancienne structure
-        async function migrateToNewStructure() {
-            if (!currentUser) return;
+        // Migration de l'ancienne vers la nouvelle structure
+        async function migrateOldToNewStructure(oldData) {
+            console.log('🔄 Migration de l\'ancienne vers la nouvelle structure...');
             
             try {
-                console.log('🔄 Migration vers nouvelle structure...');
+                userData = {};
                 
-                const categories = Object.keys(userData);
                 for (const category of categories) {
-                    console.log(`📤 Migration de ${category}...`);
-                    
-                    const categoryRef = db.collection('users').doc(currentUser.uid).collection(category);
-                    
-                    for (const item of userData[category]) {
-                        await categoryRef.add({
-                            name: item.name,
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                            isFavorite: item.isFavorite || false,
-                            isDefault: item.isDefault || true,
-                            tags: item.tags || []
-                        });
+                    if (oldData[category] && Array.isArray(oldData[category])) {
+                        console.log(`📤 Migration de ${category}: ${oldData[category].length} éléments`);
+                        
+                        userData[category] = [];
+                        
+                        for (const itemName of oldData[category]) {
+                            const docRef = await db.collection('users')
+                                .doc(currentUser.uid)
+                                .collection(category)
+                                .add({
+                                    name: itemName,
+                                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                                    isFavorite: false,
+                                    isDefault: true,
+                                    tags: []
+                                });
+                            
+                            userData[category].push({
+                                id: docRef.id,
+                                name: itemName,
+                                isFavorite: false,
+                                isDefault: true,
+                                createdAt: new Date(),
+                                tags: []
+                            });
+                        }
+                        
+                        console.log(`✅ ${category} migré (${userData[category].length} éléments)`);
+                    } else {
+                        userData[category] = [];
                     }
-                    
-                    console.log(`✅ ${category} migré (${userData[category].length} éléments)`);
                 }
                 
                 // Supprimer l'ancienne structure
-                await db.collection('users').doc(currentUser.uid).update({
+                await userDocRef.update({
                     data: firebase.firestore.FieldValue.delete()
                 });
                 
@@ -1155,35 +1177,96 @@
                 
             } catch (error) {
                 console.error('❌ Erreur migration:', error);
+                showNotification('Erreur lors de la migration', 'error');
             }
         }
 
-        // Charger depuis les données locales (fallback)
-        function loadUserDataFromLocal() {
+        // Initialiser les données utilisateur dans Firebase
+        async function initializeUserData() {
+            if (!currentUser) return;
+            
+            try {
+                console.log('🔄 Initialisation des données utilisateur...');
+                
+                // Créer le document utilisateur principal
+                await db.collection('users').doc(currentUser.uid).set({
+                    email: currentUser.email,
+                    displayName: currentUser.displayName,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    menusGenerated: menusGenerated,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // Initialiser userData
+                userData = {};
+
+                // Créer les collections pour chaque catégorie
+                for (const category of categories) {
+                    console.log(`📤 Initialisation de la catégorie: ${category}`);
+                    
+                    userData[category] = [];
+                    const categoryRef = db.collection('users').doc(currentUser.uid).collection(category);
+                    
+                    // Ajouter chaque élément de la catégorie
+                    for (const item of defaultData[category]) {
+                        const docRef = await categoryRef.add({
+                            name: item,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            isFavorite: false,
+                            isDefault: true,
+                            tags: []
+                        });
+                        
+                        userData[category].push({
+                            id: docRef.id,
+                            name: item,
+                            isFavorite: false,
+                            isDefault: true,
+                            createdAt: new Date(),
+                            tags: []
+                        });
+                    }
+                    
+                    console.log(`✅ ${category}: ${userData[category].length} éléments initialisés`);
+                }
+                
+                console.log('✅ Initialisation terminée avec succès');
+            } catch (error) {
+                console.error('❌ Erreur initialisation:', error);
+                throw error;
+            }
+        }
+
+        // Charger les données locales (fallback)
+        function loadLocalData() {
             try {
                 const localData = localStorage.getItem('mealPlannerData');
                 if (localData) {
                     const simpleData = JSON.parse(localData);
                     userData = {};
                     
-                    Object.keys(simpleData).forEach(category => {
-                        userData[category] = simpleData[category].map(name => ({
-                            id: 'local-' + Date.now() + Math.random(),
-                            name: name,
-                            isFavorite: false,
-                            isDefault: true,
-                            createdAt: new Date(),
-                            tags: []
-                        }));
+                    categories.forEach(category => {
+                        if (simpleData[category]) {
+                            userData[category] = simpleData[category].map((name, index) => ({
+                                id: 'local-' + Date.now() + '-' + index,
+                                name: name,
+                                isFavorite: false,
+                                isDefault: true,
+                                createdAt: new Date(),
+                                tags: []
+                            }));
+                        } else {
+                            userData[category] = [];
+                        }
                     });
                     
                     console.log('📱 Données locales chargées');
                 } else {
                     // Utiliser les données par défaut
                     userData = {};
-                    Object.keys(initialData).forEach(category => {
-                        userData[category] = initialData[category].map(name => ({
-                            id: 'default-' + Date.now() + Math.random(),
+                    categories.forEach(category => {
+                        userData[category] = defaultData[category].map((name, index) => ({
+                            id: 'default-' + Date.now() + '-' + index,
                             name: name,
                             isFavorite: false,
                             isDefault: true,
@@ -1200,32 +1283,76 @@
             }
         }
 
-        // Fonction de déconnexion (sans bouton sync)
-        function signOut() {
+        // Connexion Google avec gestion d'erreurs avancée
+        document.getElementById('googleSignIn').addEventListener('click', async () => {
+            try {
+                console.log('🔄 Tentative de connexion Google...');
+                updateSyncStatus('⏳ Connexion...');
+                
+                // Configuration pour forcer la sélection de compte
+                const googleProvider = new firebase.auth.GoogleAuthProvider();
+                googleProvider.addScope('email');
+                googleProvider.addScope('profile');
+                googleProvider.setCustomParameters({
+                    prompt: 'select_account'
+                });
+                
+                const result = await auth.signInWithPopup(googleProvider);
+                console.log('✅ Connexion réussie:', result.user.email);
+                
+                // Ne pas faire loadFreshDataFromFirebase ici car onAuthStateChanged le fait déjà
+                
+            } catch (error) {
+                console.error('❌ Erreur de connexion détaillée:', error);
+                
+                let errorMessage = 'Erreur de connexion inconnue';
+                
+                switch(error.code) {
+                    case 'auth/popup-blocked':
+                        errorMessage = 'Popup bloqué. Autorisez les popups pour ce site.';
+                        break;
+                    case 'auth/popup-closed-by-user':
+                        errorMessage = 'Connexion annulée.';
+                        return; // Ne pas afficher d'erreur si l'utilisateur annule
+                    case 'auth/unauthorized-domain':
+                        errorMessage = 'Domaine non autorisé. Contactez l\'administrateur.';
+                        break;
+                    case 'auth/operation-not-allowed':
+                        errorMessage = 'Connexion Google non activée.';
+                        break;
+                    case 'auth/api-key-not-valid':
+                        errorMessage = 'Clé API Firebase invalide.';
+                        break;
+                    default:
+                        errorMessage = `Erreur: ${error.message}`;
+                }
+                
+                showNotification(errorMessage, 'error');
+                updateSyncStatus('❌ Erreur');
+            }
+        });
+
+        // Déconnexion
+        document.getElementById('logoutBtn').addEventListener('click', () => {
             auth.signOut().then(() => {
-                console.log('Déconnexion réussie');
-                // Vider les données locales
+                console.log('✅ Déconnexion réussie');
                 userData = {};
-                localStorage.removeItem('mealPlannerData');
-                loadUserDataFromLocal();
-                renderData();
                 showNotification('Déconnecté avec succès', 'info');
             }).catch((error) => {
-                console.error('Erreur déconnexion:', error);
+                console.error('❌ Erreur déconnexion:', error);
                 showNotification('Erreur lors de la déconnexion', 'error');
             });
-        }
+        });
 
-        // Fonction de réinitialisation des données
-        async function resetUserData() {
-            if (!currentUser) return;
+        // Réinitialisation des données
+        document.getElementById('resetDataBtn').addEventListener('click', async () => {
+            if (!currentUser || !confirm('Êtes-vous sûr de vouloir réinitialiser toutes vos données ?')) return;
             
             try {
                 console.log('🔄 Réinitialisation des données...');
-                document.getElementById('syncStatus').textContent = '🔄 Réinit...';
+                updateSyncStatus('🔄 Réinit...');
                 
                 // Supprimer toutes les collections existantes
-                const categories = Object.keys(initialData);
                 for (const category of categories) {
                     const snapshot = await db.collection('users')
                         .doc(currentUser.uid)
@@ -1241,1123 +1368,9 @@
                 
                 // Réinitialiser avec les données par défaut
                 await initializeUserData();
-                
-                // Recharger
-                await loadUserDataFresh();
                 renderData();
                 
-                document.getElementById('syncStatus').textContent = '✅ Réinitialisé';
+                updateSyncStatus('✅ Réinitialisé');
                 showNotification('Données réinitialisées avec succès!', 'success');
                 
-                setTimeout(() => {
-                    document.getElementById('syncStatus').textContent = '✅ Synchronisé';
-                }, 2000);
-                
-            } catch (error) {
-                console.error('❌ Erreur réinitialisation:', error);
-                showNotification('Erreur lors de la réinitialisation', 'error');
-            }
-        }
-
-        // Event listeners
-        document.getElementById('logoutBtn').addEventListener('click', signOut);
-        document.getElementById('resetDataBtn').addEventListener('click', resetUserData);
-
-        // Connexion Google avec gestion mobile améliorée
-        document.getElementById('googleSignIn').addEventListener('click', async () => {
-            try {
-                console.log('Tentative de connexion Google...');
-                
-                // Vérifier si Firebase est initialisé
-                if (!firebase.apps.length) {
-                    throw new Error('Firebase non initialisé');
-                }
-
-                // Configuration pour mobile
-                googleProvider.setCustomParameters({
-                    prompt: 'select_account' // Force la sélection de compte
-                });
-                
-                // Tentative de connexion
-                const result = await auth.signInWithPopup(googleProvider);
-                console.log('Connexion réussie:', result.user.email);
-                
-                // Forcer le rechargement des données
-                setTimeout(async () => {
-                    await forceRefreshData();
-                }, 1000);
-                
-                // Vérifier si c'est un nouvel utilisateur
-                if (result.additionalUserInfo.isNewUser) {
-                    console.log('Nouvel utilisateur - initialisation des données');
-                    await initializeUserData();
-                }
-            } catch (error) {
-                console.error('Erreur de connexion détaillée:', error);
-                console.error('Code d\'erreur:', error.code);
-                console.error('Message d\'erreur:', error.message);
-                
-                let errorMessage = 'Erreur de connexion inconnue';
-                
-                switch(error.code) {
-                    case 'auth/popup-blocked':
-                        errorMessage = 'Popup bloqué. Autorisez les popups pour ce site.';
-                        break;
-                    case 'auth/popup-closed-by-user':
-                        errorMessage = 'Connexion annulée.';
-                        break;
-                    case 'auth/unauthorized-domain':
-                        errorMessage = 'Domaine non autorisé. Contactez l\'administrateur.';
-                        break;
-                    case 'auth/operation-not-allowed':
-                        errorMessage = 'Connexion Google non activée.';
-                        break;
-                    default:
-                        errorMessage = `Erreur: ${error.message}`;
-                }
-                
-                alert(errorMessage);
-            }
-        });
-
-        // Initialiser les données utilisateur dans Firebase avec structure organisée
-        async function initializeUserData() {
-            if (!currentUser) return;
-            
-            try {
-                console.log('Initialisation des données utilisateur...');
-                
-                // Créer le document utilisateur principal
-                await db.collection('users').doc(currentUser.uid).set({
-                    email: currentUser.email,
-                    displayName: currentUser.displayName,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    menusGenerated: menusGenerated,
-                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                // Créer les collections pour chaque catégorie
-                const categories = Object.keys(initialData);
-                
-                for (const category of categories) {
-                    console.log(`Initialisation de la catégorie: ${category}`);
-                    
-                    // Créer une sous-collection pour chaque catégorie
-                    const categoryRef = db.collection('users').doc(currentUser.uid).collection(category);
-                    
-                    // Ajouter chaque élément de la catégorie
-                    for (const item of initialData[category]) {
-                        await categoryRef.add({
-                            name: item,
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                            isFavorite: false,
-                            isDefault: true, // Marquer les éléments par défaut
-                            tags: []
-                        });
-                    }
-                }
-                
-                console.log('Initialisation terminée avec succès');
-            } catch (error) {
-                console.error('Erreur initialisation:', error);
-            }
-        }
-
-        // Charger les données utilisateur depuis Firebase avec nouvelle structure
-        async function loadUserData() {
-            if (!currentUser) return;
-            
-            try {
-                console.log('Chargement des données utilisateur...');
-                
-                // Charger les infos utilisateur
-                const userDoc = await db.collection('users').doc(currentUser.uid).get();
-                
-                if (userDoc.exists) {
-                    const userData = userDoc.data();
-                    menusGenerated = userData.menusGenerated || 0;
-                    
-                    // Charger chaque catégorie depuis ses sous-collections
-                    const categories = Object.keys(initialData);
-                    
-                    for (const category of categories) {
-                        console.log(`Chargement de la catégorie: ${category}`);
-                        
-                        const categorySnapshot = await db.collection('users')
-                            .doc(currentUser.uid)
-                            .collection(category)
-                            .orderBy('createdAt', 'asc')
-                            .get();
-                        
-                        // Convertir les documents en array simple pour compatibilité
-                        userData[category] = [];
-                        categorySnapshot.forEach(doc => {
-                            const data = doc.data();
-                            userData[category].push({
-                                id: doc.id,
-                                name: data.name,
-                                isFavorite: data.isFavorite || false,
-                                isDefault: data.isDefault || false,
-                                createdAt: data.createdAt,
-                                tags: data.tags || []
-                            });
-                        });
-                    }
-                    
-                    console.log('Données chargées:', userData);
-                } else {
-                    // Nouveau utilisateur - initialiser
-                    console.log('Nouvel utilisateur détecté');
-                    await initializeUserData();
-                    await loadUserData(); // Recharger après initialisation
-                    return;
-                }
-            } catch (error) {
-                console.error('Erreur chargement:', error);
-                // Fallback vers les données par défaut
-                Object.keys(initialData).forEach(category => {
-                    userData[category] = initialData[category].map(name => ({
-                        id: Date.now() + Math.random(),
-                        name: name,
-                        isFavorite: false,
-                        isDefault: true,
-                        createdAt: new Date(),
-                        tags: []
-                    }));
-                });
-            }
-        }
-
-        // Sauvegarder les données avec nouvelle structure
-        async function saveData() {
-            // Toujours sauvegarder localement (format simple pour compatibilité)
-            const simpleData = {};
-            Object.keys(userData).forEach(category => {
-                simpleData[category] = userData[category].map(item => 
-                    typeof item === 'string' ? item : item.name
-                );
-            });
-            localStorage.setItem('mealPlannerData', JSON.stringify(simpleData));
-            localStorage.setItem('menusGenerated', menusGenerated.toString());
-            
-            // Sauvegarder dans Firebase si connecté
-            if (currentUser) {
-                try {
-                    document.getElementById('syncStatus').textContent = '⏳ Sync...';
-                    
-                    // Mettre à jour le compteur de menus
-                    await db.collection('users').doc(currentUser.uid).update({
-                        menusGenerated: menusGenerated,
-                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    document.getElementById('syncStatus').textContent = '✅ Synchronisé';
-                } catch (error) {
-                    console.error('Erreur sync:', error);
-                    document.getElementById('syncStatus').textContent = '❌ Erreur sync';
-                    
-                    setTimeout(() => {
-                        document.getElementById('syncStatus').textContent = '✅ Local';
-                    }, 3000);
-                }
-            }
-        }
-
-        // Ajouter un nouvel élément dans une catégorie (avec debug)
-        async function addItemToCategory(category, itemName) {
-            if (!itemName.trim()) return false;
-            
-            try {
-                console.log(`Tentative d'ajout: "${itemName}" dans ${category}`);
-                
-                if (currentUser) {
-                    // Ajouter à Firestore
-                    const docRef = await db.collection('users')
-                        .doc(currentUser.uid)
-                        .collection(category)
-                        .add({
-                            name: itemName.trim(),
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                            isFavorite: false,
-                            isDefault: false,
-                            tags: []
-                        });
-                    
-                    console.log(`Élément ajouté à Firestore avec ID: ${docRef.id}`);
-                }
-                
-                // Ajouter localement pour affichage immédiat
-                if (!userData[category]) userData[category] = [];
-                userData[category].push({
-                    id: currentUser ? 'temp-' + Date.now() : 'local-' + Date.now(),
-                    name: itemName.trim(),
-                    isFavorite: false,
-                    isDefault: false,
-                    createdAt: new Date(),
-                    tags: []
-                });
-                
-                console.log(`Élément "${itemName}" ajouté localement à ${category}`);
-                return true;
-            } catch (error) {
-                console.error('Erreur ajout élément:', error);
-                return false;
-            }
-        }
-
-        // Supprimer un élément d'une catégorie (VERSION CORRIGÉE)
-        async function deleteItemFromCategory(category, itemId, itemName) {
-            try {
-                console.log(`🗑️ Suppression Firebase: "${itemName}" (ID: ${itemId}) de ${category}`);
-                
-                if (currentUser) {
-                    // Si on a un ID spécifique, l'utiliser
-                    if (itemId && itemId !== 'local' && !itemId.startsWith('temp-')) {
-                        console.log(`🔥 Suppression directe par ID: ${itemId}`);
-                        await db.collection('users')
-                            .doc(currentUser.uid)
-                            .collection(category)
-                            .doc(itemId)
-                            .delete();
-                        console.log('✅ Suppression par ID réussie');
-                    } else {
-                        // Sinon, chercher par nom
-                        console.log(`🔍 Recherche par nom: "${itemName}"`);
-                        const snapshot = await db.collection('users')
-                            .doc(currentUser.uid)
-                            .collection(category)
-                            .where('name', '==', itemName)
-                            .get();
-                        
-                        console.log(`📊 Documents trouvés: ${snapshot.size}`);
-                        
-                        if (!snapshot.empty) {
-                            const deletePromises = [];
-                            snapshot.forEach(doc => {
-                                console.log(`🗑️ Suppression document ID: ${doc.id}, name: ${doc.data().name}`);
-                                deletePromises.push(doc.ref.delete());
-                            });
-                            
-                            await Promise.all(deletePromises);
-                            console.log('✅ Suppression par nom réussie');
-                        } else {
-                            console.log('⚠️ Aucun document trouvé avec ce nom');
-                        }
-                    }
-                }
-                
-                // Supprimer localement
-                if (userData[category]) {
-                    const initialLength = userData[category].length;
-                    userData[category] = userData[category].filter(item => {
-                        const name = typeof item === 'string' ? item : item.name;
-                        return name !== itemName;
-                    });
-                    
-                    console.log(`📊 Éléments locaux: ${initialLength} → ${userData[category].length}`);
-                    return userData[category].length < initialLength;
-                }
-                
-                return false;
-            } catch (error) {
-                console.error('❌ Erreur suppression Firebase:', error);
-                return false;
-            }
-        }
-
-        // Générer un menu aléatoire avec nouvelle structure
-        function generateRandomMenu() {
-            const menu = {};
-            const menuLabels = {
-                entrees: "🥗 Entrée",
-                sauces: "🥄 Base Sauce", 
-                proteines: "🍖 Protéine",
-                glucides: "🌾 Féculent",
-                legumes: "🥬 Légumes", 
-                cuissons: "⚡ Technique Cuisson",
-                desserts: "🍨 Dessert"
-            };
-            
-            Object.keys(userData).forEach(category => {
-                if (userData[category] && userData[category].length > 0) {
-                    const randomIndex = Math.floor(Math.random() * userData[category].length);
-                    const selectedItem = userData[category][randomIndex];
-                    const itemName = typeof selectedItem === 'string' ? selectedItem : selectedItem.name;
-                    menu[category] = itemName;
-                }
-            });
-            
-            const menuContent = document.getElementById('menuContent');
-            const randomResult = document.getElementById('randomResult');
-            
-            let menuHTML = '';
-            Object.keys(menu).forEach(category => {
-                menuHTML += `
-                    <div class="menu-item" ondblclick="searchRecipeWithCategory('${menu[category].replace(/'/g, "\\'")}', '${category}')">
-                        <div class="menu-item-label">${menuLabels[category]}</div>
-                        <div class="menu-item-value">${menu[category]}</div>
-                    </div>
-                `;
-            });
-            
-            menuContent.innerHTML = menuHTML;
-            randomResult.classList.add('show');
-            
-            // Mise à jour du compteur
-            menusGenerated++;
-            saveData();
-            
-            // Scroll vers le résultat
-            randomResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-
-        // Event listener pour le bouton menu aléatoire
-        document.getElementById('randomMenuBtn').addEventListener('click', generateRandomMenu);
-
-        // Fonction de suppression simplifiée et forcée
-        async function deleteItemSimple(itemName, category) {
-            console.log(`🗑️ deleteItemSimple: "${itemName}" de ${category}`);
-            
-            if (currentUser) {
-                try {
-                    console.log(`🔍 Recherche de "${itemName}" dans Firebase...`);
-                    
-                    // Méthode 1: Recherche par nom exact
-                    const snapshot = await db.collection('users')
-                        .doc(currentUser.uid)
-                        .collection(category)
-                        .where('name', '==', itemName)
-                        .get();
-                    
-                    console.log(`📊 Documents trouvés avec nom exact: ${snapshot.size}`);
-                    
-                    if (!snapshot.empty) {
-                        // Supprimer tous les documents trouvés
-                        const deletePromises = [];
-                        snapshot.forEach(doc => {
-                            console.log(`🗑️ Suppression doc ID: ${doc.id}, data:`, doc.data());
-                            deletePromises.push(doc.ref.delete());
-                        });
-                        
-                        await Promise.all(deletePromises);
-                        console.log(`✅ ${deletePromises.length} document(s) supprimé(s) de Firebase`);
-                    } else {
-                        console.log(`⚠️ Aucun document trouvé avec le nom "${itemName}"`);
-                        
-                        // Méthode 2: Lister TOUS les documents et chercher manuellement
-                        console.log('🔍 Recherche manuelle dans tous les documents...');
-                        const allDocs = await db.collection('users')
-                            .doc(currentUser.uid)
-                            .collection(category)
-                            .get();
-                        
-                        console.log(`📊 Total documents dans ${category}: ${allDocs.size}`);
-                        
-                        allDocs.forEach(doc => {
-                            const data = doc.data();
-                            console.log(`📄 Doc ${doc.id}:`, data);
-                            
-                            // Comparaison flexible
-                            if (data.name === itemName || 
-                                data.name?.toLowerCase() === itemName.toLowerCase() ||
-                                data.name?.trim() === itemName.trim()) {
-                                console.log(`🎯 MATCH trouvé! Suppression de ${doc.id}`);
-                                doc.ref.delete();
-                            }
-                        });
-                    }
-                } catch (error) {
-                    console.error('❌ Erreur suppression Firebase:', error);
-                }
-            }
-            
-            // Suppression locale
-            if (!userData[category]) {
-                console.log(`❌ Catégorie ${category} non trouvée localement`);
-                return;
-            }
-            
-            const initialLength = userData[category].length;
-            userData[category] = userData[category].filter(item => {
-                const name = typeof item === 'string' ? item : item.name;
-                return name !== itemName;
-            });
-            
-            if (userData[category].length < initialLength) {
-                console.log(`✅ Élément "${itemName}" supprimé localement`);
-                saveDataLocal();
-                renderData();
-                showNotification(`"${itemName}" supprimé`, 'success');
-            } else {
-                console.log('❌ Élément non trouvé localement');
-            }
-        }
-
-        // Fonction pour lister tous les éléments Firebase (debug)
-        async function debugListFirebaseItems(category) {
-            if (!currentUser) {
-                console.log('❌ Pas d\'utilisateur connecté');
-                return;
-            }
-            
-            try {
-                console.log(`🔍 === DEBUG ${category.toUpperCase()} ===`);
-                
-                const snapshot = await db.collection('users')
-                    .doc(currentUser.uid)
-                    .collection(category)
-                    .get();
-                
-                console.log(`📊 Total documents dans ${category}: ${snapshot.size}`);
-                
-                snapshot.forEach((doc, index) => {
-                    const data = doc.data();
-                    console.log(`${index + 1}. ID: ${doc.id}`);
-                    console.log(`   Nom: "${data.name}"`);
-                    console.log(`   Créé: ${data.createdAt?.toDate()}`);
-                    console.log(`   Favori: ${data.isFavorite}`);
-                    console.log('   ---');
-                });
-                
-                console.log(`🔍 === FIN DEBUG ${category.toUpperCase()} ===`);
-            } catch (error) {
-                console.error(`❌ Erreur debug ${category}:`, error);
-            }
-        }
-
-        // Ajouter le debug au window pour pouvoir l'appeler depuis la console
-        window.debugFirebase = debugListFirebaseItems;
-
-        // Debug du mode edit
-        document.getElementById('editToggle').addEventListener('click', function() {
-            editMode = !editMode;
-            console.log(`🔧 Mode edit changé: ${editMode}`);
-            
-            document.body.classList.toggle('edit-mode', editMode);
-            this.textContent = editMode ? '✅ Save Changes' : '✏️ Edit Mode';
-            this.className = editMode ? 'btn btn-success' : 'btn btn-warning';
-            
-            if (!editMode) {
-                saveData();
-            }
-            
-            console.log('🎨 Classes body:', document.body.className);
-            console.log('👁️ Boutons d\'ajout visibles:', document.querySelectorAll('.add-item-btn').length);
-        });
-
-        // Rendu des données avec nouvelle structure
-        function renderData() {
-            Object.keys(userData).forEach(category => {
-                const section = document.querySelector(`[data-category="${category}"]`);
-                if (!section) return;
-                
-                const addBtn = section.querySelector('.add-item-btn');
-                
-                // Supprime les anciens items (sauf le bouton d'ajout)
-                section.querySelectorAll('.item').forEach(item => item.remove());
-                
-                // Ajoute les nouveaux items
-                if (userData[category]) {
-                    userData[category].forEach(item => {
-                        const itemName = typeof item === 'string' ? item : item.name;
-                        const itemId = typeof item === 'string' ? 'local' : item.id;
-                        const isFavorite = typeof item === 'string' ? false : item.isFavorite;
-                        const isDefault = typeof item === 'string' ? true : item.isDefault;
-                        
-                        const itemEl = createItemElement(itemName, category, itemId, isFavorite, isDefault);
-                        section.insertBefore(itemEl, addBtn);
-                    });
-                }
-            });
-        }
-
-        // Création d'un élément item avec métadonnées
-        function createItemElement(text, category, itemId = 'local', isFavorite = false, isDefault = true) {
-            const item = document.createElement('div');
-            item.className = 'item';
-            if (isFavorite) item.classList.add('favorite');
-            if (!isDefault) item.classList.add('custom');
-            
-            // Contenu principal
-            const content = document.createElement('span');
-            content.className = 'item-content';
-            content.textContent = text;
-            item.appendChild(content);
-            
-            // Indicateur favori
-            if (isFavorite) {
-                const favoriteIcon = document.createElement('span');
-                favoriteIcon.className = 'favorite-icon';
-                favoriteIcon.innerHTML = '⭐';
-                favoriteIcon.style.cssText = 'position: absolute; top: 8px; right: 32px; font-size: 12px;';
-                item.appendChild(favoriteIcon);
-            }
-            
-            // Bouton de suppression (version debug)
-            const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'delete-btn';
-            deleteBtn.innerHTML = '×';
-            deleteBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                console.log(`🗑️ Tentative de suppression: "${text}" de ${category}`);
-                console.log('🔧 Mode edit:', editMode);
-                
-                if (editMode) {
-                    deleteItemSimple(text, category);
-                } else {
-                    console.log('⚠️ Mode edit non activé pour suppression');
-                }
-            });
-            item.appendChild(deleteBtn);
-            
-            // Sélection et recherche
-            item.addEventListener('click', function() {
-                if (!editMode) {
-                    this.classList.toggle('selected');
-                }
-            });
-            
-            // Double-clic pour recherche web avec catégorie
-            item.addEventListener('dblclick', function() {
-                if (!editMode) {
-                    searchRecipeWithCategory(text, category);
-                }
-            });
-            
-            return item;
-        }
-
-        // Suppression d'un item (fonction corrigée)
-        async function deleteItem(text, category) {
-            // Trouver l'ID de l'élément
-            let itemId = 'local';
-            if (userData[category]) {
-                const item = userData[category].find(item => {
-                    const name = typeof item === 'string' ? item : item.name;
-                    return name === text;
-                });
-                if (item && typeof item === 'object') {
-                    itemId = item.id;
-                }
-            }
-            
-            const success = await deleteItemFromCategory(category, itemId, text);
-            if (success) {
-                renderData();
-                showNotification(`"${text}" supprimé`, 'success');
-            } else {
-                showNotification('Erreur lors de la suppression', 'error');
-            }
-        }
-
-        // Ajout d'un item (mise à jour)
-        function addItem(category) {
-            const input = document.createElement('input');
-            input.className = 'item-input';
-            input.placeholder = 'Entrez un nouvel élément...';
-            
-            const section = document.querySelector(`[data-category="${category}"]`);
-            const addBtn = section.querySelector('.add-item-btn');
-            section.insertBefore(input, addBtn);
-            
-            input.focus();
-            
-            const handleSave = async () => {
-                const text = input.value.trim();
-                if (text) {
-                    // Vérifier si l'élément existe déjà
-                    const exists = userData[category] && userData[category].some(item => {
-                        const name = typeof item === 'string' ? item : item.name;
-                        return name.toLowerCase() === text.toLowerCase();
-                    });
-                    
-                    if (!exists) {
-                        const success = await addItemToCategory(category, text);
-                        if (success) {
-                            renderData();
-                            showNotification(`"${text}" ajouté avec succès!`, 'success');
-                        } else {
-                            showNotification('Erreur lors de l\'ajout', 'error');
-                        }
-                    } else {
-                        showNotification('Cet élément existe déjà', 'warning');
-                    }
-                }
-                input.remove();
-            };
-            
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    handleSave();
-                }
-            });
-            
-            input.addEventListener('blur', handleSave);
-        }
-
-        // Système de notifications amélioré
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            const colors = {
-                success: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                error: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-                warning: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-                info: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'
-            };
-            
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${colors[type]};
-                color: white;
-                padding: 12px 20px;
-                border-radius: 12px;
-                font-weight: 600;
-                z-index: 1000;
-                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-                animation: slideInRight 0.3s ease;
-                max-width: 300px;
-            `;
-            notification.textContent = message;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'slideInRight 0.3s ease reverse';
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
-                }, 300);
-            }, 3000);
-        }
-        
-        // Fonction de recherche avec catégorie
-        function searchRecipeWithCategory(ingredient, category) {
-            const categoryTerms = {
-                entrees: "entrée",
-                sauces: "sauce",
-                proteines: "protéine",
-                glucides: "féculent",
-                legumes: "légumes",
-                cuissons: "cuisson",
-                desserts: "dessert"
-            };
-            
-            const categoryTerm = categoryTerms[category] || category;
-            const searchQuery = `${categoryTerm} ${ingredient} healthy recette`;
-            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
-            
-            window.open(searchUrl, '_blank');
-            showSearchFeedback(`${categoryTerm} ${ingredient}`);
-        }
-        
-        // Fonction de recherche accessible globalement
-        window.searchRecipeWithCategory = function(ingredient, category) {
-            const categoryTerms = {
-                entrees: "entrée",
-                sauces: "sauce",
-                proteines: "protéine",
-                glucides: "féculent", 
-                legumes: "légumes",
-                cuissons: "cuisson",
-                desserts: "dessert"
-            };
-            
-            const categoryTerm = categoryTerms[category] || category;
-            const searchQuery = `${categoryTerm} ${ingredient} healthy recette`;
-            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
-            
-            window.open(searchUrl, '_blank');
-            showSearchFeedback(`${categoryTerm} ${ingredient}`);
-        }
-        
-        // Feedback visuel pour la recherche
-        function showSearchFeedback(ingredient) {
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
-                color: white;
-                padding: 12px 20px;
-                border-radius: 12px;
-                font-weight: 600;
-                z-index: 1000;
-                box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
-                animation: slideInRight 0.3s ease;
-            `;
-            notification.textContent = `🔍 Recherche: "${ingredient}"`;
-            
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes slideInRight {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-            `;
-            document.head.appendChild(style);
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'slideInRight 0.3s ease reverse';
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
-                }, 300);
-            }, 3000);
-        }
-
-        // Suppression d'un item
-        function deleteItem(text, category) {
-            const index = userData[category].indexOf(text);
-            if (index > -1) {
-                userData[category].splice(index, 1);
-                renderData();
-                saveData();
-            }
-        }
-
-        // Ajout d'un item
-        function addItem(category) {
-            const input = document.createElement('input');
-            input.className = 'item-input';
-            input.placeholder = 'Enter new item...';
-            
-            const section = document.querySelector(`[data-category="${category}"]`);
-            const addBtn = section.querySelector('.add-item-btn');
-            section.insertBefore(input, addBtn);
-            
-            input.focus();
-            
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    const text = input.value.trim();
-                    if (text && !userData[category].includes(text)) {
-                        userData[category].push(text);
-                        renderData();
-                        saveData();
-                    } else {
-                        input.remove();
-                    }
-                }
-            });
-            
-            input.addEventListener('blur', () => {
-                const text = input.value.trim();
-                if (text && !userData[category].includes(text)) {
-                    userData[category].push(text);
-                    renderData();
-                    saveData();
-                } else {
-                    input.remove();
-                }
-            });
-        }
-
-        // Event listeners pour TOUS les boutons d'ajout (avec debug)
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🔧 Initialisation des event listeners...');
-            
-            // Attendre un peu que le DOM soit complètement chargé
-            setTimeout(() => {
-                // Boutons d'ajout principaux (en bas)
-                const addButtons = document.querySelectorAll('.add-item-btn');
-                console.log(`📝 Trouvé ${addButtons.length} boutons d'ajout principaux`);
-                
-                addButtons.forEach((btn, index) => {
-                    console.log(`🎯 Configuration bouton principal ${index + 1}`);
-                    
-                    // Supprimer les anciens listeners
-                    btn.replaceWith(btn.cloneNode(true));
-                    const newBtn = document.querySelectorAll('.add-item-btn')[index];
-                    
-                    newBtn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        
-                        const categoryElement = newBtn.closest('[data-category]');
-                        const category = categoryElement ? categoryElement.dataset.category : null;
-                        
-                        console.log(`🎯 Clic sur bouton principal pour catégorie: ${category}`);
-                        
-                        if (category) {
-                            addItemSimple(category);
-                        } else {
-                            console.error('❌ Impossible de trouver la catégorie');
-                        }
-                    });
-                });
-
-                // Boutons "+ Add" dans les headers
-                const addCategoryButtons = document.querySelectorAll('.add-category-btn');
-                console.log(`➕ Trouvé ${addCategoryButtons.length} boutons "+ Add" dans les headers`);
-                
-                addCategoryButtons.forEach((btn, index) => {
-                    console.log(`➕ Configuration bouton header ${index + 1}`);
-                    
-                    // Supprimer les anciens listeners
-                    btn.replaceWith(btn.cloneNode(true));
-                    const newBtn = document.querySelectorAll('.add-category-btn')[index];
-                    
-                    newBtn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        
-                        const categoryElement = newBtn.closest('[data-category]');
-                        const category = categoryElement ? categoryElement.dataset.category : null;
-                        
-                        console.log(`➕ Clic sur bouton "+ Add" pour catégorie: ${category}`);
-                        console.log('🔧 Mode edit actuel:', editMode);
-                        
-                        if (category && editMode) {
-                            addItemSimple(category);
-                        } else if (!editMode) {
-                            console.log('⚠️ Mode edit non activé pour bouton "+ Add"');
-                            showNotification('Activez le mode Edit d\'abord', 'warning');
-                        } else {
-                            console.error('❌ Impossible de trouver la catégorie pour "+ Add"');
-                        }
-                    });
-                    
-                    console.log(`✅ Bouton "+ Add" ${index + 1} configuré pour:`, newBtn.closest('[data-category]')?.dataset.category);
-                });
-                
-            }, 1000);
-        });
-
-        // Version simplifiée de l'ajout d'élément
-        function addItemSimple(category) {
-            console.log(`🚀 addItemSimple appelé pour: ${category}`);
-            console.log('👤 Utilisateur connecté:', currentUser ? currentUser.email : 'Non connecté');
-            console.log('📝 Mode edit:', editMode);
-            
-            if (!editMode) {
-                console.log('⚠️ Mode edit non activé');
-                return;
-            }
-            
-            const section = document.querySelector(`[data-category="${category}"]`);
-            if (!section) {
-                console.error(`❌ Section pour ${category} introuvable`);
-                return;
-            }
-            
-            const addBtn = section.querySelector('.add-item-btn');
-            if (!addBtn) {
-                console.error(`❌ Bouton d'ajout pour ${category} introuvable`);
-                return;
-            }
-            
-            console.log('✅ Section et bouton trouvés, création de l\'input...');
-            
-            // Créer l'input
-            const input = document.createElement('input');
-            input.className = 'item-input';
-            input.placeholder = 'Entrez un nouvel élément...';
-            input.style.display = 'block';
-            input.style.width = '100%';
-            
-            // Insérer l'input
-            section.insertBefore(input, addBtn);
-            input.focus();
-            
-            console.log('✅ Input créé et inséré');
-            
-            // Gérer la sauvegarde
-            const handleSave = () => {
-                const text = input.value.trim();
-                console.log(`💾 Tentative de sauvegarde: "${text}"`);
-                
-                if (text) {
-                    // Ajouter directement aux données locales
-                    if (!userData[category]) {
-                        userData[category] = [];
-                        console.log(`📁 Catégorie ${category} initialisée`);
-                    }
-                    
-                    // Vérifier si existe déjà
-                    const exists = userData[category].some(item => {
-                        const name = typeof item === 'string' ? item : item.name;
-                        return name.toLowerCase() === text.toLowerCase();
-                    });
-                    
-                    if (!exists) {
-                        userData[category].push({
-                            id: 'local-' + Date.now(),
-                            name: text,
-                            isFavorite: false,
-                            isDefault: false,
-                            createdAt: new Date(),
-                            tags: []
-                        });
-                        
-                        console.log(`✅ Élément "${text}" ajouté à ${category}`);
-                        console.log('📊 Données actuelles:', userData[category]);
-                        
-                        // Sauvegarder et recharger
-                        saveDataLocal();
-                        renderData();
-                        showNotification(`"${text}" ajouté!`, 'success');
-                        
-                        // Essayer de synchroniser avec Firebase si connecté
-                        if (currentUser) {
-                            syncNewItemToFirebase(category, text);
-                        }
-                    } else {
-                        console.log('⚠️ Élément existe déjà');
-                        showNotification('Cet élément existe déjà', 'warning');
-                    }
-                } else {
-                    console.log('⚠️ Texte vide');
-                }
-                
-                input.remove();
-            };
-            
-            // Event listeners pour l'input
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    console.log('⌨️ Touche Entrée pressée');
-                    handleSave();
-                }
-            });
-            
-            input.addEventListener('blur', () => {
-                console.log('👁️ Input a perdu le focus');
-                handleSave();
-            });
-        }
-
-        // Sauvegarde locale simple
-        function saveDataLocal() {
-            try {
-                const simpleData = {};
-                Object.keys(userData).forEach(category => {
-                    simpleData[category] = userData[category].map(item => 
-                        typeof item === 'string' ? item : item.name
-                    );
-                });
-                localStorage.setItem('mealPlannerData', JSON.stringify(simpleData));
-                console.log('💾 Données sauvegardées localement');
-            } catch (error) {
-                console.error('❌ Erreur sauvegarde locale:', error);
-            }
-        }
-
-        // Synchronisation Firebase en arrière-plan
-        async function syncNewItemToFirebase(category, itemName) {
-            if (!currentUser) return;
-            
-            try {
-                console.log(`🔄 Synchronisation Firebase: ${itemName} → ${category}`);
-                await db.collection('users')
-                    .doc(currentUser.uid)
-                    .collection(category)
-                    .add({
-                        name: itemName,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        isFavorite: false,
-                        isDefault: false,
-                        tags: []
-                    });
-                console.log('✅ Synchronisation Firebase réussie');
-            } catch (error) {
-                console.error('❌ Erreur synchronisation Firebase:', error);
-            }
-        }
-
-        // Initialisation
-        renderData();
-
-        // PWA Installation
-        let deferredPrompt;
-        const installBanner = document.getElementById('installBanner');
-        const installBtn = document.getElementById('installBtn');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBanner.style.display = 'block';
-        });
-
-        installBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                deferredPrompt = null;
-                installBanner.style.display = 'none';
-            }
-        });
-
-        window.addEventListener('appinstalled', () => {
-            installBanner.style.display = 'none';
-        });
-
-        // Service Worker pour fonctionnement offline
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                const swCode = `
-                    const CACHE_NAME = 'meal-planner-pro-v1';
-                    const urlsToCache = ['/'];
-                    
-                    self.addEventListener('install', event => {
-                        event.waitUntil(
-                            caches.open(CACHE_NAME)
-                                .then(cache => cache.addAll(urlsToCache))
-                        );
-                    });
-                    
-                    self.addEventListener('fetch', event => {
-                        event.respondWith(
-                            caches.match(event.request)
-                                .then(response => response || fetch(event.request))
-                        );
-                    });
-                `;
-                
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                const swUrl = URL.createObjectURL(blob);
-                
-                navigator.serviceWorker.register(swUrl)
-                    .then(() => console.log('SW registered'))
-                    .catch(() => console.log('SW registration failed'));
-            });
-        }
-
-        // Fermer l'overlay en cliquant à l'extérieur
-        document.getElementById('authOverlay').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) {
-                // Ne pas fermer - l'utilisateur doit se connecter pour utiliser l'app
-                // document.getElementById('authOverlay').classList.remove('show');
-            }
-        });
-
-        // Test de la configuration Firebase au chargement
-        window.addEventListener('load', () => {
-            console.log('=== DIAGNOSTIC FIREBASE ===');
-            console.log('Configuration Firebase:', firebaseConfig);
-            console.log('Firebase apps:', firebase.apps.length);
-            console.log('Auth instance:', auth);
-            console.log('Firestore instance:', db);
-            console.log('URL actuelle:', window.location.href);
-            console.log('Domaine:', window.location.hostname);
-            console.log('=== FIN DIAGNOSTIC ===');
-            
-            // Test de connexion Firestore
-            db.collection('test').doc('connection').set({
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                test: true
-            }).then(() => {
-                console.log('✅ Test Firestore réussi');
-            }).catch((error) => {
-                console.error('❌ Test Firestore échoué:', error);
-            });
-        });
-    </script>
-</body>
-</html>
+                setTimeout
