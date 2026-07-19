@@ -4,9 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Repas Healthy — Inspiration</title>
-<meta name="description" content="Générateur d'idées de repas healthy">
+<meta name="description" content="Générateur d'idées de repas protéinés, rassasiants et légers">
 <meta name="theme-color" content="#2f6b3a">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥗</text></svg>">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
 <style>
   :root {
     --bg: #f6f4ee;
@@ -65,35 +67,36 @@
   @keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; } }
 
   /* ---- Generator ---- */
-  .modes { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+  .modes { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 12px; }
   .mode {
     padding: 8px 16px; border-radius: 10px; font-weight: 600; font-size: .92rem;
     background: var(--card); border: 1.5px solid var(--line); color: var(--ink-soft);
   }
   .mode.active { border-color: var(--green); color: var(--green); background: var(--green-soft); }
 
-  .slots { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .filters { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+  .fchip {
+    padding: 5px 13px; border-radius: 99px; font-weight: 600; font-size: .85rem;
+    background: var(--card); border: 1.5px solid var(--line); color: var(--ink-soft);
+    transition: all .15s;
+  }
+  .fchip.active { background: var(--green); border-color: var(--green); color: #fff; }
+
+  .slots { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
   .slot {
     background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
     padding: 14px 16px; border: 2px solid transparent; position: relative;
     transition: border-color .15s;
   }
   .slot.locked { border-color: var(--amber); background: var(--amber-soft); }
-  .slot-cat { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); }
+  .slot-cat { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); padding-right: 120px; }
   .slot-val { font-size: 1.08rem; font-weight: 600; margin-top: 4px; min-height: 1.6em; }
-  .slot-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 2px; }
+  .slot-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 1px; }
   .icon-btn {
-    width: 32px; height: 32px; border-radius: 8px; font-size: 1rem;
+    width: 28px; height: 28px; border-radius: 8px; font-size: .95rem;
     display: grid; place-items: center; transition: background .15s;
   }
   .icon-btn:hover { background: var(--green-soft); }
-
-  .big-card {
-    background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
-    padding: 22px; text-align: center; margin-bottom: 12px;
-  }
-  .big-card .slot-cat { margin-bottom: 6px; }
-  .big-card .dish { font-size: 1.5rem; font-weight: 700; }
 
   .gen-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 22px; }
   .btn {
@@ -109,25 +112,38 @@
   .hint { text-align: center; color: var(--ink-soft); font-size: .85rem; margin-top: 14px; }
 
   /* ---- Week ---- */
-  .week-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 16px; }
+  .week-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 16px; }
   .day-card {
     background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
     padding: 14px 16px; border: 2px solid transparent; position: relative;
   }
   .day-card.locked { border-color: var(--amber); background: var(--amber-soft); }
   .day-name { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--green); }
-  .day-meal { margin-top: 4px; font-weight: 600; padding-right: 60px; }
+  .day-meal { margin-top: 4px; font-weight: 600; padding-right: 88px; }
   .day-type { font-size: .75rem; color: var(--ink-soft); margin-top: 4px; }
 
-  /* ---- Favorites ---- */
-  .fav-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  /* ---- Shopping list ---- */
+  .shop { margin-top: 26px; }
+  .shop-group {
+    background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 14px 18px; margin-top: 12px;
+  }
+  .shop-group h4 { font-size: .95rem; margin-bottom: 6px; }
+  .shop-item { display: flex; align-items: center; gap: 10px; padding: 4px 0; }
+  .shop-item input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--green); flex: none; }
+  .shop-item.done span { text-decoration: line-through; color: var(--ink-soft); }
+  .shop-item span { flex: 1; }
+
+  /* ---- Favorites & journal ---- */
+  .section-title { font-size: 1.05rem; font-weight: 700; margin: 26px 0 4px; }
+  .fav-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
   .fav-item {
     background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
     padding: 12px 16px; display: flex; align-items: center; gap: 12px;
   }
   .fav-text { flex: 1; font-weight: 600; }
   .fav-date { font-size: .78rem; color: var(--ink-soft); white-space: nowrap; }
-  .empty { text-align: center; color: var(--ink-soft); padding: 40px 16px; }
+  .empty { text-align: center; color: var(--ink-soft); padding: 24px 16px; }
 
   /* ---- Library ---- */
   .lib-cat { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 18px; margin-top: 14px; }
@@ -168,7 +184,7 @@
 
 <header>
   <h1>🥗 Repas Healthy</h1>
-  <p>Trouve l'inspiration pour tes prochains repas sains</p>
+  <p>Protéiné, rassasiant, léger en gras — trouve ton prochain repas</p>
 </header>
 
 <nav>
@@ -188,32 +204,50 @@
       <button class="mode active" data-mode="compose">🍽️ Assiette composée</button>
       <button class="mode" data-mode="complet">🥘 Plat complet</button>
       <button class="mode" data-mode="menu">🍾 Menu entier</button>
+      <button class="mode" data-mode="apero">🎉 Apéro dinatoire</button>
+    </div>
+    <div class="filters">
+      <button class="fchip" data-f="rapide" title="Uniquement les préparations rapides">⏱️ Rapide</button>
+      <button class="fchip" data-f="saison" title="Légumes et plats de saison uniquement">🌞 De saison</button>
+      <button class="fchip" data-f="leger" title="Écarte les options les plus grasses">🥗 Léger</button>
     </div>
     <div id="gen-area"></div>
     <div class="gen-actions">
       <button class="btn" id="btn-roll">🎲 Inspire-moi !</button>
-      <button class="btn secondary" id="btn-save">⭐ Garder cette idée</button>
+      <button class="btn secondary" id="btn-save">⭐ Garder</button>
+      <button class="btn secondary" id="btn-eat">✅ Je le fais ce soir</button>
     </div>
-    <p class="hint">🔒 Verrouille un élément qui te plaît, puis relance les dés pour changer le reste.</p>
+    <p class="hint">🔒 Verrouille ce qui te plaît et relance le reste. 👍/👎 apprennent tes goûts : ce que tu aimes ressortira plus souvent.<br>Chaque assiette = protéine + féculent + légumes : le cadre protéiné-rassasiant est déjà dans la structure.</p>
   </section>
 
   <!-- ============ WEEK ============ -->
   <section id="panel-week" class="panel">
     <div class="gen-actions" style="margin-top:4px">
       <button class="btn" id="btn-week">✨ Générer ma semaine</button>
+      <button class="btn secondary" id="btn-shop">🛒 Liste de courses</button>
     </div>
     <div class="week-grid" id="week-grid"></div>
-    <p class="hint">Une idée de dîner par soir, sans répétition. Verrouille les soirs qui te plaisent et regénère le reste.</p>
+    <p class="hint">Une idée de dîner par soir, sans répétition ni deux fois la même protéine d'affilée. Les filtres de l'onglet Inspiration s'appliquent aussi ici. ✅ envoie le repas dans ton journal.</p>
+    <div class="shop" id="shop-area"></div>
   </section>
 
-  <!-- ============ FAVORITES ============ -->
+  <!-- ============ FAVORITES + JOURNAL ============ -->
   <section id="panel-favs" class="panel">
+    <h2 class="section-title" style="margin-top:4px">⭐ Favoris</h2>
     <div class="fav-list" id="fav-list"></div>
+    <h2 class="section-title">📖 Journal des repas</h2>
+    <p class="hint" style="margin-top:0;text-align:left">Ce que tu as mangé récemment — l'app évite de te reproposer les mêmes plats pendant 7 jours.</p>
+    <div class="fav-list" id="journal-list"></div>
   </section>
 
   <!-- ============ LIBRARY ============ -->
   <section id="panel-lib" class="panel">
     <p class="hint" style="margin-top:4px">Tes listes d'idées, utilisées par le générateur. Ajoute ou supprime ce que tu veux — tout est sauvegardé sur cet appareil.</p>
+    <div class="gen-actions" style="margin-top:10px">
+      <button class="btn secondary small" id="btn-export">⬇️ Exporter mes données</button>
+      <button class="btn secondary small" id="btn-import">⬆️ Importer</button>
+      <input type="file" id="import-file" accept="application/json,.json" hidden>
+    </div>
     <div id="lib-area"></div>
   </section>
 
@@ -268,6 +302,96 @@ const DEFAULTS = {
   }
 };
 
+/* ==================== TAGS ====================
+   rapide : compatible filtre ⏱️ (ne s'applique qu'aux catégories "temps")
+   gras   : écarté par le filtre 🥗 Léger
+   saison : mois (1-12) où l'item est proposé quand le filtre 🌞 est actif
+   dip    : tartinable, utilisé par le mode Apéro dinatoire
+   Les items ajoutés par l'utilisateur n'ont pas de tags : ils passent tous les filtres. */
+const TAGS = {
+  // Cuissons
+  "Grillé à la poêle": { rapide: true },
+  "Air fryer": { rapide: true },
+  "Sauté au wok": { rapide: true },
+  "En papillote": { rapide: true },
+  "Kefta / boulettes": { rapide: true },
+  // Féculents
+  "Riz": { rapide: true },
+  "Pâtes": { rapide: true },
+  "Semoule": { rapide: true },
+  "Boulgour": { rapide: true },
+  "Quinoa": { rapide: true },
+  "Pain complet / wrap": { rapide: true },
+  "Crêpes / pancakes salés": { rapide: true },
+  "Frites air fryer": { rapide: true },
+  "Gougères": { gras: true },
+  // Façons légume
+  "Vapeur": { rapide: true },
+  "Salade": { rapide: true },
+  "Poêlé": { rapide: true },
+  "Frites de légumes": { rapide: true },
+  "Soupe": { saison: [9, 10, 11, 12, 1, 2, 3, 4] },
+  "Tian": { saison: [6, 7, 8, 9] },
+  // Légumes
+  "Courgette": { saison: [5, 6, 7, 8, 9] },
+  "Potimarron": { saison: [9, 10, 11, 12, 1, 2] },
+  "Chou-fleur": { saison: [9, 10, 11, 12, 1, 2, 3, 4] },
+  "Brocoli": { saison: [9, 10, 11, 12, 1, 2, 3, 4] },
+  "Haricots verts": { saison: [6, 7, 8, 9] },
+  "Poivrons": { saison: [6, 7, 8, 9, 10] },
+  "Aubergine": { saison: [6, 7, 8, 9] },
+  "Épinards": { saison: [3, 4, 5, 9, 10, 11] },
+  "Tomates": { saison: [6, 7, 8, 9] },
+  "Poireaux": { saison: [10, 11, 12, 1, 2, 3] },
+  "Fenouil": { saison: [6, 7, 8, 9, 10] },
+  "Concombre": { saison: [5, 6, 7, 8, 9] },
+  // Sauces
+  "Mayo avocat": { gras: true },
+  "Pesto": { gras: true },
+  // Plats complets
+  "Wok de nouilles sautées": { rapide: true },
+  "Fajitas / burritos": { rapide: true },
+  "Poke bowl": { rapide: true },
+  "Buddha bowl": { rapide: true },
+  "Burger maison": { rapide: true },
+  "Lasagnes": { gras: true },
+  "Pizza maison": { gras: true },
+  "Quiche / tarte salée": { gras: true },
+  // Entrées
+  "Soupe froide (gaspacho…)": { saison: [5, 6, 7, 8, 9] },
+  "Potimarron rôti au roquefort": { gras: true, saison: [9, 10, 11, 12, 1, 2] },
+  "Viande en croûte": { gras: true },
+  "Oignon + fromage au four": { gras: true },
+  "Guacamole": { gras: true, dip: true },
+  "Tapenade": { gras: true, dip: true },
+  "Houmous": { dip: true },
+  "Rillettes de sardine ou saumon": { dip: true },
+  "Dips de légumes": { dip: true },
+  // Desserts
+  "Fondant au chocolat": { gras: true },
+  "Banana bread": { gras: true }
+};
+const TIME_CATS = ["cuissons", "feculents", "cuissonsLegumes", "platsComplets"];
+
+/* Ingrédients de base des plats complets, pour la liste de courses */
+const INGREDIENTS = {
+  "Bibimbap": ["Riz", "Bœuf haché ou tofu", "Œufs", "Légumes variés (carotte, épinard, champignon)", "Sauce soja / gochujang"],
+  "Burger maison": ["Pains burger", "Steaks (bœuf ou poulet)", "Salade, tomate, oignon", "Fromage"],
+  "Fajitas / burritos": ["Tortillas", "Poulet", "Poivrons + oignons", "Épices fajitas", "Yaourt / fromage râpé"],
+  "Hachis parmentier": ["Pommes de terre", "Bœuf haché", "Oignons", "Lait"],
+  "Quiche / tarte salée": ["Pâte", "Œufs", "Crème légère", "Garniture (légumes, lardons…)"],
+  "Lasagnes": ["Plaques de lasagnes", "Bœuf haché", "Tomates concassées", "Béchamel légère", "Fromage râpé"],
+  "Pizza maison": ["Pâte à pizza", "Sauce tomate", "Mozzarella", "Garniture"],
+  "Couscous": ["Semoule", "Poulet / merguez", "Légumes à couscous", "Pois chiches", "Épices"],
+  "Burger gaufre de patate": ["Pommes de terre", "Œufs", "Steak ou poulet", "Crudités"],
+  "Poke bowl": ["Riz", "Saumon ou thon", "Avocat", "Concombre", "Edamame", "Sauce soja"],
+  "Buddha bowl": ["Quinoa ou riz", "Pois chiches", "Légumes rôtis", "Crudités", "Sauce yaourt"],
+  "Curry de légumes ou poulet": ["Poulet", "Lait de coco léger", "Pâte / poudre de curry", "Légumes", "Riz"],
+  "Chili (con ou sin carne)": ["Haricots rouges", "Bœuf haché (optionnel)", "Tomates concassées", "Maïs", "Riz", "Épices chili"],
+  "Wok de nouilles sautées": ["Nouilles", "Poulet ou crevettes", "Légumes à wok", "Sauce soja"],
+  "Dahl de lentilles": ["Lentilles corail", "Lait de coco léger", "Curry", "Riz"]
+};
+
 /* ==================== ÉTAT & STOCKAGE ==================== */
 const store = {
   get(key, fallback) {
@@ -278,27 +402,60 @@ const store = {
 };
 
 let lib = store.get("rh-lib", null) || structuredClone(DEFAULTS);
-// Ajoute les catégories manquantes si la bibliothèque vient d'une ancienne version
 for (const k of Object.keys(DEFAULTS)) if (!lib[k]) lib[k] = structuredClone(DEFAULTS[k]);
 let favs = store.get("rh-favs", []);
 let week = store.get("rh-week", null);
+let journal = store.get("rh-journal", []);
+let weights = store.get("rh-weights", {});
+let filters = store.get("rh-filters", { rapide: false, saison: false, leger: false });
+let shop = store.get("rh-shop", null);
 
-const recent = {}; // anti-répétition : derniers tirages par catégorie
+const recent = {}; // anti-répétition de session : derniers tirages par catégorie
 
 function items(cat) {
-  const list = lib[cat] && lib[cat].items.length ? lib[cat].items : DEFAULTS[cat].items;
-  return list;
+  return lib[cat] && lib[cat].items.length ? lib[cat].items : DEFAULTS[cat].items;
 }
 
-function pick(cat) {
+function allowed(cat, name) {
+  const t = TAGS[name] || {};
+  if (filters.leger && t.gras) return false;
+  if (filters.rapide && TIME_CATS.includes(cat) && !t.rapide) return false;
+  if (filters.saison && t.saison && !t.saison.includes(new Date().getMonth() + 1)) return false;
+  return true;
+}
+
+function weightedPick(pool) {
+  const total = pool.reduce((s, x) => s + (weights[x] || 1), 0);
+  let r = Math.random() * total;
+  for (const x of pool) { r -= (weights[x] || 1); if (r <= 0) return x; }
+  return pool[pool.length - 1];
+}
+
+function pick(cat, exclude = []) {
   const list = items(cat);
   const hist = recent[cat] || (recent[cat] = []);
-  const pool = list.filter(x => !hist.includes(x));
-  const choice = (pool.length ? pool : list)[Math.floor(Math.random() * (pool.length ? pool.length : list.length))];
+  let pool = list.filter(x => allowed(cat, x) && !exclude.includes(x));
+  if (!pool.length) pool = list.filter(x => allowed(cat, x));
+  if (!pool.length) pool = list;
+  const fresh = pool.filter(x => !hist.includes(x));
+  const choice = weightedPick(fresh.length ? fresh : pool);
   hist.push(choice);
   const memory = Math.min(3, Math.max(0, list.length - 1));
   while (hist.length > memory) hist.shift();
   return choice;
+}
+
+// pick restreint aux items vérifiant pred
+function pickWhere(cat, pred, exclude = []) {
+  const banned = items(cat).filter(x => !pred(x));
+  return pick(cat, exclude.concat(banned));
+}
+
+// plats mangés ces 7 derniers jours (d'après le journal) → à éviter
+function recentPlats() {
+  const cutoff = Date.now() - 7 * 864e5;
+  const texts = journal.filter(e => new Date(e.date).getTime() > cutoff).map(e => e.text);
+  return items("platsComplets").filter(p => texts.some(t => t.includes(p)));
 }
 
 function esc(s) {
@@ -319,24 +476,58 @@ document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () =>
   document.querySelectorAll(".panel").forEach(p => p.classList.toggle("active", p.id === "panel-" + t.dataset.panel));
 }));
 
+/* ==================== FILTRES ==================== */
+function renderFilters() {
+  document.querySelectorAll(".fchip").forEach(c => c.classList.toggle("active", !!filters[c.dataset.f]));
+}
+document.querySelectorAll(".fchip").forEach(c => c.addEventListener("click", () => {
+  filters[c.dataset.f] = !filters[c.dataset.f];
+  store.set("rh-filters", filters);
+  renderFilters();
+  toast(filters[c.dataset.f] ? "Filtre activé pour les prochains tirages" : "Filtre désactivé");
+}));
+
 /* ==================== GÉNÉRATEUR ==================== */
 const MODES = {
   compose: ["proteines", "cuissons", "feculents", "legumes", "cuissonsLegumes", "sauces"],
   complet: ["platsComplets", "desserts"],
-  menu: ["entree", "platPrincipal", "desserts"]
+  menu: ["entree", "platPrincipal", "desserts"],
+  apero: ["aperoFroid", "aperoFroid", "aperoChaud", "aperoChaud", "aperoDip"]
 };
 let mode = "compose";
 let slots = []; // { cat, label, value, locked }
 
-function slotDef(cat) {
-  if (cat === "entree") {
-    const src = Math.random() < 0.5 ? "entreesFroides" : "entreesChaudes";
-    return { cat: src, label: "🥗 Entrée / apéro", value: pick(src), locked: false };
+const isDip = x => (TAGS[x] || {}).dip;
+
+function slotDef(catKey) {
+  switch (catKey) {
+    case "entree": {
+      const src = Math.random() < 0.5 ? "entreesFroides" : "entreesChaudes";
+      return { cat: src, label: "🥗 Entrée / apéro", value: pick(src), locked: false };
+    }
+    case "platPrincipal":
+      return { cat: "platsComplets", label: "🥘 Plat", value: pick("platsComplets", recentPlats()), locked: false };
+    case "aperoFroid":
+      return { cat: "entreesFroides", label: "🧊 Froid", value: pickWhere("entreesFroides", x => !isDip(x)), locked: false };
+    case "aperoChaud":
+      return { cat: "entreesChaudes", label: "♨️ Chaud", value: pick("entreesChaudes"), locked: false };
+    case "aperoDip":
+      return { cat: "entreesFroides", label: "🫙 Dip & tartinades", value: pickWhere("entreesFroides", isDip), locked: false };
+    case "platsComplets":
+      return { cat: catKey, label: DEFAULTS[catKey].label, value: pick(catKey, recentPlats()), locked: false };
+    default:
+      return { cat: catKey, label: DEFAULTS[catKey].label, value: pick(catKey), locked: false };
   }
-  if (cat === "platPrincipal") {
-    return { cat: "platsComplets", label: "🥘 Plat", value: pick("platsComplets"), locked: false };
+}
+
+function dedupeSlots(defs) {
+  for (let i = 0; i < slots.length; i++) {
+    if (slots[i].locked) continue;
+    let tries = 0;
+    while (slots.some((s, j) => j !== i && s.value === slots[i].value) && tries++ < 8) {
+      slots[i] = slotDef(defs[i]);
+    }
   }
-  return { cat, label: DEFAULTS[cat].label, value: pick(cat), locked: false };
 }
 
 function rollAll() {
@@ -346,6 +537,7 @@ function rollAll() {
   } else {
     slots = slots.map((s, i) => s.locked ? s : slotDef(defs[i]));
   }
+  dedupeSlots(defs);
   renderGen();
 }
 
@@ -356,6 +548,8 @@ function renderGen() {
       <div class="slot-cat">${s.label}</div>
       <div class="slot-val">${esc(s.value)}</div>
       <div class="slot-actions">
+        <button class="icon-btn" data-act="up" title="J'aime → proposé plus souvent">👍</button>
+        <button class="icon-btn" data-act="down" title="Bof → proposé moins souvent">👎</button>
         <button class="icon-btn" data-act="reroll" title="Relancer cet élément">🔄</button>
         <button class="icon-btn" data-act="lock" title="${s.locked ? "Déverrouiller" : "Verrouiller"}">${s.locked ? "🔒" : "🔓"}</button>
       </div>
@@ -363,15 +557,24 @@ function renderGen() {
 
   area.querySelectorAll(".slot").forEach(el => {
     const i = +el.dataset.i;
-    el.querySelector('[data-act="reroll"]').addEventListener("click", e => {
-      e.stopPropagation();
-      slots[i] = { ...slotDef(MODES[mode][i]), locked: false };
-      renderGen();
-    });
-    el.querySelector('[data-act="lock"]').addEventListener("click", e => {
-      e.stopPropagation();
+    const reroll = () => { slots[i] = { ...slotDef(MODES[mode][i]), locked: false }; dedupeSlots(MODES[mode]); renderGen(); };
+    el.querySelector('[data-act="reroll"]').addEventListener("click", reroll);
+    el.querySelector('[data-act="lock"]').addEventListener("click", () => {
       slots[i].locked = !slots[i].locked;
       renderGen();
+    });
+    el.querySelector('[data-act="up"]').addEventListener("click", () => {
+      const v = slots[i].value;
+      weights[v] = Math.min(4, (weights[v] || 1) * 1.6);
+      store.set("rh-weights", weights);
+      toast(`« ${v} » ressortira plus souvent 👍`);
+    });
+    el.querySelector('[data-act="down"]').addEventListener("click", () => {
+      const v = slots[i].value;
+      weights[v] = Math.max(0.15, (weights[v] || 1) * 0.35);
+      store.set("rh-weights", weights);
+      toast(`« ${v} » sera plus rare 👎`);
+      reroll();
     });
   });
 }
@@ -391,6 +594,7 @@ function ideaText() {
     return `${p} ${c.toLowerCase()} · ${f.toLowerCase()} · ${l.toLowerCase()} ${cl.toLowerCase()} · ${s.toLowerCase()}`;
   }
   if (mode === "complet") return `${slots[0].value} + dessert : ${slots[1].value.toLowerCase()}`;
+  if (mode === "apero") return "Apéro : " + slots.map(s => s.value).join(" · ");
   return `Entrée : ${slots[0].value} · Plat : ${slots[1].value} · Dessert : ${slots[2].value}`;
 }
 
@@ -402,30 +606,48 @@ document.getElementById("btn-save").addEventListener("click", () => {
   toast("Ajouté aux favoris ⭐");
 });
 
+function addJournal(text) {
+  journal.unshift({ id: Date.now() + Math.random(), date: new Date().toISOString(), text });
+  journal = journal.slice(0, 60);
+  store.set("rh-journal", journal);
+  renderJournal();
+}
+
+document.getElementById("btn-eat").addEventListener("click", () => {
+  if (!slots.length) { toast("Lance d'abord les dés 🎲"); return; }
+  addJournal(ideaText());
+  toast("Noté dans ton journal ✅ Bon app !");
+});
+
 /* ==================== SEMAINE ==================== */
 const DAYS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
 
-function weekMeal(used) {
-  // ~ moitié plats complets, moitié assiettes composées
+function weekMeal(used, prevProtein) {
   if (Math.random() < 0.5) {
-    const list = items("platsComplets").filter(x => !used.has(x));
+    const avoid = new Set([...used, ...recentPlats()]);
+    const list = items("platsComplets").filter(x => !avoid.has(x) && allowed("platsComplets", x));
     if (list.length) {
-      const plat = list[Math.floor(Math.random() * list.length)];
+      const plat = weightedPick(list);
       used.add(plat);
-      return { text: plat, type: "Plat complet" };
+      return { text: plat, type: "Plat complet", parts: { plat } };
     }
   }
-  const p = pick("proteines"), c = pick("cuissons"), f = pick("feculents"), l = pick("legumes");
-  return { text: `${p} ${c.toLowerCase()}, ${f.toLowerCase()} & ${l.toLowerCase()}`, type: "Assiette composée" };
+  const p = pick("proteines", prevProtein ? [prevProtein] : []);
+  const c = pick("cuissons"), f = pick("feculents"), l = pick("legumes");
+  return { text: `${p} ${c.toLowerCase()}, ${f.toLowerCase()} & ${l.toLowerCase()}`, type: "Assiette composée", parts: { p, f, l } };
 }
+
+function mealProtein(d) { return d && d.parts ? (d.parts.p || null) : null; }
 
 function genWeek() {
   const used = new Set((week || []).filter(d => d.locked).map(d => d.text));
-  week = DAYS.map((day, i) => {
+  const next = [];
+  for (let i = 0; i < DAYS.length; i++) {
     const prev = week && week[i];
-    if (prev && prev.locked) return prev;
-    return { day, ...weekMeal(used), locked: false };
-  });
+    if (prev && prev.locked) { next.push(prev); continue; }
+    next.push({ day: DAYS[i], ...weekMeal(used, mealProtein(next[i - 1])), locked: false });
+  }
+  week = next;
   store.set("rh-week", week);
   renderWeek();
 }
@@ -442,6 +664,7 @@ function renderWeek() {
       <div class="day-meal">${esc(d.text)}</div>
       <div class="day-type">${d.type}</div>
       <div class="slot-actions">
+        <button class="icon-btn" data-i="${i}" data-act="eat" title="Je l'ai mangé → journal">✅</button>
         <button class="icon-btn" data-i="${i}" data-act="reroll" title="Changer ce repas">🔄</button>
         <button class="icon-btn" data-i="${i}" data-act="lock" title="${d.locked ? "Déverrouiller" : "Verrouiller"}">${d.locked ? "🔒" : "🔓"}</button>
       </div>
@@ -451,9 +674,13 @@ function renderWeek() {
     const i = +b.dataset.i;
     if (b.dataset.act === "lock") {
       week[i].locked = !week[i].locked;
+    } else if (b.dataset.act === "eat") {
+      addJournal(week[i].text);
+      toast("Noté dans ton journal ✅");
+      return;
     } else {
       const used = new Set(week.filter((d, j) => j !== i).map(d => d.text));
-      week[i] = { day: DAYS[i], ...weekMeal(used), locked: false };
+      week[i] = { day: DAYS[i], ...weekMeal(used, mealProtein(week[i - 1])), locked: false };
     }
     store.set("rh-week", week);
     renderWeek();
@@ -462,7 +689,89 @@ function renderWeek() {
 
 document.getElementById("btn-week").addEventListener("click", genWeek);
 
-/* ==================== FAVORIS ==================== */
+/* ==================== LISTE DE COURSES ==================== */
+function buildShop() {
+  if (!week) { toast("Génère d'abord ta semaine ✨"); return; }
+  const groups = [];
+  const grp = title => {
+    let g = groups.find(x => x.title === title);
+    if (!g) { g = { title, items: [] }; groups.push(g); }
+    return g;
+  };
+  const add = (title, name) => {
+    const g = grp(title);
+    if (!g.items.some(i => i.name === name)) g.items.push({ name, checked: false });
+  };
+  for (const d of week) {
+    if (d.parts && d.parts.p) {
+      add("🍖 Protéines", d.parts.p);
+      add("🌾 Féculents", d.parts.f);
+      add("🥦 Légumes", d.parts.l);
+    } else {
+      const plat = (d.parts && d.parts.plat) || d.text;
+      const ing = INGREDIENTS[plat];
+      if (ing) ing.forEach(x => add("🥘 " + plat, x));
+      else add("🥘 Plats", plat);
+    }
+  }
+  shop = { groups, custom: (shop && shop.custom) || [] };
+  store.set("rh-shop", shop);
+  renderShop();
+  toast("Liste de courses générée 🛒");
+}
+
+function renderShop() {
+  const area = document.getElementById("shop-area");
+  if (!shop) { area.innerHTML = ""; return; }
+  const groupHtml = g => `
+    <div class="shop-group">
+      <h4>${esc(g.title)}</h4>
+      ${g.items.map((it, i) => `
+        <label class="shop-item ${it.checked ? "done" : ""}">
+          <input type="checkbox" data-g="${esc(g.title)}" data-i="${i}" ${it.checked ? "checked" : ""}>
+          <span>${esc(it.name)}</span>
+        </label>`).join("")}
+    </div>`;
+  area.innerHTML = `<h2 class="section-title">🛒 Liste de courses</h2>`
+    + shop.groups.map(groupHtml).join("")
+    + `<div class="shop-group">
+        <h4>➕ Autres</h4>
+        ${shop.custom.map((it, i) => `
+          <label class="shop-item ${it.checked ? "done" : ""}">
+            <input type="checkbox" data-custom="${i}" ${it.checked ? "checked" : ""}>
+            <span>${esc(it.name)}</span>
+          </label>`).join("")}
+        <div class="add-row">
+          <input type="text" id="shop-add" placeholder="Ajouter un article…" maxlength="60">
+          <button class="btn small" id="shop-add-btn">Ajouter</button>
+        </div>
+      </div>`;
+
+  area.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.addEventListener("change", () => {
+    if (cb.dataset.custom !== undefined) {
+      shop.custom[+cb.dataset.custom].checked = cb.checked;
+    } else {
+      const g = shop.groups.find(x => x.title === cb.dataset.g);
+      if (g) g.items[+cb.dataset.i].checked = cb.checked;
+    }
+    store.set("rh-shop", shop);
+    renderShop();
+  }));
+  const input = area.querySelector("#shop-add");
+  const addCustom = () => {
+    const v = input.value.trim();
+    if (!v) return;
+    shop.custom.push({ name: v, checked: false });
+    store.set("rh-shop", shop);
+    renderShop();
+  };
+  area.querySelector("#shop-add-btn").addEventListener("click", addCustom);
+  input.addEventListener("keydown", e => { if (e.key === "Enter") addCustom(); });
+}
+
+document.getElementById("btn-shop").addEventListener("click", buildShop);
+
+/* ==================== FAVORIS & JOURNAL ==================== */
 function renderFavs() {
   const el = document.getElementById("fav-list");
   if (!favs.length) {
@@ -479,6 +788,25 @@ function renderFavs() {
     favs = favs.filter(f => f.id !== +b.dataset.id);
     store.set("rh-favs", favs);
     renderFavs();
+  }));
+}
+
+function renderJournal() {
+  const el = document.getElementById("journal-list");
+  if (!journal.length) {
+    el.innerHTML = '<p class="empty">Rien pour l\'instant — clique sur ✅ quand tu fais un repas.</p>';
+    return;
+  }
+  el.innerHTML = journal.map(e => `
+    <div class="fav-item">
+      <span class="fav-text">${esc(e.text)}</span>
+      <span class="fav-date">${new Date(e.date).toLocaleDateString("fr-FR")}</span>
+      <button class="icon-btn" data-id="${e.id}" title="Supprimer">🗑️</button>
+    </div>`).join("");
+  el.querySelectorAll(".icon-btn").forEach(b => b.addEventListener("click", () => {
+    journal = journal.filter(e => e.id !== +b.dataset.id);
+    store.set("rh-journal", journal);
+    renderJournal();
   }));
 }
 
@@ -528,11 +856,55 @@ function renderLib() {
   });
 }
 
+/* ==================== EXPORT / IMPORT ==================== */
+document.getElementById("btn-export").addEventListener("click", () => {
+  const data = { app: "repas-healthy", version: 2, lib, favs, week, journal, weights, filters, shop };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "repas-healthy-donnees.json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast("Données exportées ⬇️");
+});
+
+document.getElementById("btn-import").addEventListener("click", () => document.getElementById("import-file").click());
+document.getElementById("import-file").addEventListener("change", e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      if (data.app !== "repas-healthy" || !data.lib) { toast("Fichier non reconnu ❌"); return; }
+      store.set("rh-lib", data.lib);
+      if (data.favs) store.set("rh-favs", data.favs);
+      if (data.week) store.set("rh-week", data.week);
+      if (data.journal) store.set("rh-journal", data.journal);
+      if (data.weights) store.set("rh-weights", data.weights);
+      if (data.filters) store.set("rh-filters", data.filters);
+      if (data.shop) store.set("rh-shop", data.shop);
+      location.reload();
+    } catch {
+      toast("Fichier illisible ❌");
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+});
+
 /* ==================== INIT ==================== */
+renderFilters();
 rollAll();
 renderWeek();
+renderShop();
 renderFavs();
+renderJournal();
 renderLib();
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
 </script>
 </body>
 </html>
