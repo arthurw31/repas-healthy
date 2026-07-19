@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Repas Healthy — Inspiration</title>
+<meta name="description" content="Générateur d'idées de repas healthy">
+<meta name="theme-color" content="#2f6b3a">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥗</text></svg>">
+<style>
+  :root {
+    --bg: #f6f4ee;
+    --card: #ffffff;
+    --ink: #22301f;
+    --ink-soft: #5c6b57;
+    --green: #2f6b3a;
+    --green-soft: #e4efe2;
+    --green-line: #c9dcc5;
+    --amber: #b4741f;
+    --amber-soft: #f7ecd9;
+    --red: #a94434;
+    --line: #e5e1d6;
+    --radius: 14px;
+    --shadow: 0 1px 3px rgba(34,48,31,.08), 0 4px 16px rgba(34,48,31,.06);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  input { font: inherit; }
+
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 16px 80px; }
+
+  header { text-align: center; padding: 28px 16px 12px; }
+  header h1 { font-size: 1.7rem; letter-spacing: -.02em; }
+  header p { color: var(--ink-soft); font-size: .95rem; margin-top: 2px; }
+
+  /* ---- Tabs ---- */
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    padding: 10px 0;
+    margin-bottom: 18px;
+  }
+  .tabs {
+    display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
+    max-width: 880px; margin: 0 auto; padding: 0 16px;
+  }
+  .tab {
+    padding: 8px 14px; border-radius: 99px; font-weight: 600; font-size: .92rem;
+    color: var(--ink-soft); background: transparent; transition: background .15s, color .15s;
+  }
+  .tab:hover { background: var(--green-soft); }
+  .tab.active { background: var(--green); color: #fff; }
+
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadein .2s ease; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; } }
+
+  /* ---- Generator ---- */
+  .modes { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+  .mode {
+    padding: 8px 16px; border-radius: 10px; font-weight: 600; font-size: .92rem;
+    background: var(--card); border: 1.5px solid var(--line); color: var(--ink-soft);
+  }
+  .mode.active { border-color: var(--green); color: var(--green); background: var(--green-soft); }
+
+  .slots { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .slot {
+    background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 14px 16px; border: 2px solid transparent; position: relative;
+    transition: border-color .15s;
+  }
+  .slot.locked { border-color: var(--amber); background: var(--amber-soft); }
+  .slot-cat { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); }
+  .slot-val { font-size: 1.08rem; font-weight: 600; margin-top: 4px; min-height: 1.6em; }
+  .slot-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 2px; }
+  .icon-btn {
+    width: 32px; height: 32px; border-radius: 8px; font-size: 1rem;
+    display: grid; place-items: center; transition: background .15s;
+  }
+  .icon-btn:hover { background: var(--green-soft); }
+
+  .big-card {
+    background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 22px; text-align: center; margin-bottom: 12px;
+  }
+  .big-card .slot-cat { margin-bottom: 6px; }
+  .big-card .dish { font-size: 1.5rem; font-weight: 700; }
+
+  .gen-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 22px; }
+  .btn {
+    padding: 12px 22px; border-radius: 12px; font-weight: 700; font-size: 1rem;
+    background: var(--green); color: #fff; box-shadow: var(--shadow);
+    transition: transform .1s, filter .15s;
+  }
+  .btn:hover { filter: brightness(1.08); }
+  .btn:active { transform: scale(.97); }
+  .btn.secondary { background: var(--card); color: var(--green); border: 1.5px solid var(--green-line); }
+  .btn.small { padding: 8px 14px; font-size: .9rem; }
+
+  .hint { text-align: center; color: var(--ink-soft); font-size: .85rem; margin-top: 14px; }
+
+  /* ---- Week ---- */
+  .week-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 16px; }
+  .day-card {
+    background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 14px 16px; border: 2px solid transparent; position: relative;
+  }
+  .day-card.locked { border-color: var(--amber); background: var(--amber-soft); }
+  .day-name { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--green); }
+  .day-meal { margin-top: 4px; font-weight: 600; padding-right: 60px; }
+  .day-type { font-size: .75rem; color: var(--ink-soft); margin-top: 4px; }
+
+  /* ---- Favorites ---- */
+  .fav-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  .fav-item {
+    background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 12px 16px; display: flex; align-items: center; gap: 12px;
+  }
+  .fav-text { flex: 1; font-weight: 600; }
+  .fav-date { font-size: .78rem; color: var(--ink-soft); white-space: nowrap; }
+  .empty { text-align: center; color: var(--ink-soft); padding: 40px 16px; }
+
+  /* ---- Library ---- */
+  .lib-cat { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 18px; margin-top: 14px; }
+  .lib-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .lib-head h3 { font-size: 1.02rem; }
+  .lib-reset { font-size: .78rem; color: var(--ink-soft); text-decoration: underline; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--green-soft); border: 1px solid var(--green-line);
+    border-radius: 99px; padding: 5px 8px 5px 12px; font-size: .88rem; font-weight: 500;
+  }
+  .chip button { font-size: .8rem; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; color: var(--ink-soft); }
+  .chip button:hover { background: var(--red); color: #fff; }
+  .add-row { display: flex; gap: 8px; margin-top: 12px; }
+  .add-row input {
+    flex: 1; padding: 9px 12px; border: 1.5px solid var(--line); border-radius: 10px;
+    background: var(--bg); min-width: 0;
+  }
+  .add-row input:focus { outline: none; border-color: var(--green); }
+
+  /* ---- Toast ---- */
+  #toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--ink); color: #fff; padding: 10px 20px; border-radius: 99px;
+    font-weight: 600; font-size: .9rem; opacity: 0; transition: all .25s ease; z-index: 100;
+    pointer-events: none; max-width: 90vw; text-align: center;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  @media (max-width: 480px) {
+    header h1 { font-size: 1.4rem; }
+    .slots, .week-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🥗 Repas Healthy</h1>
+  <p>Trouve l'inspiration pour tes prochains repas sains</p>
+</header>
+
+<nav>
+  <div class="tabs">
+    <button class="tab active" data-panel="gen">🎲 Inspiration</button>
+    <button class="tab" data-panel="week">📅 Ma semaine</button>
+    <button class="tab" data-panel="favs">⭐ Favoris</button>
+    <button class="tab" data-panel="lib">📚 Bibliothèque</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- ============ GENERATOR ============ -->
+  <section id="panel-gen" class="panel active">
+    <div class="modes">
+      <button class="mode active" data-mode="compose">🍽️ Assiette composée</button>
+      <button class="mode" data-mode="complet">🥘 Plat complet</button>
+      <button class="mode" data-mode="menu">🍾 Menu entier</button>
+    </div>
+    <div id="gen-area"></div>
+    <div class="gen-actions">
+      <button class="btn" id="btn-roll">🎲 Inspire-moi !</button>
+      <button class="btn secondary" id="btn-save">⭐ Garder cette idée</button>
+    </div>
+    <p class="hint">🔒 Verrouille un élément qui te plaît, puis relance les dés pour changer le reste.</p>
+  </section>
+
+  <!-- ============ WEEK ============ -->
+  <section id="panel-week" class="panel">
+    <div class="gen-actions" style="margin-top:4px">
+      <button class="btn" id="btn-week">✨ Générer ma semaine</button>
+    </div>
+    <div class="week-grid" id="week-grid"></div>
+    <p class="hint">Une idée de dîner par soir, sans répétition. Verrouille les soirs qui te plaisent et regénère le reste.</p>
+  </section>
+
+  <!-- ============ FAVORITES ============ -->
+  <section id="panel-favs" class="panel">
+    <div class="fav-list" id="fav-list"></div>
+  </section>
+
+  <!-- ============ LIBRARY ============ -->
+  <section id="panel-lib" class="panel">
+    <p class="hint" style="margin-top:4px">Tes listes d'idées, utilisées par le générateur. Ajoute ou supprime ce que tu veux — tout est sauvegardé sur cet appareil.</p>
+    <div id="lib-area"></div>
+  </section>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+"use strict";
+
+/* ==================== DONNÉES PAR DÉFAUT ==================== */
+const DEFAULTS = {
+  proteines: {
+    label: "🍖 Protéine",
+    items: ["Poulet", "Dinde", "Bœuf maigre", "Saumon", "Poisson blanc (cabillaud, lieu…)", "Thon", "Crevettes", "Œufs", "Tofu", "Tempeh", "Lentilles", "Pois chiches", "Haricots rouges"]
+  },
+  cuissons: {
+    label: "🔥 Préparation",
+    items: ["Grillé à la poêle", "Air fryer", "Mariné puis grillé", "Pané / nuggets maison (œuf + panure)", "Kefta / boulettes", "En papillote", "Effiloché", "Au four", "Sauté au wok"]
+  },
+  feculents: {
+    label: "🌾 Féculent",
+    items: ["Riz", "Risotto", "Pâtes", "Purée de pommes de terre", "Frites air fryer", "Patate douce rôtie", "Gaufres salées (riz, patate…)", "Gougères", "Crêpes / pancakes salés", "Quinoa", "Boulgour", "Semoule", "Pain complet / wrap"]
+  },
+  legumes: {
+    label: "🥦 Légume",
+    items: ["Brocoli", "Courgette", "Potimarron", "Chou-fleur", "Haricots verts", "Carottes", "Poivrons", "Aubergine", "Épinards", "Champignons", "Tomates", "Poireaux", "Fenouil", "Betterave", "Concombre"]
+  },
+  cuissonsLegumes: {
+    label: "🍳 Façon légume",
+    items: ["Vapeur", "Air fryer", "Gaufres de légumes", "Gratin", "Soupe", "Salade", "Frites de légumes", "Tian", "Crumble salé", "Rôti au four", "Tarte / roulé de légumes", "Farcis", "Poêlé"]
+  },
+  sauces: {
+    label: "🥄 Base / Sauce",
+    items: ["Base fromage blanc / fromage frais + herbes", "Échalotes déglacées (vin, alcool…)", "Base crème légère", "Base sauce soja", "Mayo avocat", "Mayo yaourt", "Vinaigrette classique", "Vinaigrette asiatique", "Pesto", "Chimichurri", "Sauce verte (herbes)", "Fromage fouetté (type Mme Loïk)"]
+  },
+  platsComplets: {
+    label: "🥘 Plat complet",
+    items: ["Bibimbap", "Burger maison", "Fajitas / burritos", "Hachis parmentier", "Quiche / tarte salée", "Lasagnes", "Pizza maison", "Couscous", "Burger gaufre de patate", "Poke bowl", "Buddha bowl", "Curry de légumes ou poulet", "Chili (con ou sin carne)", "Wok de nouilles sautées", "Dahl de lentilles"]
+  },
+  entreesFroides: {
+    label: "🧊 Entrée / apéro froid",
+    items: ["Soupe froide (gaspacho…)", "Salade", "Rouleaux de printemps", "Roulés concombre-saumon", "Concombre rolls", "Concombre boat", "Sushi / maki", "Tartines", "Tartine échalotes, miel, balsamique", "Rillettes de sardine ou saumon", "Houmous", "Guacamole", "Tapenade", "Dips de légumes"]
+  },
+  entreesChaudes: {
+    label: "♨️ Entrée / apéro chaud",
+    items: ["Gaufres de légumes", "Pois chiches grillés au four", "Viande en croûte", "Mini buns", "Mini pizzas", "Samoussas / nems", "Crêpes salées (saumon…)", "Oignon + fromage au four", "Potimarron rôti au roquefort"]
+  },
+  desserts: {
+    label: "🍨 Dessert",
+    items: ["Glace aux fruits maison", "Banana bread", "Tiramisu léger", "Fromage blanc aux fruits", "Fondant au chocolat", "Fruits au four", "Crème renversée", "Compote maison", "Salade de fruits", "Energy balls"]
+  }
+};
+
+/* ==================== ÉTAT & STOCKAGE ==================== */
+const store = {
+  get(key, fallback) {
+    try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+    catch { return fallback; }
+  },
+  set(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} }
+};
+
+let lib = store.get("rh-lib", null) || structuredClone(DEFAULTS);
+// Ajoute les catégories manquantes si la bibliothèque vient d'une ancienne version
+for (const k of Object.keys(DEFAULTS)) if (!lib[k]) lib[k] = structuredClone(DEFAULTS[k]);
+let favs = store.get("rh-favs", []);
+let week = store.get("rh-week", null);
+
+const recent = {}; // anti-répétition : derniers tirages par catégorie
+
+function items(cat) {
+  const list = lib[cat] && lib[cat].items.length ? lib[cat].items : DEFAULTS[cat].items;
+  return list;
+}
+
+function pick(cat) {
+  const list = items(cat);
+  const hist = recent[cat] || (recent[cat] = []);
+  const pool = list.filter(x => !hist.includes(x));
+  const choice = (pool.length ? pool : list)[Math.floor(Math.random() * (pool.length ? pool.length : list.length))];
+  hist.push(choice);
+  const memory = Math.min(3, Math.max(0, list.length - 1));
+  while (hist.length > memory) hist.shift();
+  return choice;
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function toast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove("show"), 2200);
+}
+
+/* ==================== ONGLETS ==================== */
+document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => {
+  document.querySelectorAll(".tab").forEach(x => x.classList.toggle("active", x === t));
+  document.querySelectorAll(".panel").forEach(p => p.classList.toggle("active", p.id === "panel-" + t.dataset.panel));
+}));
+
+/* ==================== GÉNÉRATEUR ==================== */
+const MODES = {
+  compose: ["proteines", "cuissons", "feculents", "legumes", "cuissonsLegumes", "sauces"],
+  complet: ["platsComplets", "desserts"],
+  menu: ["entree", "platPrincipal", "desserts"]
+};
+let mode = "compose";
+let slots = []; // { cat, label, value, locked }
+
+function slotDef(cat) {
+  if (cat === "entree") {
+    const src = Math.random() < 0.5 ? "entreesFroides" : "entreesChaudes";
+    return { cat: src, label: "🥗 Entrée / apéro", value: pick(src), locked: false };
+  }
+  if (cat === "platPrincipal") {
+    return { cat: "platsComplets", label: "🥘 Plat", value: pick("platsComplets"), locked: false };
+  }
+  return { cat, label: DEFAULTS[cat].label, value: pick(cat), locked: false };
+}
+
+function rollAll() {
+  const defs = MODES[mode];
+  if (slots.length !== defs.length) {
+    slots = defs.map(slotDef);
+  } else {
+    slots = slots.map((s, i) => s.locked ? s : slotDef(defs[i]));
+  }
+  renderGen();
+}
+
+function renderGen() {
+  const area = document.getElementById("gen-area");
+  area.innerHTML = '<div class="slots">' + slots.map((s, i) => `
+    <div class="slot ${s.locked ? "locked" : ""}" data-i="${i}">
+      <div class="slot-cat">${s.label}</div>
+      <div class="slot-val">${esc(s.value)}</div>
+      <div class="slot-actions">
+        <button class="icon-btn" data-act="reroll" title="Relancer cet élément">🔄</button>
+        <button class="icon-btn" data-act="lock" title="${s.locked ? "Déverrouiller" : "Verrouiller"}">${s.locked ? "🔒" : "🔓"}</button>
+      </div>
+    </div>`).join("") + "</div>";
+
+  area.querySelectorAll(".slot").forEach(el => {
+    const i = +el.dataset.i;
+    el.querySelector('[data-act="reroll"]').addEventListener("click", e => {
+      e.stopPropagation();
+      slots[i] = { ...slotDef(MODES[mode][i]), locked: false };
+      renderGen();
+    });
+    el.querySelector('[data-act="lock"]').addEventListener("click", e => {
+      e.stopPropagation();
+      slots[i].locked = !slots[i].locked;
+      renderGen();
+    });
+  });
+}
+
+document.querySelectorAll(".mode").forEach(m => m.addEventListener("click", () => {
+  mode = m.dataset.mode;
+  document.querySelectorAll(".mode").forEach(x => x.classList.toggle("active", x === m));
+  slots = [];
+  rollAll();
+}));
+
+document.getElementById("btn-roll").addEventListener("click", rollAll);
+
+function ideaText() {
+  if (mode === "compose") {
+    const [p, c, f, l, cl, s] = slots.map(x => x.value);
+    return `${p} ${c.toLowerCase()} · ${f.toLowerCase()} · ${l.toLowerCase()} ${cl.toLowerCase()} · ${s.toLowerCase()}`;
+  }
+  if (mode === "complet") return `${slots[0].value} + dessert : ${slots[1].value.toLowerCase()}`;
+  return `Entrée : ${slots[0].value} · Plat : ${slots[1].value} · Dessert : ${slots[2].value}`;
+}
+
+document.getElementById("btn-save").addEventListener("click", () => {
+  if (!slots.length) { toast("Lance d'abord les dés 🎲"); return; }
+  favs.unshift({ id: Date.now(), text: ideaText(), date: new Date().toLocaleDateString("fr-FR") });
+  store.set("rh-favs", favs);
+  renderFavs();
+  toast("Ajouté aux favoris ⭐");
+});
+
+/* ==================== SEMAINE ==================== */
+const DAYS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+
+function weekMeal(used) {
+  // ~ moitié plats complets, moitié assiettes composées
+  if (Math.random() < 0.5) {
+    const list = items("platsComplets").filter(x => !used.has(x));
+    if (list.length) {
+      const plat = list[Math.floor(Math.random() * list.length)];
+      used.add(plat);
+      return { text: plat, type: "Plat complet" };
+    }
+  }
+  const p = pick("proteines"), c = pick("cuissons"), f = pick("feculents"), l = pick("legumes");
+  return { text: `${p} ${c.toLowerCase()}, ${f.toLowerCase()} & ${l.toLowerCase()}`, type: "Assiette composée" };
+}
+
+function genWeek() {
+  const used = new Set((week || []).filter(d => d.locked).map(d => d.text));
+  week = DAYS.map((day, i) => {
+    const prev = week && week[i];
+    if (prev && prev.locked) return prev;
+    return { day, ...weekMeal(used), locked: false };
+  });
+  store.set("rh-week", week);
+  renderWeek();
+}
+
+function renderWeek() {
+  const grid = document.getElementById("week-grid");
+  if (!week) {
+    grid.innerHTML = '<p class="empty" style="grid-column:1/-1">Pas encore de planning — clique sur « Générer ma semaine » ✨</p>';
+    return;
+  }
+  grid.innerHTML = week.map((d, i) => `
+    <div class="day-card ${d.locked ? "locked" : ""}">
+      <div class="day-name">${d.day}</div>
+      <div class="day-meal">${esc(d.text)}</div>
+      <div class="day-type">${d.type}</div>
+      <div class="slot-actions">
+        <button class="icon-btn" data-i="${i}" data-act="reroll" title="Changer ce repas">🔄</button>
+        <button class="icon-btn" data-i="${i}" data-act="lock" title="${d.locked ? "Déverrouiller" : "Verrouiller"}">${d.locked ? "🔒" : "🔓"}</button>
+      </div>
+    </div>`).join("");
+
+  grid.querySelectorAll(".icon-btn").forEach(b => b.addEventListener("click", () => {
+    const i = +b.dataset.i;
+    if (b.dataset.act === "lock") {
+      week[i].locked = !week[i].locked;
+    } else {
+      const used = new Set(week.filter((d, j) => j !== i).map(d => d.text));
+      week[i] = { day: DAYS[i], ...weekMeal(used), locked: false };
+    }
+    store.set("rh-week", week);
+    renderWeek();
+  }));
+}
+
+document.getElementById("btn-week").addEventListener("click", genWeek);
+
+/* ==================== FAVORIS ==================== */
+function renderFavs() {
+  const el = document.getElementById("fav-list");
+  if (!favs.length) {
+    el.innerHTML = '<p class="empty">Aucun favori pour l\'instant.<br>Garde tes meilleures idées depuis l\'onglet 🎲 Inspiration !</p>';
+    return;
+  }
+  el.innerHTML = favs.map(f => `
+    <div class="fav-item">
+      <span class="fav-text">${esc(f.text)}</span>
+      <span class="fav-date">${esc(f.date)}</span>
+      <button class="icon-btn" data-id="${f.id}" title="Supprimer">🗑️</button>
+    </div>`).join("");
+  el.querySelectorAll(".icon-btn").forEach(b => b.addEventListener("click", () => {
+    favs = favs.filter(f => f.id !== +b.dataset.id);
+    store.set("rh-favs", favs);
+    renderFavs();
+  }));
+}
+
+/* ==================== BIBLIOTHÈQUE ==================== */
+function renderLib() {
+  const area = document.getElementById("lib-area");
+  area.innerHTML = Object.keys(DEFAULTS).map(cat => `
+    <div class="lib-cat" data-cat="${cat}">
+      <div class="lib-head">
+        <h3>${DEFAULTS[cat].label} <span style="color:var(--ink-soft);font-weight:400;font-size:.85rem">(${lib[cat].items.length})</span></h3>
+        <button class="lib-reset" data-act="reset">réinitialiser</button>
+      </div>
+      <div class="chips">
+        ${lib[cat].items.map((it, i) => `<span class="chip">${esc(it)}<button data-act="del" data-i="${i}" title="Supprimer">✕</button></span>`).join("")}
+      </div>
+      <div class="add-row">
+        <input type="text" placeholder="Ajouter une idée…" maxlength="80">
+        <button class="btn small" data-act="add">Ajouter</button>
+      </div>
+    </div>`).join("");
+
+  area.querySelectorAll(".lib-cat").forEach(box => {
+    const cat = box.dataset.cat;
+    const input = box.querySelector("input");
+    const add = () => {
+      const v = input.value.trim();
+      if (!v) return;
+      if (lib[cat].items.some(x => x.toLowerCase() === v.toLowerCase())) { toast("Déjà dans la liste !"); return; }
+      lib[cat].items.push(v);
+      store.set("rh-lib", lib);
+      renderLib();
+      toast("Ajouté 👍");
+    };
+    box.querySelector('[data-act="add"]').addEventListener("click", add);
+    input.addEventListener("keydown", e => { if (e.key === "Enter") add(); });
+    box.querySelector('[data-act="reset"]').addEventListener("click", () => {
+      lib[cat] = structuredClone(DEFAULTS[cat]);
+      store.set("rh-lib", lib);
+      renderLib();
+      toast("Liste réinitialisée");
+    });
+    box.querySelectorAll('[data-act="del"]').forEach(b => b.addEventListener("click", () => {
+      lib[cat].items.splice(+b.dataset.i, 1);
+      store.set("rh-lib", lib);
+      renderLib();
+    }));
+  });
+}
+
+/* ==================== INIT ==================== */
+rollAll();
+renderWeek();
+renderFavs();
+renderLib();
+</script>
+</body>
+</html>
